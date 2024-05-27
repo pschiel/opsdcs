@@ -20,7 +20,6 @@ startTime = nil
 raceIsRunning = false
 startZone = trigger.misc.getZone(startZoneName)
 endZone = trigger.misc.getZone(endZoneName)
-player = world.getPlayer()
 lastCheckpoint = 0
 lastCheckpointTime = nil
 numCheckpoints = 1
@@ -53,6 +52,20 @@ end
 
 -- scheduled timer function
 function raceTimer()
+    playersBlue = coalition.getPlayers(coalition.side.BLUE)
+    playersRed = coalition.getPlayers(coalition.side.RED)
+    if #playersBlue > 0 then
+        player = playersBlue[1]
+    else
+        if #playersRed > 0 then
+            player = playersRed[1]
+        else
+            -- no players, check 1 sec later
+            timer.scheduleFunction(raceTimer, {}, timer.getTime() + 1)
+            return
+        end
+    end
+
     local playerPos = player:getPoint()
     local playerInStartZone = (playerPos.x - startZone.point.x)^2 + (playerPos.z - startZone.point.z)^2 < startZone.radius^2
     local playerInEndZone = (playerPos.x - endZone.point.x)^2 + (playerPos.z - endZone.point.z)^2 < endZone.radius^2
