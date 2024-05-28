@@ -17,7 +17,7 @@ showSmokeMarkers = true                -- show smoke markers in start/end zones 
 targetTime = 240                       -- target time in seconds: for balancing time/altitude
 maxScoreAltitude = 800                 -- max altitude for score points: 1000 points per second at ground, reduced to 0 at this altitude
                                        -- e.g. if race time is ~100 seconds, you can get max. 100k points (50k at half this altitude)
-scorePerSecond = 1500                  -- score per second under targetTime (becomes a penalty over targetTime)
+scorePerSecond = 2000                  -- score per second under targetTime (becomes a penalty over targetTime)
                                        -- should be higher than 1000 (what you can get maximum from altitude per second)
 
 -- all globals for easy access in ME
