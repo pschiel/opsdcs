@@ -1,4 +1,4 @@
--- Timer display
+-- Race Timer and Altitude Scoring
 --
 -- works on zone names "race-start" and "race-end"
 -- sets user flags "race-started" and "race-ended", available in ME
