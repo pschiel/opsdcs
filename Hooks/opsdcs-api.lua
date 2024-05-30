@@ -1,3 +1,7 @@
+-- package.cpath = package.cpath .. ';C:/Users/ops/.vscode/extensions/tangzx.emmylua-0.6.18/debugger/emmy/windows/x64/?.dll'
+-- local dbg = require('emmy_core')
+-- dbg.tcpConnect('localhost', 9966)
+
 OpsdcsApi = {}
 
 function OpsdcsApi:onSimulationStart()
@@ -7,7 +11,7 @@ function OpsdcsApi:onSimulationStart()
     self.gserver = assert(socket.bind("127.0.0.1", 31480)) -- just for dwe
     self.gserver:settimeout(0)
     self.targetCamera = nil
-    self.staticObjectsByName = {}
+    self.staticObjects = {}
     self.maxUnitId = 0
     self.env = "gui"
 end
@@ -33,7 +37,7 @@ function OpsdcsApi:onSimulationFrame()
                 if not err then
                     local method, path, id = request:match("^(%w+)%s(/%S-)/?(%d*)%sHTTP/%d%.%d$")
                     local headers = self:getHeaders(client)
-                    local body = self:getBody(client, headers)
+                    local data = self:getBodyData(client, headers)
                     if id == "" then id = nil end
                     if method == "OPTIONS" then
                         client:send(self:responseOptions())
@@ -43,13 +47,17 @@ function OpsdcsApi:onSimulationFrame()
                             code, result = self:getHealth()
                         elseif method == "GET" and path == "/mission" then
                             code, result = self:getMissionData()
+                        elseif method == "GET" and path == "/static-objects" then
+                            code, result = self:getStaticObjects()
                         elseif method == "POST" and path == "/lua" then
                             code, result = self:postLua(body)
                         elseif method == "POST" and path == "/set-camera-position" then
-                            code, result = self:postSetCameraPosition(body)
+                            code, result = self:postSetCameraPosition(data)
                         elseif method == "POST" and path == "/static-objects" then
-                            code, result = self:postStaticObjects(body)
-                        elseif method == "DELETE" and path == "/static-objects" then
+                            code, result = self:postStaticObjects(data)
+                        elseif method == "POST" and path == "/delete-static-objects" then
+                            code, result = self:postDeleteStaticObjects(data)
+                        elseif method == "DELETE" and path == "/clear-all" then
                             code, result = self:deleteAllStaticObjects()
                         end
                         if code == 200 then
@@ -130,7 +138,7 @@ function OpsdcsApi:getHeaders(client)
     return headers
 end
 
-function OpsdcsApi:getBody(client, headers)
+function OpsdcsApi:getBodyData(client, headers)
     local body = nil
     if headers["content-length"] then
         local contentLength = tonumber(headers["content-length"])
@@ -213,6 +221,11 @@ function OpsdcsApi:getMissionData()
     return 200, result
 end
 
+function OpsdcsApi:getStaticObjects()
+    local result = self.staticObjects
+    return 200, result
+end
+
 function OpsdcsApi:postLua()
     local result = nil
     if data.env == OpsdcsApi.env then
@@ -266,17 +279,26 @@ function OpsdcsApi:postStaticObjects(data)
         }
         local luaCode = "a_do_script([[coalition.addStaticObject(" .. static.country .. "," .. self:serializeTable(staticObject) .. ")]])";
         net.dostring_in("mission", luaCode)
-        self.staticObjectsByName[staticObject.name] = staticObject
+        self.staticObjects[staticObject.name] = staticObject
         table.insert(result, staticObject)
     end
     return 200, result
 end
 
-function OpsdcsApi:deleteAllStaticObjects()
-    for name, _ in pairs(self.staticObjectsByName) do
+function OpsdcsApi:postDeleteStaticObjects(data)
+    for _, name in ipairs(data) do
         local luaCode = [[a_do_script('StaticObject.getByName("]] .. name .. [["):destroy()')]]
         net.dostring_in("mission", luaCode)
-        self.staticObjectsByName[name] = nil
+        self.staticObjects[name] = nil
+    end
+    return 200
+end
+
+function OpsdcsApi:deleteAllStaticObjects()
+    for name, _ in pairs(self.staticObjects) do
+        local luaCode = [[a_do_script('StaticObject.getByName("]] .. name .. [["):destroy()')]]
+        net.dostring_in("mission", luaCode)
+        self.staticObjects[name] = nil
     end
     return 200
 end
