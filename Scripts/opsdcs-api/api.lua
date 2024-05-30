@@ -8,6 +8,7 @@ function OpsdcsApi:onSimulationStart()
     self.gserver = assert(socket.bind("127.0.0.1", 31480)) -- just for dwe
     self.gserver:settimeout(0)
     self.targetCamera = nil
+    self.staticObjectsByName = {}
 end
 
 function OpsdcsApi:onSimulationStop()
@@ -29,9 +30,10 @@ function OpsdcsApi:onSimulationFrame()
                 client:settimeout(60)
                 local request, err = client:receive()
                 if not err then
-                    local method, path = request:match("^(%w+)%s(/%S*)%sHTTP/%d%.%d$")
+                    local method, path, id = request:match("^(%w+)%s(/%S-)/?(%d*)%sHTTP/%d%.%d$")
                     local headers = self:getHeaders(client)
                     local body = self:getBody(client, headers)
+                    if id == "" then id = nil end
                     if method == "OPTIONS" then
                         client:send(self:responseOptions())
                     else
@@ -40,7 +42,7 @@ function OpsdcsApi:onSimulationFrame()
                         if lfs.attributes(filename) then
                             local handleRequest = dofile(filename)
                             if handleRequest then
-                                local response = handleRequest(body)
+                                local response = handleRequest(body, id)
                                 client:send(response)
                             else
                                 client:send(self:response404())
@@ -98,7 +100,7 @@ end
 function OpsdcsApi:responseOptions()
     local response = "HTTP/1.1 204 No Content\r\n"
         .. "Access-Control-Allow-Origin: *\r\n"
-        .. "Access-Control-Allow-Methods: GET, POST, OPTIONS\r\n"
+        .. "Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS\r\n"
         .. "Access-Control-Allow-Headers: Content-Type\r\n"
         .. "Access-Control-Max-Age: 86400\r\n\r\n"
     return response
@@ -108,7 +110,7 @@ function OpsdcsApi:response200(data)
     local response = "HTTP/1.1 200 OK\r\n"
         .. "Content-Type: application/json\r\n"
         .. "Access-Control-Allow-Origin: *\r\n"
-        .. "Access-Control-Allow-Methods: GET, POST, OPTIONS\r\n"
+        .. "Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS\r\n"
         .. "Access-Control-Allow-Headers: Content-Type\r\n\r\n"
     if data then
         response = response .. net.lua2json(data)
@@ -120,7 +122,7 @@ function OpsdcsApi:response404()
     local response = "HTTP/1.1 404 Not Found\r\n"
         .. "Content-Type: text/plain\r\n"
         .. "Access-Control-Allow-Origin: *\r\n"
-        .. "Access-Control-Allow-Methods: GET, POST, OPTIONS\r\n"
+        .. "Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS\r\n"
         .. "Access-Control-Allow-Headers: Content-Type\r\n\r\n"
         .. "404 Not Found"
     return response
