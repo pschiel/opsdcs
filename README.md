@@ -1,2 +1,0 @@
-# opsdcs
-DCS scripting tools
