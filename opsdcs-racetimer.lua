@@ -85,9 +85,17 @@ function getTimeString(time)
     return str
 end
 
+-- check if position is in zone
+function isPositionInZone(pos, zone)
+    local dx = pos.x - zone.point.x
+    local dz = pos.z - zone.point.z
+    return dx * dx + dz * dz < zone.radius * zone.radius
+end
+
 -- scheduled timer function
 rtTime = timer.getTime()
 function raceTimer()
+    -- get the first player from any coalition (no MP for now)
     local playersBlue = coalition.getPlayers(coalition.side.BLUE)
     local playersRed = coalition.getPlayers(coalition.side.RED)
     if #playersBlue > 0 then
@@ -99,20 +107,11 @@ function raceTimer()
         timer.scheduleFunction(raceTimer, {}, timer.getTime() + 1)
         return
     end
-
     local playerPos = player:getPoint()
-    local playerInStartZone = (playerPos.x - startZone.point.x)^2 + (playerPos.z - startZone.point.z)^2 < startZone.radius^2
-    local playerInEndZone = (playerPos.x - endZone.point.x)^2 + (playerPos.z - endZone.point.z)^2 < endZone.radius^2
-    local playerInNextCheckpointZone = false
-    local nextCheckpointZone = trigger.misc.getZone(checkpointPrefix .. (lastCheckpoint + 1))
-    if nextCheckpointZone ~= nil then
-        if (playerPos.x - nextCheckpointZone.point.x)^2 + (playerPos.z - nextCheckpointZone.point.z)^2 < nextCheckpointZone.radius^2 then
-            playerInNextCheckpointZone = true
-        end
-    end
 
     -- passed checkpoint
-    if playerInNextCheckpointZone then
+    local nextCheckpointZone = trigger.misc.getZone(checkpointPrefix .. (lastCheckpoint + 1))
+    if nextCheckpointZone and isPositionInZone(playerPos, nextCheckpointZone) then
         lastCheckpoint = lastCheckpoint + 1
         lastCheckpointTime = timer.getTime()
         trigger.action.setUserFlag("race-checkpoint-" .. lastCheckpoint, 1)
@@ -120,7 +119,7 @@ function raceTimer()
     end
 
     -- race started
-    if not raceIsRunning and playerInStartZone then
+    if not raceIsRunning and isPositionInZone(playerPos, startZone) then
         raceIsRunning = true
         startTime = timer.getTime()
         trigger.action.setUserFlag("race-started", 1)
@@ -130,7 +129,7 @@ function raceTimer()
     end
 
     -- race ended
-    if raceIsRunning and playerInEndZone then
+    if raceIsRunning and isPositionInZone(playerPos, endZone) then
         lastCheckpoint = lastCheckpoint + 1
         raceIsRunning = false
         finalTime = timer.getTime() - startTime
