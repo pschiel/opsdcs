@@ -1,4 +1,4 @@
 return function(_, id)
-    local response = Export.LoGetObjectById(id)
-    return OpsdcsApi:response200(response)
+    local result = Export.LoGetObjectById(id)
+    return 200, result
 end

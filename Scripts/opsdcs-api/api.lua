@@ -10,6 +10,7 @@ function OpsdcsApi:onSimulationStart()
     self.targetCamera = nil
     self.staticObjectsByName = {}
     self.maxUnitId = 0
+    self.env = "gui"
 end
 
 function OpsdcsApi:onSimulationStop()
@@ -41,10 +42,10 @@ function OpsdcsApi:onSimulationFrame()
                         local filename = lfs.writedir() .. "Scripts/opsdcs-api/endpoints/"
                             .. string.lower(method) .. "-" .. string.sub(path, 2):gsub("/", "-") .. ".lua"
                         if lfs.attributes(filename) then
-                            local handleRequest = dofile(filename)
-                            if handleRequest then
-                                local response = handleRequest(body, id)
-                                client:send(response)
+                            local apiFunction = dofile(filename)
+                            local code, result = apiFunction(body, id)
+                            if code == 200 then
+                                client:send(self:response200(result))
                             else
                                 client:send(self:response404())
                             end
@@ -98,42 +99,42 @@ function OpsdcsApi:getBody(client, headers)
     if headers["content-length"] then
         local contentLength = tonumber(headers["content-length"])
         if contentLength > 0 then
-            body, err = client:receive(contentLength)
-            if err then body = nil end
+            local json, err = client:receive(contentLength)
+            if not err then
+                local success, data = pcall(net.json2lua, json)
+                if success then
+                    body = data
+                end
+            end
         end
     end
     return body
 end
 
-function OpsdcsApi:responseOptions()
-    local response = "HTTP/1.1 204 No Content\r\n"
-        .. "Access-Control-Allow-Origin: *\r\n"
+function OpsdcsApi:defaultHeaders()
+    return "Access-Control-Allow-Origin: *\r\n"
         .. "Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS\r\n"
-        .. "Access-Control-Allow-Headers: Content-Type\r\n"
-        .. "Access-Control-Max-Age: 86400\r\n\r\n"
-    return response
+        .. "Access-Control-Allow-Headers: Content-Type\r\n\r\n"
+end
+
+function OpsdcsApi:responseOptions()
+    return "HTTP/1.1 204 No Content\r\n"
+        .. "Access-Control-Max-Age: 86400\r\n"
+        .. self:defaultHeaders()
 end
 
 function OpsdcsApi:response200(data)
-    local response = "HTTP/1.1 200 OK\r\n"
+    return "HTTP/1.1 200 OK\r\n"
         .. "Content-Type: application/json\r\n"
-        .. "Access-Control-Allow-Origin: *\r\n"
-        .. "Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS\r\n"
-        .. "Access-Control-Allow-Headers: Content-Type\r\n\r\n"
-    if data then
-        response = response .. net.lua2json(data)
-    end
-    return response
+        .. self:defaultHeaders()
+        .. (data and net.lua2json(data) or "")
 end
 
 function OpsdcsApi:response404()
-    local response = "HTTP/1.1 404 Not Found\r\n"
+    return "HTTP/1.1 404 Not Found\r\n"
         .. "Content-Type: text/plain\r\n"
-        .. "Access-Control-Allow-Origin: *\r\n"
-        .. "Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS\r\n"
-        .. "Access-Control-Allow-Headers: Content-Type\r\n\r\n"
+        .. self:defaultHeaders()
         .. "404 Not Found"
-    return response
 end
 
 DCS.setUserCallbacks({

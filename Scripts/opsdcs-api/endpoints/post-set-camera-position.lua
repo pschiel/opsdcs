@@ -14,23 +14,20 @@ local function getOrientation(roll, pitch, heading)
     return o
 end
 
-return function(body)
-    local success, result = pcall(net.json2lua, body)
-    if success then
-        local x, z = terrain.convertLatLonToMeters(result.position[2], result.position[1])
-        local y = result.position[3]
-        if result.agl then
-            y = y + terrain.GetHeight(x, z)
-        end
-        local orientation = getOrientation(result.roll, result.pitch, result.heading)
-        Export.LoSetCommand(158) -- freecam
-        Export.LoSetCommand(36) -- center
-        OpsdcsApi.targetCamera = {
-            x = orientation.x,
-            y = orientation.y,
-            z = orientation.z,
-            p = {x = x, y = y, z = z}
-        }
+return function(data)
+    local x, z = terrain.convertLatLonToMeters(data.position[2], data.position[1])
+    local y = data.position[3]
+    if data.agl then
+        y = y + terrain.GetHeight(x, z)
     end
-    return OpsdcsApi:response200()
+    local orientation = getOrientation(data.roll, data.pitch, data.heading)
+    Export.LoSetCommand(158) -- freecam
+    Export.LoSetCommand(36) -- center
+    OpsdcsApi.targetCamera = {
+        x = orientation.x,
+        y = orientation.y,
+        z = orientation.z,
+        p = {x = x, y = y, z = z}
+    }
+    return 200
 end

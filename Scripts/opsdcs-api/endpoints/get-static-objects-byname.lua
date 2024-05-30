@@ -1,4 +1,4 @@
 return function()
-    local response = OpsdcsApi.staticObjectsByName
-    return OpsdcsApi:response200(response)
+    local result = OpsdcsApi.staticObjectsByName
+    return 200, result
 end

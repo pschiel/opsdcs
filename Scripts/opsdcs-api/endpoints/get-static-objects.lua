@@ -1,7 +1,7 @@
 return function()
-    local response = {}
+    local result = {}
     for _, static in pairs(OpsdcsApi.staticObjectsByName) do
-        response[tostring(static.unitId)] = static
+        result[tostring(static.unitId)] = static
     end
-    return OpsdcsApi:response200(response)
+    return 200, result
 end

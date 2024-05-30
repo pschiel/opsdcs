@@ -1,7 +1,7 @@
 return function()
-    local response = {
+    local result = {
         missionServerRunning = true,
         missionRunning = DCS.getCurrentMission() ~= nil,
     }
-    return OpsdcsApi:response200(response)
+    return 200, result
 end

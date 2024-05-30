@@ -3,7 +3,7 @@ return function(_, id)
     for i = 1, 18 do
         properties[tostring(i)] = DCS.getUnitProperty(id, i)
     end
-    local response = {
+    local result = {
         id = DCS.getUnitProperty(id, 2),
         name = DCS.getUnitProperty(id, 3),
         type = DCS.getUnitProperty(id, 4),
@@ -24,10 +24,10 @@ return function(_, id)
             [18] = DCS.getUnitProperty(id, 18),
         }
     }
-    response.display_name = DCS.getUnitTypeAttribute(response.type, "DisplayName")
-    local unitTypeDesc = me_db.unit_by_type[response.type]
+    result.display_name = DCS.getUnitTypeAttribute(result.type, "DisplayName")
+    local unitTypeDesc = me_db.unit_by_type[result.type]
     if unitTypeDesc and unitTypeDesc.attribute then
-        response.attribute = unitTypeDesc.attribute
+        result.attribute = unitTypeDesc.attribute
     end
-    return OpsdcsApi:response200(response)
+    return 200, result
 end

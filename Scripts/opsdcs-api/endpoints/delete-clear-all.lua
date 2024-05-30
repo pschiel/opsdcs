@@ -4,5 +4,5 @@ return function()
         net.dostring_in("mission", luaCode)
         OpsdcsApi.staticObjectsByName[name] = nil
     end
-    return OpsdcsApi:response200()
+    return 200
 end

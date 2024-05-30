@@ -1,4 +1,4 @@
 return function()
-    local response = Export.LoGetWorldObjects()
-    return OpsdcsApi:response200(response)
+    local result = Export.LoGetWorldObjects()
+    return 200, result
 end
