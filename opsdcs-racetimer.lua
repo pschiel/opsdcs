@@ -1,26 +1,31 @@
 -- Race Timer and Altitude Scoring
 --
--- works on zone names "race-start" and "race-end"
--- sets user flags "race-started" and "race-ended", available in ME
+-- works on zone names "race-start", "race-end", "race-checkpoint-1", "race-checkpoint-2", ...
+-- sets user flags for all zones (same name)
+-- plays sounds in all zones when they exist in sounds folder (e.g. sounds/race-start.ogg)
+-- configuration can be set in race-start zone (see below for config options)
+-- all stuff is global, for easy access from ME (see below for example)
 --
 -- example to access final time in ME:
 --  condition: FLAG IS TRUE("race-ended")
 --  action: DO SCRIPT: trigger.action.outText("Race ended, final time: " .. getTimeString(finalTime), 20, true)
 
--- configuration
-timeDelta = 0.01                       -- time delta for the schedule function
+-- hardcoded
 startZoneName = "race-start"           -- name of the start zone
 endZoneName = "race-end"               -- name of the finish zone
 checkpointPrefix = "race-checkpoint-"  -- prefix of the checkpoint zones
+
+-- config options/defaults
+timeDelta = 0.01                       -- time delta for the schedule function (0.01 = tries to run at 100fps)
 blinkMsgSeconds = 5                    -- blink message duration
-showSmokeMarkers = true                -- show smoke markers in start/end zones and checkpoints
+showSmokeMarkers = 1                   -- 0/1 show smoke markers in start/end zones and checkpoints
 targetTime = 240                       -- target time in seconds: for balancing time/altitude
 maxScoreAltitude = 800                 -- max altitude for score points: 1000 points per second at ground, reduced to 0 at this altitude
                                        -- e.g. if race time is ~100 seconds, you can get max. 100k points (50k at half this altitude)
 scorePerSecond = 2000                  -- score per second under targetTime (becomes a penalty over targetTime)
                                        -- should be higher than 1000 (what you can get maximum from altitude per second)
 
--- all globals for easy access in ME
+-- globals
 startTime = nil
 raceIsRunning = false
 startZone = trigger.misc.getZone(startZoneName)
@@ -30,6 +35,29 @@ lastCheckpointTime = nil
 numCheckpoints = 1
 player = nil
 score = 0
+
+-- read configuration from start zone properties
+function readConfigFromStartZone()
+    for _, zone in pairs(env.mission.triggers.zones) do
+        if zone.name == startZoneName and zone.properties then
+            for _, prop in pairs(zone.properties) do
+                if prop.key == "timeDelta" then
+                    timeDelta = tonumber(prop.value)
+                elseif prop.key == "blinkMsgSeconds" then
+                    blinkMsgSeconds = tonumber(prop.value)
+                elseif prop.key == "showSmokeMarkers" then
+                    showSmokeMarkers = tonumber(prop.value)
+                elseif prop.key == "targetTime" then
+                    targetTime = tonumber(prop.value)
+                elseif prop.key == "maxScoreAltitude" then
+                    maxScoreAltitude = tonumber(prop.value)
+                elseif prop.key == "scorePerSecond" then
+                    scorePerSecond = tonumber(prop.value)
+                end
+            end
+        end
+    end
+end
 
 -- show smoke in start/end zones and checkpoints
 function showSmoke()
@@ -64,14 +92,12 @@ function raceTimer()
     local playersRed = coalition.getPlayers(coalition.side.RED)
     if #playersBlue > 0 then
         player = playersBlue[1]
+    elseif #playersRed > 0 then
+        player = playersRed[1]
     else
-        if #playersRed > 0 then
-            player = playersRed[1]
-        else
-            -- no players, check 1 sec later
-            timer.scheduleFunction(raceTimer, {}, timer.getTime() + 1)
-            return
-        end
+        -- no players, check 1 sec later
+        timer.scheduleFunction(raceTimer, {}, timer.getTime() + 1)
+        return
     end
 
     local playerPos = player:getPoint()
@@ -89,6 +115,7 @@ function raceTimer()
     if playerInNextCheckpointZone then
         lastCheckpoint = lastCheckpoint + 1
         lastCheckpointTime = timer.getTime()
+        trigger.action.setUserFlag("race-checkpoint-" .. lastCheckpoint, 1)
         trigger.action.outSound("sounds/race-checkpoint-" .. lastCheckpoint .. ".ogg")
     end
 
@@ -175,7 +202,9 @@ function raceTimer()
     timer.scheduleFunction(raceTimer, {}, timer.getTime() + timeDelta)
 end
 
-if showSmokeMarkers then
+-- main
+readConfigFromStartZone()
+if showSmokeMarkers == 1 then
     showSmoke()
 end
 timer.scheduleFunction(raceTimer, {}, timer.getTime() + timeDelta)
