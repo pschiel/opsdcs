@@ -1,4 +1,4 @@
 return function()
-    local response = DCS.getCurrentMission()
+    local response = OpsdcsApi.staticObjectsByName
     return OpsdcsApi:response200(response)
 end

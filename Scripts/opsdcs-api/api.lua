@@ -9,6 +9,7 @@ function OpsdcsApi:onSimulationStart()
     self.gserver:settimeout(0)
     self.targetCamera = nil
     self.staticObjectsByName = {}
+    self.maxUnitId = 0
 end
 
 function OpsdcsApi:onSimulationStop()
@@ -38,7 +39,7 @@ function OpsdcsApi:onSimulationFrame()
                         client:send(self:responseOptions())
                     else
                         local filename = lfs.writedir() .. "Scripts/opsdcs-api/endpoints/"
-                            .. string.lower(method) .. "-" .. string.sub(path, 2) .. ".lua"
+                            .. string.lower(method) .. "-" .. string.sub(path, 2):gsub("/", "-") .. ".lua"
                         if lfs.attributes(filename) then
                             local handleRequest = dofile(filename)
                             if handleRequest then
@@ -66,7 +67,14 @@ function OpsdcsApi:serializeTable(t)
     local str = "{"
     for k, v in pairs(t) do
         local key = type(k) == "string" and string.format("%q", k) or tostring(k)
-        local value = type(v) == "table" and self:serializeTable(v) or string.format("%q", v)
+        local value
+        if type(v) == "table" then
+            value = self:serializeTable(v)
+        elseif type(v) == "string" then
+            value = string.format("%q", v)
+        else
+            value = tostring(v)
+        end
         str = str .. "[" .. key .. "]=" .. value .. ","
     end
     return str .. "}"

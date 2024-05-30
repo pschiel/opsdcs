@@ -11,6 +11,14 @@ return function(body)
     if success then
         for _, static in ipairs(result) do
             local pos = Export.LoGeoCoordinatesToLoCoordinates(static.position[1], static.position[2])
+            if static.unitId == nil then
+                if OpsdcsApi.staticObjectsByName[static.name] then
+                    static.unitId = OpsdcsApi.staticObjectsByName[static.name].unitId
+                else
+                    OpsdcsApi.maxUnitId = OpsdcsApi.maxUnitId + 1
+                    static.unitId = OpsdcsApi.maxUnitId
+                end
+            end
             local staticObject = {
                 name = static.name,
                 type = static.type,
