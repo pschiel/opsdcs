@@ -47,18 +47,20 @@ function OpsdcsApi:onSimulationFrame()
                             code, result = self:getHealth()
                         elseif method == "GET" and path == "/mission-data" then
                             code, result = self:getMissionData()
-                        elseif method == "GET" and path == "/static-objects" then
-                            code, result = self:getStaticObjects()
                         elseif method == "POST" and path == "/lua" then
                             code, result = self:postLua(body)
-                        elseif method == "POST" and path == "/set-camera-position" then
-                            code, result = self:postSetCameraPosition(data)
+                        elseif method == "GET" and path == "/static-objects" then
+                            code, result = self:getStaticObjects()
                         elseif method == "POST" and path == "/static-objects" then
                             code, result = self:postStaticObjects(data)
                         elseif method == "POST" and path == "/delete-static-objects" then
                             code, result = self:postDeleteStaticObjects(data)
                         elseif method == "DELETE" and path == "/clear-all" then
                             code, result = self:deleteAllStaticObjects()
+                        elseif method == "POST" and path == "/set-camera-position" then
+                            code, result = self:postSetCameraPosition(data)
+                        elseif method == "GET" and path == "/export-world-objects" then
+                            code, result = self:getExportWorldObjects()
                         end
                         if code == 200 then
                             client:send(self:response200(result))
@@ -318,6 +320,12 @@ function OpsdcsApi:deleteAllStaticObjects()
         self.staticObjects[name] = nil
     end
     return 200
+end
+
+-- returns Export world objects
+function OpsdcsApi:getExportWorldObjects()
+    local result = Export.LoGetWorldObjects()
+    return 200, result
 end
 
 DCS.setUserCallbacks({
