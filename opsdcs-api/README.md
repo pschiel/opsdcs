@@ -1,6 +1,6 @@
 # opsdcs API
 
-simple and lightweight JSON API for DCS (DEW compatible)
+simple and lightweight JSON API for DCS (DWE compatible)
 
 ## Installation
 
