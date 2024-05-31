@@ -6,6 +6,8 @@ simple and lightweight JSON API for DCS (DWE compatible)
 
 copy [opsdcs-api.lua](Hooks/opsdcs-api.lua) into `Saved Games/DCS/Scripts/Hooks`
 
+API is available once a simulation starts.
+
 ## Usage
 
 ### misc
