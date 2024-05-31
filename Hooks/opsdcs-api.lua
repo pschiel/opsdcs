@@ -1,21 +1,19 @@
--- package.cpath = package.cpath .. ';C:/Users/ops/.vscode/extensions/tangzx.emmylua-0.6.18/debugger/emmy/windows/x64/?.dll'
--- local dbg = require('emmy_core')
--- dbg.tcpConnect('localhost', 9966)
-
+-- OpsdcsApi - simple and lightweight JSON API for DCS
 OpsdcsApi = {}
 
+-- create socket once sim is started
 function OpsdcsApi:onSimulationStart()
     local socket = require("socket")
     self.server = assert(socket.bind("127.0.0.1", 31481))
     self.server:settimeout(0)
-    self.gserver = assert(socket.bind("127.0.0.1", 31480)) -- just for dwe
+    self.gserver = assert(socket.bind("127.0.0.1", 31480))  -- just for dwe support
     self.gserver:settimeout(0)
-    self.targetCamera = nil
-    self.staticObjects = {}
-    self.maxUnitId = 0
-    self.env = "gui"
+    self.targetCamera = nil  -- camera position for lerping
+    self.staticObjects = {}  -- stores dynamically created static objects
+    self.isRunning = true
 end
 
+-- close sockets
 function OpsdcsApi:onSimulationStop()
     if self.server then
         self.server:close()
@@ -27,6 +25,7 @@ function OpsdcsApi:onSimulationStop()
     end
 end
 
+-- runs every frame
 function OpsdcsApi:onSimulationFrame()
     for _, server in ipairs({self.server, self.gserver}) do
         if server then
@@ -35,6 +34,7 @@ function OpsdcsApi:onSimulationFrame()
                 client:settimeout(60)
                 local request, err = client:receive()
                 if not err then
+                    -- no query string for now
                     local method, path, id = request:match("^(%w+)%s(/%S-)/?(%d*)%sHTTP/%d%.%d$")
                     local headers = self:getHeaders(client)
                     local data = self:getBodyData(client, headers)
@@ -74,6 +74,7 @@ function OpsdcsApi:onSimulationFrame()
     self:handleCamera()
 end
 
+-- handles camera movement
 function OpsdcsApi:handleCamera()
     if self.targetCamera then
         local camera = Export.LoGetCameraPosition()
@@ -85,6 +86,7 @@ function OpsdcsApi:handleCamera()
     end
 end
 
+-- lerp between camera positions
 function OpsdcsApi:lerpCamera(cam1, cam2, t)
     for _, vec in ipairs({"x", "y", "z", "p"}) do
         for _, coord in ipairs({"x", "y", "z"}) do
@@ -94,6 +96,7 @@ function OpsdcsApi:lerpCamera(cam1, cam2, t)
     return cam1
 end
 
+-- compare camera positions
 function OpsdcsApi:cameraEquals(cam1, cam2, precision)
     for _, vec in ipairs({"x", "y", "z", "p"}) do
         for _, coord in ipairs({"x", "y", "z"}) do
@@ -105,6 +108,7 @@ function OpsdcsApi:cameraEquals(cam1, cam2, precision)
     return true
 end
 
+-- yet another serialize helper
 function OpsdcsApi:serializeTable(t)
     if type(t) ~= "table" then
         return tostring(t)
@@ -125,6 +129,7 @@ function OpsdcsApi:serializeTable(t)
     return str .. "}"
 end
 
+-- reads http headers
 function OpsdcsApi:getHeaders(client)
     local headers = {}
     while true do
@@ -138,6 +143,7 @@ function OpsdcsApi:getHeaders(client)
     return headers
 end
 
+-- reads http body, returns json
 function OpsdcsApi:getBodyData(client, headers)
     local body = nil
     if headers["content-length"] then
@@ -155,18 +161,21 @@ function OpsdcsApi:getBodyData(client, headers)
     return body
 end
 
+-- default http headers
 function OpsdcsApi:defaultHeaders()
     return "Access-Control-Allow-Origin: *\r\n"
         .. "Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS\r\n"
         .. "Access-Control-Allow-Headers: Content-Type\r\n\r\n"
 end
 
+-- options response
 function OpsdcsApi:responseOptions()
     return "HTTP/1.1 204 No Content\r\n"
         .. "Access-Control-Max-Age: 86400\r\n"
         .. self:defaultHeaders()
 end
 
+-- 200 response
 function OpsdcsApi:response200(data)
     return "HTTP/1.1 200 OK\r\n"
         .. "Content-Type: application/json\r\n"
@@ -174,6 +183,7 @@ function OpsdcsApi:response200(data)
         .. (data and net.lua2json(data) or "")
 end
 
+-- 404 response
 function OpsdcsApi:response404()
     return "HTTP/1.1 404 Not Found\r\n"
         .. "Content-Type: text/plain\r\n"
@@ -183,6 +193,7 @@ end
 
 ----------------------------------------------------------------
 
+-- rotates two vectors around their axes by the given angle
 function OpsdcsApi:applyRotation(a, b, angle)
     local cos_angle, sin_angle = math.cos(angle), math.sin(angle)
     local ax, ay, az, bx, by, bz = a.x, a.y, a.z, b.x, b.y, b.z
@@ -190,6 +201,7 @@ function OpsdcsApi:applyRotation(a, b, angle)
     b.x, b.y, b.z = cos_angle * bx - sin_angle * ax, cos_angle * by - sin_angle * ay, cos_angle * bz - sin_angle * az
 end
 
+-- returns orientation matrix from roll, pitch and heading
 function OpsdcsApi:getOrientation(roll, pitch, heading)
     local h, p, r = math.rad(heading), math.rad(pitch), math.rad(roll)
     local o = {x = {x = 1, y = 0, z = 0}, y = {x = 0, y = 1, z = 0}, z = {x = 0, y = 0, z = 1}}
@@ -199,6 +211,7 @@ function OpsdcsApi:getOrientation(roll, pitch, heading)
     return o
 end
 
+-- degrees to radians
 function OpsdcsApi:deg2rad(degrees)
     if degrees < 0 then
         degrees = degrees + 360
@@ -208,6 +221,7 @@ end
 
 ----------------------------------------------------------------
 
+-- health check
 function OpsdcsApi:getHealth()
     local result = {
         missionServerRunning = true,
@@ -216,26 +230,30 @@ function OpsdcsApi:getHealth()
     return 200, result
 end
 
+-- returns mission data
 function OpsdcsApi:getMissionData()
     local result = DCS.getCurrentMission()
     return 200, result
 end
 
+-- returns dynamically created static objects
 function OpsdcsApi:getStaticObjects()
     local result = self.staticObjects
     return 200, result
 end
 
+-- runs lua code
 function OpsdcsApi:postLua()
     local result = nil
-    if data.env == OpsdcsApi.env then
-        result = loadstring(data.code)()
-    else
+    if data.env then
         result = net.dostring_in(data.env, data.code)
+    else
+        result = loadstring(data.code)()
     end
     return 200, result
 end
 
+-- sets camera position
 function OpsdcsApi:postSetCameraPosition(data)
     local x, z = terrain.convertLatLonToMeters(data.position[2], data.position[1])
     local y = data.position[3]
@@ -254,6 +272,7 @@ function OpsdcsApi:postSetCameraPosition(data)
     return 200
 end
 
+-- creates static objects
 function OpsdcsApi:postStaticObjects(data)
     local result = {}
     for _, static in ipairs(data) do
@@ -285,6 +304,7 @@ function OpsdcsApi:postStaticObjects(data)
     return 200, result
 end
 
+-- deletes static objects
 function OpsdcsApi:postDeleteStaticObjects(data)
     for _, name in ipairs(data) do
         local luaCode = [[a_do_script('StaticObject.getByName("]] .. name .. [["):destroy()')]]
@@ -294,6 +314,7 @@ function OpsdcsApi:postDeleteStaticObjects(data)
     return 200
 end
 
+-- deletes all static objects
 function OpsdcsApi:deleteAllStaticObjects()
     for name, _ in pairs(self.staticObjects) do
         local luaCode = [[a_do_script('StaticObject.getByName("]] .. name .. [["):destroy()')]]
