@@ -28,7 +28,7 @@ DELETE http://127.0.0.1:31481/clear-all - deletes all static objects
 
 ### camera
 
-POST http://127.0.0.1:31481/set-camera-position - sets camera position
+POST http://127.0.0.1:31481/set-camera-position - sets camera position (smooth lerped)
 
 ### export
 
