@@ -1,4 +1,12 @@
 -- OpsdcsApi - simple and lightweight JSON API for DCS
+
+-- debug
+-- pcall(function()
+--     package.cpath = package.cpath .. ';C:/Users/ops/.vscode/extensions/tangzx.emmylua-0.6.18/debugger/emmy/windows/x64/?.dll'
+--     local dbg = require('emmy_core')
+--     dbg.tcpConnect('localhost', 9966)
+-- end)
+
 OpsdcsApi = {}
 
 -- create socket once sim is started
@@ -34,11 +42,15 @@ function OpsdcsApi:onSimulationFrame()
                 client:settimeout(60)
                 local request, err = client:receive()
                 if not err then
-                    -- no query string for now
-                    local method, path, id = request:match("^(%w+)%s(/%S-)/?(%d*)%sHTTP/%d%.%d$")
+                    local method, path, slug, queryString = request:match("^(%w+)%s(/[^%?]+)([^%?]*)%??(.*)%sHTTP/%d%.%d$")
                     local headers = self:getHeaders(client)
                     local data = self:getBodyData(client, headers)
-                    if id == "" then id = nil end
+                    if slug == "" then slug = nil end
+                    local query = {}
+                    for key, value in queryString:gmatch("([^&=?]+)=([^&=?]+)") do
+                        query[key] = value
+                    end
+                    local response = self.response200
                     if method == "OPTIONS" then
                         client:send(self:responseOptions())
                     else
@@ -61,9 +73,48 @@ function OpsdcsApi:onSimulationFrame()
                             code, result = self:postSetCameraPosition(data)
                         elseif method == "GET" and path == "/export-world-objects" then
                             code, result = self:getExportWorldObjects()
+                        elseif method == "GET" and path == "/db-countries" then
+                            code, result = self:getDbCountries()
+                        elseif method == "GET" and path == "/db-countries-by-name" then
+                            code, result = self:getDbCountriesByName()
+                        elseif method == "GET" and path == "/db-units" then
+                            code, result = self:getDbUnits()
+                        elseif method == "GET" and path == "/db-weapons" then
+                            code, result = self:getDbWeapons()
+                        elseif method == "GET" and path == "/db-callnames" then
+                            code, result = self:getDbCallnames()
+                        elseif method == "GET" and path == "/db-sensors" then
+                            code, result = self:getDbSensors()
+                        elseif method == "GET" and path == "/db-pods" then
+                            code, result = self:getDbPods()
+                        elseif method == "GET" and path == "/db-years" then
+                            code, result = self:getDbYears()
+                        elseif method == "GET" and path == "/db-years-launchers" then
+                            code, result = self:getDbYearsLaunchers()
+                        elseif method == "GET" and path == "/db-farp-objects" then
+                            code, result = self:getDbFarpObjects()
+                        elseif method == "GET" and path == "/db-objects" then
+                            code, result = self:getDbObjects()
+                        elseif method == "GET" and path == "/db-theatres" then
+                            code, result = self:getDbTheatres()
+                        elseif method == "GET" and path == "/db-beacons-from-lua" then
+                            code, result = self:getDbBeaconsFromLua(query)
+                        elseif method == "GET" and path == "/db-radio-from-lua" then
+                            code, result = self:getDbRadioFromLua(query)
+                        elseif method == "GET" and path == "/db-nodes-from-lua" then
+                            code, result = self:getDbNodesFromLua(query)
+                        elseif method == "GET" and path == "/image" then
+                            code, result = self:getImage(query)
+                            if code == 200 then
+                                response = self.responseImage
+                            end
                         end
                         if code == 200 then
-                            client:send(self:response200(result))
+                            if response == self.responseImage then
+                                client:send(self:responseImage(result))
+                            else
+                                client:send(self:response200(result))
+                            end
                         else
                             client:send(self:response404())
                         end
@@ -167,21 +218,21 @@ end
 function OpsdcsApi:defaultHeaders()
     return "Access-Control-Allow-Origin: *\r\n"
         .. "Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS\r\n"
-        .. "Access-Control-Allow-Headers: Content-Type\r\n\r\n"
+        .. "Access-Control-Allow-Headers: Content-Type\r\n"
 end
 
 -- options response
 function OpsdcsApi:responseOptions()
     return "HTTP/1.1 204 No Content\r\n"
         .. "Access-Control-Max-Age: 86400\r\n"
-        .. self:defaultHeaders()
+        .. self:defaultHeaders() .. "\r\n"
 end
 
 -- 200 response
 function OpsdcsApi:response200(data)
     return "HTTP/1.1 200 OK\r\n"
         .. "Content-Type: application/json\r\n"
-        .. self:defaultHeaders()
+        .. self:defaultHeaders() .. "\r\n"
         .. (data and net.lua2json(data) or "")
 end
 
@@ -189,8 +240,19 @@ end
 function OpsdcsApi:response404()
     return "HTTP/1.1 404 Not Found\r\n"
         .. "Content-Type: text/plain\r\n"
-        .. self:defaultHeaders()
+        .. self:defaultHeaders() .. "\r\n"
         .. "404 Not Found"
+end
+
+-- image response
+function OpsdcsApi:responseImage(imageData, mimeType)
+    mimeType = mimeType or "image/png"
+    return "HTTP/1.1 200 OK\r\n"
+        .. "Content-Type: " .. mimeType .. "\r\n"
+        .. "Content-Length: " .. #imageData .. "\r\n"
+        .. "Cache-Control: no-cache\r\n"
+        .. self:defaultHeaders() .. "\r\n"
+        .. imageData
 end
 
 -- rotates two vectors around their axes by the given angle
@@ -326,6 +388,138 @@ end
 function OpsdcsApi:getExportWorldObjects()
     local result = Export.LoGetWorldObjects()
     return 200, result
+end
+
+-- returns db.Countries
+function OpsdcsApi:getDbCountries()
+    local result = db.Countries
+    return 200, result
+end
+
+-- returns db.CountriesByName
+function OpsdcsApi:getDbCountriesByName()
+    local result = db.CountriesByName
+    return 200, result
+end
+
+-- returns db.Units
+function OpsdcsApi:getDbUnits()
+    local result = db.Units
+    return 200, result
+end
+
+-- returns db.Weapons
+function OpsdcsApi:getDbWeapons()
+    local result = db.Weapons
+    return 200, result
+end
+
+-- returns db.Callnames
+function OpsdcsApi:getDbCallnames()
+    local result = db.Callnames
+    return 200, result
+end
+
+-- returns db.Sensors.Sensor
+function OpsdcsApi:getDbSensors()
+    local result = db.Sensors.Sensor
+    return 200, result
+end
+
+-- returns db.Pods.Pod
+function OpsdcsApi:getDbPods()
+    local result = db.Pods.Pod
+    return 200, result
+end
+
+-- returns _G.dbYears
+function OpsdcsApi:getDbYears()
+    local result = _G.dbYears
+    return 200, result
+end
+
+-- returns _G.dbYearsLaunchers
+function OpsdcsApi:getDbYearsLaunchers()
+    local result = _G.dbYearsLaunchers
+    return 200, result
+end
+
+-- returns _G.FARP_data.FARP_objects
+function OpsdcsApi:getDbFarpObjects()
+    local result = _G.FARP_data.FARP_objects
+    return 200, result
+end
+
+-- returns _G.Objects
+function OpsdcsApi:getDbObjects()
+    local result = _G.Objects
+    return 200, result
+end
+
+-- returns _G.theatresByName
+function OpsdcsApi:getDbTheatres()
+    local result = _G.theatresByName
+    return 200, result
+end
+
+-- returns data from beacons.lua
+function OpsdcsApi:getDbBeaconsFromLua(query)
+    local path = query.path
+    local data = loadfile(path)
+    if data then
+        local success, result = pcall(function()
+            data()
+            return beacons
+        end)
+        if success then
+            return 200, result
+        end
+    end
+    return 404
+end
+
+-- returns data from radio.lua
+function OpsdcsApi:getDbRadioFromLua(query)
+    local path = query.path
+    local data = loadfile(path)
+    if data then
+        local success, result = pcall(function()
+            data()
+            return radio
+        end)
+        if success then
+            return 200, result
+        end
+    end
+    return 404
+end
+
+-- returns data from MissionGenerator/nodes.lua
+function OpsdcsApi:getDbNodesFromLua(query)
+    local path = query.path
+    local data = loadfile(path)
+    if data then
+        local success, result = pcall(function()
+            data()
+            return missionNodes
+        end)
+        if success then
+            return 200, result
+        end
+    end
+    return 404
+end
+
+-- returns an image from internal files
+function OpsdcsApi:getImage(query)
+    local path = query.path
+    local file = io.open(path, "rb")
+    if file then
+        local data = file:read("*all")
+        file:close()
+        return 200, data
+    end
+    return 404
 end
 
 DCS.setUserCallbacks({
