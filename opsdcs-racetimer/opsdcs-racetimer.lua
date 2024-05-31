@@ -10,11 +10,6 @@
 --  condition: FLAG IS TRUE("race-ended")
 --  action: DO SCRIPT: trigger.action.outText("Race ended, final time: " .. getTimeString(finalTime), 20, true)
 
--- hardcoded
-startZoneName = "race-start"           -- name of the start zone
-endZoneName = "race-end"               -- name of the finish zone
-checkpointPrefix = "race-checkpoint-"  -- prefix of the checkpoint zones
-
 -- config options/defaults
 timeDelta = 0.01                       -- time delta for the schedule function (0.01 = tries to run at 100fps)
 blinkMsgSeconds = 5                    -- blink message duration
@@ -24,6 +19,11 @@ maxScoreAltitude = 800                 -- max altitude for score points: 1000 po
                                        -- e.g. if race time is ~100 seconds, you can get max. 100k points (50k at half this altitude)
 scorePerSecond = 2000                  -- score per second under targetTime (becomes a penalty over targetTime)
                                        -- should be higher than 1000 (what you can get maximum from altitude per second)
+
+-- hardcoded
+startZoneName = "race-start"           -- name of the start zone
+endZoneName = "race-end"               -- name of the finish zone
+checkpointPrefix = "race-checkpoint-"  -- prefix of the checkpoint zones
 
 -- globals
 startTime = nil

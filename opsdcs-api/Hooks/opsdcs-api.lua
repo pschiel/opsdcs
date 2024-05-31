@@ -191,8 +191,6 @@ function OpsdcsApi:response404()
         .. "404 Not Found"
 end
 
-----------------------------------------------------------------
-
 -- rotates two vectors around their axes by the given angle
 function OpsdcsApi:applyRotation(a, b, angle)
     local cos_angle, sin_angle = math.cos(angle), math.sin(angle)
@@ -218,8 +216,6 @@ function OpsdcsApi:deg2rad(degrees)
     end
     return degrees * (math.pi / 180)
 end
-
-----------------------------------------------------------------
 
 -- health check
 function OpsdcsApi:getHealth()
@@ -323,8 +319,6 @@ function OpsdcsApi:deleteAllStaticObjects()
     end
     return 200
 end
-
-----------------------------------------------------------------
 
 DCS.setUserCallbacks({
     onSimulationStart = function() OpsdcsApi:onSimulationStart() end,
