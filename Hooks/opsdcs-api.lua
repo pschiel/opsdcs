@@ -45,7 +45,7 @@ function OpsdcsApi:onSimulationFrame()
                         local code = nil
                         if method == "GET" and path == "/health" then
                             code, result = self:getHealth()
-                        elseif method == "GET" and path == "/mission" then
+                        elseif method == "GET" and path == "/mission-data" then
                             code, result = self:getMissionData()
                         elseif method == "GET" and path == "/static-objects" then
                             code, result = self:getStaticObjects()
