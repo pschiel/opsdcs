@@ -315,20 +315,26 @@ end
 
 -- sets camera position
 function OpsdcsApi:postSetCameraPosition(data)
-    local x, z = terrain.convertLatLonToMeters(data.position[2], data.position[1])
-    local y = data.position[3]
-    if data.agl then
-        y = y + terrain.GetHeight(x, z)
+    if data.position then
+        local x, z = terrain.convertLatLonToMeters(data.position[2], data.position[1])
+        local y = data.position[3]
+        if data.agl then
+            y = y + terrain.GetHeight(x, z)
+        end
+        local orientation = self:getOrientation(data.roll, data.pitch, data.heading)
+        self.targetCamera = {
+            x = orientation.x,
+            y = orientation.y,
+            z = orientation.z,
+            p = { x = x, y = y, z = z }
+        }
+        data.commands = data.commands or { 158, 36 }
     end
-    local orientation = self:getOrientation(data.roll, data.pitch, data.heading)
-    Export.LoSetCommand(158) -- freecam
-    Export.LoSetCommand(36) -- center
-    self.targetCamera = {
-        x = orientation.x,
-        y = orientation.y,
-        z = orientation.z,
-        p = {x = x, y = y, z = z}
-    }
+    if data.commands then
+        for _, command in ipairs(data.commands) do
+            Export.LoSetCommand(command)
+        end
+    end
     return 200
 end
 
