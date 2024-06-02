@@ -60,7 +60,7 @@ function OpsdcsApi:onSimulationFrame()
                         elseif method == "GET" and path == "/mission-data" then
                             code, result = self:getMissionData()
                         elseif method == "POST" and path == "/lua" then
-                            code, result = self:postLua(body)
+                            code, result = self:postLua(data)
                         elseif method == "GET" and path == "/static-objects" then
                             code, result = self:getStaticObjects()
                         elseif method == "POST" and path == "/static-objects" then
@@ -303,7 +303,7 @@ function OpsdcsApi:getStaticObjects()
 end
 
 -- runs lua code
-function OpsdcsApi:postLua()
+function OpsdcsApi:postLua(data)
     local result = nil
     if data.env then
         result = net.dostring_in(data.env, data.code)

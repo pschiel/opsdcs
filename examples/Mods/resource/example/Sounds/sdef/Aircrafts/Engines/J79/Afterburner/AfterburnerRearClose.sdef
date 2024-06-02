@@ -1,0 +1,14 @@
+wave = "Effects/Aircrafts/Engines/Generic/Afterburner/AfterburnerRearClose"
+no_doppler = true
+inner_radius = 800	
+outer_radius = 1800
+cone_inner_angle = 80
+cone_outer_angle = 160
+cone_outer_gain = 1.50
+cone_inner_gain = 6
+direction = {-1, 0, 0}
+position = {0, 0, 0}
+gain = 50
+attack = 0.75
+release = 0.75
+

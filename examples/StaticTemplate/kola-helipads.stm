@@ -1,0 +1,909 @@
+staticTemplate = 
+{
+    ["coalition"] = 
+    {
+        ["blue"] = 
+        {
+            ["name"] = "blue",
+            ["country"] = 
+            {
+                [1] = 
+                {
+                    ["name"] = "USA",
+                    ["ship"] = 
+                    {
+                        ["group"] = 
+                        {
+                            [1] = 
+                            {
+                                ["visible"] = false,
+                                ["tasks"] = 
+                                {
+                                }, -- end of ["tasks"]
+                                ["uncontrollable"] = false,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "Turning Point",
+                                            ["ETA"] = 0,
+                                            ["alt_type"] = "BARO",
+                                            ["formation_template"] = "",
+                                            ["y"] = -88376.473515409,
+                                            ["x"] = 499503.68507165,
+                                            ["ETA_locked"] = true,
+                                            ["speed"] = 0,
+                                            ["action"] = "Turning Point",
+                                            ["task"] = 
+                                            {
+                                                ["id"] = "ComboTask",
+                                                ["params"] = 
+                                                {
+                                                    ["tasks"] = 
+                                                    {
+                                                    }, -- end of ["tasks"]
+                                                }, -- end of ["params"]
+                                            }, -- end of ["task"]
+                                            ["speed_locked"] = true,
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 1,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["modulation"] = 0,
+                                        ["skill"] = "Excellent",
+                                        ["type"] = "Ship_Tilde_Supply",
+                                        ["unitId"] = 1,
+                                        ["y"] = -88376.473515409,
+                                        ["x"] = 499503.68507165,
+                                        ["name"] = "ENUJ-1",
+                                        ["heading"] = 5.0511030346915,
+                                        ["frequency"] = 127500000,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = -88376.473515409,
+                                ["x"] = 499503.68507165,
+                                ["name"] = "ENUJ",
+                                ["start_time"] = 0,
+                            }, -- end of [1]
+                        }, -- end of ["group"]
+                    }, -- end of ["ship"]
+                    ["id"] = 2,
+                    ["static"] = 
+                    {
+                        ["group"] = 
+                        {
+                            [1] = 
+                            {
+                                ["heading"] = 4.9567350756639,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = -367569.17638292,
+                                            ["speed"] = 0,
+                                            ["x"] = -170688.06771471,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 2,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Heliports",
+                                        ["shape_name"] = "FARP",
+                                        ["type"] = "SINGLE_HELIPAD",
+                                        ["unitId"] = 2,
+                                        ["heliport_frequency"] = "127.5",
+                                        ["y"] = -367569.17638292,
+                                        ["x"] = -170688.06771471,
+                                        ["name"] = "ENMX-1",
+                                        ["heliport_modulation"] = 0,
+                                        ["heliport_callsign_id"] = 1,
+                                        ["heading"] = 4.9567350756639,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = -367569.17638292,
+                                ["x"] = -170688.06771471,
+                                ["name"] = "ENMX",
+                                ["dead"] = false,
+                            }, -- end of [1]
+                            [2] = 
+                            {
+                                ["heading"] = 1.1344640137963,
+                                ["hiddenOnPlanner"] = false,
+                                ["groupId"] = 3,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Heliports",
+                                        ["shape_name"] = "FARP",
+                                        ["type"] = "SINGLE_HELIPAD",
+                                        ["unitId"] = 3,
+                                        ["heliport_frequency"] = "127.5",
+                                        ["y"] = -66815.804101219,
+                                        ["x"] = 110961.41959967,
+                                        ["name"] = "EFEK-1",
+                                        ["heliport_modulation"] = 0,
+                                        ["heliport_callsign_id"] = 1,
+                                        ["heading"] = 1.1344640137963,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = -66815.804101219,
+                                ["x"] = 110961.41959967,
+                                ["name"] = "EFEK",
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = -66815.804101219,
+                                            ["speed"] = 0,
+                                            ["x"] = 110961.41959967,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["dead"] = false,
+                            }, -- end of [2]
+                            [3] = 
+                            {
+                                ["heading"] = 4.9741883681838,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 149864.26381813,
+                                            ["speed"] = 0,
+                                            ["x"] = -160744.93142711,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 4,
+                                ["hidden"] = false,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Heliports",
+                                        ["shape_name"] = "FARP",
+                                        ["type"] = "SINGLE_HELIPAD",
+                                        ["unitId"] = 4,
+                                        ["heliport_frequency"] = "127.5",
+                                        ["y"] = 149864.26381813,
+                                        ["x"] = -160744.93142711,
+                                        ["name"] = "EFLR-1",
+                                        ["heliport_modulation"] = 0,
+                                        ["heliport_callsign_id"] = 1,
+                                        ["heading"] = 4.9741883681838,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 149864.26381813,
+                                ["x"] = -160744.93142711,
+                                ["name"] = "EFLR",
+                                ["dead"] = false,
+                            }, -- end of [3]
+                            [4] = 
+                            {
+                                ["heading"] = 3.8222710618676,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = -240518.12624682,
+                                            ["speed"] = 0,
+                                            ["x"] = 92543.466991439,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 5,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Heliports",
+                                        ["shape_name"] = "FARP",
+                                        ["type"] = "SINGLE_HELIPAD",
+                                        ["unitId"] = 5,
+                                        ["heliport_frequency"] = "127.5",
+                                        ["y"] = -240518.12624682,
+                                        ["x"] = 92543.466991439,
+                                        ["name"] = "ENHR-1",
+                                        ["heliport_modulation"] = 0,
+                                        ["heliport_callsign_id"] = 1,
+                                        ["heading"] = 3.8222710618676,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = -240518.12624682,
+                                ["x"] = 92543.466991439,
+                                ["name"] = "ENHR",
+                                ["dead"] = false,
+                            }, -- end of [4]
+                            [5] = 
+                            {
+                                ["heading"] = 0.066711214933289,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = -17962.803599344,
+                                            ["speed"] = 0,
+                                            ["x"] = 368941.38006251,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 6,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Heliports",
+                                        ["shape_name"] = "oil_platform",
+                                        ["type"] = "Oil rig",
+                                        ["unitId"] = 6,
+                                        ["heliport_callsign_id"] = 1,
+                                        ["heliport_modulation"] = 0,
+                                        ["rate"] = 100,
+                                        ["y"] = -17962.803599344,
+                                        ["x"] = 368941.38006251,
+                                        ["name"] = "ENUG-1",
+                                        ["heliport_frequency"] = "127.5",
+                                        ["heading"] = 0.066711214933289,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = -17962.803599344,
+                                ["x"] = 368941.38006251,
+                                ["name"] = "ENUG",
+                                ["dead"] = false,
+                            }, -- end of [5]
+                            [6] = 
+                            {
+                                ["heading"] = 5.4628805587423,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = -412911.39229408,
+                                            ["speed"] = 0,
+                                            ["x"] = -15803.31868697,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 7,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Heliports",
+                                        ["shape_name"] = "FARP",
+                                        ["type"] = "SINGLE_HELIPAD",
+                                        ["unitId"] = 7,
+                                        ["heliport_frequency"] = "127.5",
+                                        ["y"] = -412911.39229408,
+                                        ["x"] = -15803.31868697,
+                                        ["name"] = "ENVR-1",
+                                        ["heliport_modulation"] = 0,
+                                        ["heliport_callsign_id"] = 1,
+                                        ["heading"] = 5.4628805587423,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = -412911.39229408,
+                                ["x"] = -15803.31868697,
+                                ["name"] = "ENVR",
+                                ["dead"] = false,
+                            }, -- end of [6]
+                            [7] = 
+                            {
+                                ["heading"] = 1.0646508437165,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = -96054.536651438,
+                                            ["speed"] = 0,
+                                            ["x"] = -16153.234780278,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 8,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Heliports",
+                                        ["shape_name"] = "FARP",
+                                        ["type"] = "SINGLE_HELIPAD",
+                                        ["unitId"] = 8,
+                                        ["heliport_frequency"] = "127.5",
+                                        ["y"] = -96054.536651438,
+                                        ["x"] = -16153.234780278,
+                                        ["name"] = "ESEK-1",
+                                        ["heliport_modulation"] = 0,
+                                        ["heliport_callsign_id"] = 1,
+                                        ["heading"] = 1.0646508437165,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = -96054.536651438,
+                                ["x"] = -16153.234780278,
+                                ["name"] = "ESEK",
+                                ["dead"] = false,
+                            }, -- end of [7]
+                            [8] = 
+                            {
+                                ["heading"] = 6.0562925044203,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = -78578.717979221,
+                                            ["speed"] = 0,
+                                            ["x"] = -96951.795021966,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 9,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Heliports",
+                                        ["shape_name"] = "FARP",
+                                        ["type"] = "SINGLE_HELIPAD",
+                                        ["unitId"] = 9,
+                                        ["heliport_frequency"] = "127.5",
+                                        ["y"] = -78578.717979221,
+                                        ["x"] = -96951.795021966,
+                                        ["name"] = "ESEG-1",
+                                        ["heliport_modulation"] = 0,
+                                        ["heliport_callsign_id"] = 1,
+                                        ["heading"] = 6.0562925044203,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = -78578.717979221,
+                                ["x"] = -96951.795021966,
+                                ["name"] = "ESEG",
+                                ["dead"] = false,
+                            }, -- end of [8]
+                            [9] = 
+                            {
+                                ["heading"] = 2.9043824772941e-05,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = -94827.673852315,
+                                            ["speed"] = 0,
+                                            ["x"] = -17236.096220202,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 10,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Heliports",
+                                        ["shape_name"] = "FARP",
+                                        ["type"] = "SINGLE_HELIPAD",
+                                        ["unitId"] = 10,
+                                        ["heliport_frequency"] = "127.5",
+                                        ["y"] = -94827.673852315,
+                                        ["x"] = -17236.096220202,
+                                        ["name"] = "ESEQ-1",
+                                        ["heliport_modulation"] = 0,
+                                        ["heliport_callsign_id"] = 1,
+                                        ["heading"] = 2.9043824772941e-05,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = -94827.673852315,
+                                ["x"] = -17236.096220202,
+                                ["name"] = "ESEQ",
+                                ["dead"] = false,
+                            }, -- end of [9]
+                            [10] = 
+                            {
+                                ["heading"] = 0.68067840827779,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = -19672.17300047,
+                                            ["speed"] = 0,
+                                            ["x"] = -259913.60748798,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 11,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Heliports",
+                                        ["shape_name"] = "FARP",
+                                        ["type"] = "SINGLE_HELIPAD",
+                                        ["unitId"] = 11,
+                                        ["heliport_frequency"] = "127.5",
+                                        ["y"] = -19672.17300047,
+                                        ["x"] = -259913.60748798,
+                                        ["name"] = "ESES-1",
+                                        ["heliport_modulation"] = 0,
+                                        ["heliport_callsign_id"] = 1,
+                                        ["heading"] = 0.68067840827779,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = -19672.17300047,
+                                ["x"] = -259913.60748798,
+                                ["name"] = "ESES",
+                                ["dead"] = false,
+                            }, -- end of [10]
+                        }, -- end of ["group"]
+                    }, -- end of ["static"]
+                }, -- end of [1]
+            }, -- end of ["country"]
+        }, -- end of ["blue"]
+        ["neutrals"] = 
+        {
+            ["name"] = "neutrals",
+            ["country"] = 
+            {
+            }, -- end of ["country"]
+        }, -- end of ["neutrals"]
+        ["red"] = 
+        {
+            ["name"] = "red",
+            ["country"] = 
+            {
+                [1] = 
+                {
+                    ["id"] = 0,
+                    ["static"] = 
+                    {
+                        ["group"] = 
+                        {
+                            [1] = 
+                            {
+                                ["heading"] = 4.3807764225058,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 518195.39288616,
+                                            ["speed"] = 0,
+                                            ["x"] = 67796.867427059,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 12,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Heliports",
+                                        ["shape_name"] = "FARP",
+                                        ["type"] = "SINGLE_HELIPAD",
+                                        ["unitId"] = 12,
+                                        ["heliport_frequency"] = "127.5",
+                                        ["y"] = 518195.39288616,
+                                        ["x"] = 67796.867427059,
+                                        ["name"] = "ULML-1",
+                                        ["heliport_modulation"] = 0,
+                                        ["heliport_callsign_id"] = 1,
+                                        ["heading"] = 4.3807764225058,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 518195.39288616,
+                                ["x"] = 67796.867427059,
+                                ["name"] = "ULML",
+                                ["dead"] = false,
+                            }, -- end of [1]
+                            [2] = 
+                            {
+                                ["heading"] = 6.1261056745001,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 501462.98457594,
+                                            ["speed"] = 0,
+                                            ["x"] = -35713.025676599,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 13,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Heliports",
+                                        ["shape_name"] = "FARP",
+                                        ["type"] = "SINGLE_HELIPAD",
+                                        ["unitId"] = 13,
+                                        ["heliport_frequency"] = "127.5",
+                                        ["y"] = 501462.98457594,
+                                        ["x"] = -35713.025676599,
+                                        ["name"] = "ULMR-1",
+                                        ["heliport_modulation"] = 0,
+                                        ["heliport_callsign_id"] = 1,
+                                        ["heading"] = 6.1261056745001,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 501462.98457594,
+                                ["x"] = -35713.025676599,
+                                ["name"] = "ULMR",
+                                ["dead"] = false,
+                            }, -- end of [2]
+                            [3] = 
+                            {
+                                ["heading"] = 3.2637657012294,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 424625.07189342,
+                                            ["speed"] = 0,
+                                            ["x"] = 166993.03349149,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 15,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Heliports",
+                                        ["shape_name"] = "FARP",
+                                        ["type"] = "SINGLE_HELIPAD",
+                                        ["unitId"] = 25,
+                                        ["heliport_frequency"] = "127.5",
+                                        ["y"] = 424625.07189342,
+                                        ["x"] = 166993.03349149,
+                                        ["name"] = "RU-0439",
+                                        ["heliport_modulation"] = 0,
+                                        ["heliport_callsign_id"] = 1,
+                                        ["heading"] = 3.2637657012294,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 424625.07189342,
+                                ["x"] = 166993.03349149,
+                                ["name"] = "RU-0439",
+                                ["dead"] = false,
+                            }, -- end of [3]
+                            [4] = 
+                            {
+                                ["heading"] = 0.48869219055841,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 424917.80944083,
+                                            ["speed"] = 0,
+                                            ["x"] = 184206.03545792,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 17,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Heliports",
+                                        ["shape_name"] = "FARP",
+                                        ["type"] = "SINGLE_HELIPAD",
+                                        ["unitId"] = 27,
+                                        ["heliport_frequency"] = "127.5",
+                                        ["y"] = 424917.80944083,
+                                        ["x"] = 184206.03545792,
+                                        ["name"] = "Olenya Guba",
+                                        ["heliport_modulation"] = 0,
+                                        ["heliport_callsign_id"] = 1,
+                                        ["heading"] = 0.48869219055841,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 424917.80944083,
+                                ["x"] = 184206.03545792,
+                                ["name"] = "Olenya Guba",
+                                ["dead"] = false,
+                            }, -- end of [4]
+                            [5] = 
+                            {
+                                ["heading"] = 3.1241393610699,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 466662.3895226,
+                                            ["speed"] = 0,
+                                            ["x"] = 80742.61163164,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 18,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Heliports",
+                                        ["shape_name"] = "FARP",
+                                        ["type"] = "SINGLE_HELIPAD",
+                                        ["unitId"] = 28,
+                                        ["heliport_frequency"] = "127.5",
+                                        ["y"] = 466662.3895226,
+                                        ["x"] = 80742.61163164,
+                                        ["name"] = "Bolshoye Ramozero",
+                                        ["heliport_modulation"] = 0,
+                                        ["heliport_callsign_id"] = 1,
+                                        ["heading"] = 3.1241393610699,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 466662.3895226,
+                                ["x"] = 80742.61163164,
+                                ["name"] = "Bolshoye Ramozero",
+                                ["dead"] = false,
+                            }, -- end of [5]
+                            [6] = 
+                            {
+                                ["heading"] = 1.6406094968747,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 294975.13393066,
+                                            ["speed"] = 0,
+                                            ["x"] = 193205.39737458,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 19,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Heliports",
+                                        ["shape_name"] = "FARP",
+                                        ["type"] = "SINGLE_HELIPAD",
+                                        ["unitId"] = 29,
+                                        ["heliport_frequency"] = "127.5",
+                                        ["y"] = 294975.13393066,
+                                        ["x"] = 193205.39737458,
+                                        ["name"] = "Pechengsky",
+                                        ["heliport_modulation"] = 0,
+                                        ["heliport_callsign_id"] = 1,
+                                        ["heading"] = 1.6406094968747,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 294975.13393066,
+                                ["x"] = 193205.39737458,
+                                ["name"] = "Pechengsky",
+                                ["dead"] = false,
+                            }, -- end of [6]
+                            [7] = 
+                            {
+                                ["heading"] = 5.6723200689816,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 520688.775168,
+                                            ["speed"] = 0,
+                                            ["x"] = 67790.640676971,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 20,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Heliports",
+                                        ["shape_name"] = "FARP",
+                                        ["type"] = "SINGLE_HELIPAD",
+                                        ["unitId"] = 30,
+                                        ["heliport_frequency"] = "127.5",
+                                        ["y"] = 520688.775168,
+                                        ["x"] = 67790.640676971,
+                                        ["name"] = "Lovozersky",
+                                        ["heliport_modulation"] = 0,
+                                        ["heliport_callsign_id"] = 1,
+                                        ["heading"] = 5.6723200689816,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 520688.775168,
+                                ["x"] = 67790.640676971,
+                                ["name"] = "Lovozersky",
+                                ["dead"] = false,
+                            }, -- end of [7]
+                            [8] = 
+                            {
+                                ["heading"] = 5.550147021342,
+                                ["route"] = 
+                                {
+                                    ["points"] = 
+                                    {
+                                        [1] = 
+                                        {
+                                            ["alt"] = 0,
+                                            ["type"] = "",
+                                            ["name"] = "",
+                                            ["y"] = 701192.86456745,
+                                            ["speed"] = 0,
+                                            ["x"] = 118536.16625714,
+                                            ["formation_template"] = "",
+                                            ["action"] = "",
+                                        }, -- end of [1]
+                                    }, -- end of ["points"]
+                                }, -- end of ["route"]
+                                ["groupId"] = 21,
+                                ["units"] = 
+                                {
+                                    [1] = 
+                                    {
+                                        ["category"] = "Heliports",
+                                        ["shape_name"] = "FARP",
+                                        ["type"] = "SINGLE_HELIPAD",
+                                        ["unitId"] = 31,
+                                        ["heliport_frequency"] = "127.5",
+                                        ["y"] = 701192.86456745,
+                                        ["x"] = 118536.16625714,
+                                        ["name"] = "Ostrovnoy",
+                                        ["heliport_modulation"] = 0,
+                                        ["heliport_callsign_id"] = 1,
+                                        ["heading"] = 5.550147021342,
+                                    }, -- end of [1]
+                                }, -- end of ["units"]
+                                ["y"] = 701192.86456745,
+                                ["x"] = 118536.16625714,
+                                ["name"] = "Ostrovnoy",
+                                ["dead"] = false,
+                            }, -- end of [8]
+                        }, -- end of ["group"]
+                    }, -- end of ["static"]
+                    ["name"] = "Russia",
+                }, -- end of [1]
+            }, -- end of ["country"]
+        }, -- end of ["red"]
+    }, -- end of ["coalition"]
+    ["name"] = "Kola Helipads",
+    ["requiredModules"] = 
+    {
+    }, -- end of ["requiredModules"]
+    ["localization"] = 
+    {
+        ["DEFAULT"] = 
+        {
+            ["DictKey_descriptionNeutralsTask_4"] = "",
+            ["DictKey_sortie_5"] = "",
+            ["DictKey_descriptionText_1"] = "",
+            ["DictKey_descriptionBlueTask_3"] = "",
+            ["DictKey_descriptionRedTask_2"] = "",
+        }, -- end of ["DEFAULT"]
+    }, -- end of ["localization"]
+    ["theatre"] = "Kola",
+    ["desc"] = "",
+} -- end of staticTemplate

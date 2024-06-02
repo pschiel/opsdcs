@@ -1,0 +1,15 @@
+wave = "Effects/Aircrafts/Engines/Generic/Afterburner/RearAfterburnerCrackle"
+auto_width = false
+nodoppler = false
+silent_radius = 200
+peak_radius = 900
+inner_radius = 1200	
+outer_radius = 2500
+cone_inner_angle = 25
+cone_outer_angle = 65
+cone_outer_gain = 0
+direction = {-1, 0, 0}
+position = {0.0, 0.0, 0.0}
+gain = 50
+attack = 2.0
+release = 1.0

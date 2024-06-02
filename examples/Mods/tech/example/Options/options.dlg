@@ -1,0 +1,215 @@
+-- examplePlugin options
+-- @todo persist options
+
+local LeftMargin = 56
+
+local TitleSkin = {
+		["params"] = {
+			["name"] = "staticOptionsTitleSkin",
+		},
+		["states"] = {
+			["released"] = {
+				[1] = {
+					["text"] = {
+						["horzAlign"] = {
+							["type"] = "min"
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+local VersionSkin = {
+	["params"] = {
+		["name"] = "staticSkin2",
+	},
+	["states"] = {
+		["released"] = {
+			[1] = {
+				["text"] = {
+					["fontSize"] = 10,
+					["horzAlign"] = {
+						["type"] = "min"
+					}
+				}
+			}
+		}
+	}
+}
+
+local CheckBoxSkin = {
+	["params"] = {
+		["name"] = "checkBoxSkin_options",
+	},
+}
+
+local EditBoxSkin = {
+	["params"] = {
+		["name"] = "editBoxSkin_login",
+	},
+}
+
+local SliderSkin = {
+	["params"] = {
+		["name"] = "horzSliderSkin_options",
+	},
+}
+
+local ComboListSkin = {
+	["params"] = {
+		["name"] = "comboListSkin_options",
+	}
+}
+
+local LabelSkin = {
+	["params"] = {
+		["name"] = "staticOptionsCaptionSkin",
+	}
+}
+
+dialog = {
+	["children"] = {
+		["containerPlugin"] = {
+			["children"] = {
+				["examplePluginOptionsTitleLabel"] = {
+					["params"] = {
+						["bounds"] = {
+							["x"] = LeftMargin,
+							["y"] = 45,
+							["w"] = 380,
+							["h"] = 24,
+						},
+						["enabled"] = true,
+						["text"] = "$examplePluginTitle",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+					},
+					["skin"] = TitleSkin,
+					["type"] = "Static",
+				},
+				["examplePluginOptionsVersionLabel"] = {
+					["params"] = {
+						["bounds"] = {
+							["x"] = LeftMargin,
+							["y"] = 65,
+							["w"] = 380,
+							["h"] = 24,
+						},
+						["enabled"] = true,
+						["text"] = "$examplePluginVersion",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+					},
+					["skin"] = VersionSkin,
+					["type"] = "Static",
+				},
+				["examplePluginSliderOption"] = {
+					["params"] = {
+						["bounds"] = {
+							["h"] = 24,
+							["w"] = 380,
+							["x"] = LeftMargin,
+							["y"] = 100,
+						},
+						["enabled"] = true,
+						["step"] = 1,
+						["range"] = {
+							["max"] = 100,
+							["min"] = 1,
+						},
+						["tabOrder"] = 0,
+						["text"] = "$examplePluginVersion",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 1,
+					},
+					["skin"] = SliderSkin,
+					["type"] = "HorzSlider",
+				},
+				["examplePluginEditboxOption"] = {
+					["params"] = {
+						["bounds"] = {
+							["h"] = 24,
+							["w"] = 380,
+							["x"] = LeftMargin,
+							["y"] = 130,
+						},
+						["enabled"] = true,
+						["tabOrder"] = 0,
+						["text"] = "$examplePluginEditboxOption",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 1,
+					},
+					["skin"] = EditBoxSkin,
+					["type"] = "EditBox",
+				},
+				["examplePluginCheckboxOption"] = {
+					["params"] = {
+						["bounds"] = {
+							["h"] = 24,
+							["w"] = 380,
+							["x"] = LeftMargin,
+							["y"] = 160,
+						},
+						["enabled"] = true,
+						["state"] = false,
+						["tabOrder"] = 0,
+						["text"] = "examplePluginCheckboxOption label",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 1,
+					},
+					["skin"] = CheckBoxSkin,
+					["type"] = "CheckBox",
+				},
+			},
+			["params"] = {
+				["bounds"] = {
+					["h"] = 600,
+					["w"] = 974,
+					["x"] = 0,
+					["y"] = 0,
+				},
+				["enabled"] = true,
+				["text"] = "",
+				["tooltip"] = "",
+				["visible"] = true,
+				["zindex"] = 0,
+			},
+			["skin"] = {
+				["params"] = {
+					["name"] = "panelSkin",
+				},
+			},
+			["type"] = "Panel",
+		},
+	},
+	["params"] = {
+		["bounds"] = {
+			["h"] = 851,
+			["w"] = 1135,
+			["x"] = 0,
+			["y"] = 0,
+		},
+		["draggable"] = true,
+		["enabled"] = true,
+		["hasCursor"] = true,
+		["lockFlow"] = false,
+		["modal"] = false,
+		["offscreen"] = false,
+		["resizable"] = false,
+		["text"] = "New dialog",
+		["zOrder"] = 0,
+	},
+	["skin"] = {
+		["params"] = {
+			["name"] = "windowSkin",
+		},
+	},
+	["type"] = "Window",
+}

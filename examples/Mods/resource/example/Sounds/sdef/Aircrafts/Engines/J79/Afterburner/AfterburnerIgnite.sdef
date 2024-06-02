@@ -1,0 +1,9 @@
+wave = {"Effects/Aircrafts/Engines/Generic/Afterburner/ABLeadIn"}
+inner_radius = 250
+outer_radius = 1000
+cone_inner_angle = 25
+cone_outer_angle = 105
+cone_outer_gain = 0.1
+direction = {-1, 0, 0}
+position = {-4, 0, 0}
+gain = 50

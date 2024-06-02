@@ -1,0 +1,7 @@
+wave = "Effects/Aircrafts/Cockpits/HB_F-4E_Sound_J79_AfterburnerInterior"
+
+position = {-1.5, 0, 0}
+gain = 1.5
+inner_radius = 15
+attack = 1.5	
+release = 2.5
