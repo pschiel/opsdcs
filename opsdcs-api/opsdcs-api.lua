@@ -44,7 +44,7 @@ function OpsdcsApi:onSimulationResume()
     log.info("[opsdcs-api] onSimulationResume")
 end
 
--- runs every frame
+-- runs every frame (starting in main menu)
 function OpsdcsApi:onSimulationFrame()
     for _, server in ipairs({self.server, self.gserver}) do
         if server then
