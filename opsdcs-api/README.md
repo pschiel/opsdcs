@@ -60,12 +60,6 @@ GET http://127.0.0.1:31481/db-years - returns years info
 
 GET http://127.0.0.1:31481/db-years-launchers - returns years/launchers info
 
-GET http://127.0.0.1:31481/db-theatres - returns theatres info
+GET http://127.0.0.1:31481/db-theatres - returns installed theatres info
 
-GET http://127.0.0.1:31481/db-beacons-from-lua?path=beacon.lua - returns lua data from beacon file
-
-GET http://127.0.0.1:31481/db-radio-from-lua?path=radio.lua - returns lua data from radio file
-
-GET http://127.0.0.1:31481/db-nodes-from-lua?path=nodes.lua - returns lua data from nodes file
-
-GET http://127.0.0.1:31481/image?path=foo/bar.png - returns image from DCS files
+GET http://127.0.0.1:31481/db-terrains - returns beacons, radio and towns info from terrains

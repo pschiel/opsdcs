@@ -61,11 +61,10 @@ function OpsdcsApi:onSimulationFrame()
                     for key, value in queryString:gmatch("([^&=?]+)=([^&=?]+)") do
                         query[key] = value
                     end
-                    local response = self.response200
                     if method == "OPTIONS" then
                         client:send(self:responseOptions())
                     else
-                        local code = nil
+                        local code, result = nil, nil
                         if method == "GET" and path == "/health" then
                             code, result = self:getHealth()
                         elseif method == "GET" and path == "/mission-data" then
@@ -108,24 +107,11 @@ function OpsdcsApi:onSimulationFrame()
                             code, result = self:getDbObjects()
                         elseif method == "GET" and path == "/db-theatres" then
                             code, result = self:getDbTheatres()
-                        elseif method == "GET" and path == "/db-beacons-from-lua" then
-                            code, result = self:getDbBeaconsFromLua(query)
-                        elseif method == "GET" and path == "/db-radio-from-lua" then
-                            code, result = self:getDbRadioFromLua(query)
-                        elseif method == "GET" and path == "/db-nodes-from-lua" then
-                            code, result = self:getDbNodesFromLua(query)
-                        elseif method == "GET" and path == "/image" then
-                            code, result = self:getImage(query)
-                            if code == 200 then
-                                response = self.responseImage
-                            end
+                        elseif method == "GET" and path == "/db-terrains" then
+                            code, result = self:getDbTerrains()
                         end
                         if code == 200 then
-                            if response == self.responseImage then
-                                client:send(self:responseImage(result))
-                            else
-                                client:send(self:response200(result))
-                            end
+                            client:send(self:response200(result))
                         else
                             client:send(self:response404())
                         end
@@ -292,17 +278,6 @@ function OpsdcsApi:response404()
         .. "Content-Type: text/plain\r\n"
         .. self:defaultHeaders() .. "\r\n"
         .. "404 Not Found"
-end
-
--- image response
-function OpsdcsApi:responseImage(imageData, mimeType)
-    mimeType = mimeType or "image/png"
-    return "HTTP/1.1 200 OK\r\n"
-        .. "Content-Type: " .. mimeType .. "\r\n"
-        .. "Content-Length: " .. #imageData .. "\r\n"
-        .. "Cache-Control: no-cache\r\n"
-        .. self:defaultHeaders() .. "\r\n"
-        .. imageData
 end
 
 -- rotates two vectors around their axes by the given angle
@@ -520,64 +495,17 @@ function OpsdcsApi:getDbTheatres()
     return 200, result
 end
 
--- returns data from beacons.lua
-function OpsdcsApi:getDbBeaconsFromLua(query)
-    local path = query.path
-    local data = loadfile(path)
-    if data then
-        local success, result = pcall(function()
-            data()
-            return beacons
-        end)
-        if success then
-            return 200, result
-        end
+-- returns terrain data from lua files
+function OpsdcsApi:getDbTerrains()
+    local terrains = { "Caucasus", "Falklands", "Kola", "MarianaIslands", "Nevada", "Normandy", "PersianGulf", "Sinai", "Syria", "TheChannel" }
+    local result = {}
+    for _, terrain in ipairs(terrains) do
+        local hasBeacons, beacons = pcall(function() loadfile("./Mods/terrains/" .. terrain .. "/beacons.lua")() return beacons end)
+        local hasRadio, radio = pcall(function() loadfile("./Mods/terrains/" .. terrain .. "/radio.lua")() return radio end)
+        local hasTowns, towns = pcall(function() loadfile("./Mods/terrains/" .. terrain .. "/map/towns.lua")() return towns end)
+        result[terrain] = { beacons = hasBeacons and beacons or nil, radio = hasRadio and radio or nil, towns = hasTowns and towns or nil }
     end
-    return 404
-end
-
--- returns data from radio.lua
-function OpsdcsApi:getDbRadioFromLua(query)
-    local path = query.path
-    local data = loadfile(path)
-    if data then
-        local success, result = pcall(function()
-            data()
-            return radio
-        end)
-        if success then
-            return 200, result
-        end
-    end
-    return 404
-end
-
--- returns data from MissionGenerator/nodes.lua
-function OpsdcsApi:getDbNodesFromLua(query)
-    local path = query.path
-    local data = loadfile(path)
-    if data then
-        local success, result = pcall(function()
-            data()
-            return missionNodes
-        end)
-        if success then
-            return 200, result
-        end
-    end
-    return 404
-end
-
--- returns an image from internal files
-function OpsdcsApi:getImage(query)
-    local path = query.path
-    local file = io.open(path, "rb")
-    if file then
-        local data = file:read("*all")
-        file:close()
-        return 200, data
-    end
-    return 404
+    return 200, result
 end
 
 ------------------------------------------------------------------------------
