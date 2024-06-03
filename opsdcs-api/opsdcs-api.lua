@@ -11,7 +11,7 @@ OpsdcsApi = {}
 
 -- create socket once sim is started
 function OpsdcsApi:onSimulationStart()
-    log.info(string.format("[opsdcs-api] onSimulationStart, server: %s, mp: %s, track: %s", tostring(DCS.isServer()), tostring(DCS.isMultiplayer()), tostring(DCS.isTrackPlaying())))
+    log.info("[opsdcs-api] onSimulationStart")
     local socket = require("socket")
     self.server = assert(socket.bind("127.0.0.1", 31481))
     self.server:settimeout(0)
@@ -19,8 +19,6 @@ function OpsdcsApi:onSimulationStart()
     self.gserver:settimeout(0)
     self.targetCamera = nil  -- camera position for lerping
     self.staticObjects = {}  -- stores dynamically created static objects
-    self.isRunning = true
-    self.players = {}
 end
 
 -- close sockets
