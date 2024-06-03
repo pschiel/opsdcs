@@ -11,6 +11,7 @@ OpsdcsApi = {}
 
 -- create socket once sim is started
 function OpsdcsApi:onSimulationStart()
+    log.info(string.format("[opsdcs-api] onSimulationStart, server: %s, mp: %s, track: %s", tostring(DCS.isServer()), tostring(DCS.isMultiplayer()), tostring(DCS.isTrackPlaying())))
     local socket = require("socket")
     self.server = assert(socket.bind("127.0.0.1", 31481))
     self.server:settimeout(0)
@@ -19,10 +20,12 @@ function OpsdcsApi:onSimulationStart()
     self.targetCamera = nil  -- camera position for lerping
     self.staticObjects = {}  -- stores dynamically created static objects
     self.isRunning = true
+    self.players = {}
 end
 
 -- close sockets
 function OpsdcsApi:onSimulationStop()
+    log.info("[opsdcs-api] onSimulationStop")
     if self.server then
         self.server:close()
         self.server = nil
@@ -31,6 +34,16 @@ function OpsdcsApi:onSimulationStop()
         self.gserver:close()
         self.gserver = nil
     end
+end
+
+-- simulation paused
+function OpsdcsApi:onSimulationPause()
+    log.info("[opsdcs-api] onSimulationPause")
+end
+
+-- simulation resumed
+function OpsdcsApi:onSimulationResume()
+    log.info("[opsdcs-api] onSimulationResume")
 end
 
 -- runs every frame
@@ -126,6 +139,45 @@ function OpsdcsApi:onSimulationFrame()
     end
     self:handleCamera()
 end
+
+-- mission begin/end
+function OpsdcsApi:onMissionLoadBegin()
+    log.info("[opsdcs-api] onMissionLoadBegin")
+end
+function OpsdcsApi:onMissionLoadEnd(x)
+    log.info("[opsdcs-api] onMissionLoadEnd")
+end
+
+-- server callbacks
+function OpsdcsApi:onPlayerConnect(id)
+    log.info("[opsdcs-api] onPlayerConnect: " .. tostring(id))
+end
+function OpsdcsApi:onPlayerDisconnect(id)
+    log.info("[opsdcs-api] onPlayerDisconnect: " .. tostring(id))
+end
+function OpsdcsApi:onPlayerStart(id)
+    log.info("[opsdcs-api] onPlayerStart: " .. tostring(id))
+end
+function OpsdcsApi:onPlayerStop(id)
+    log.info("[opsdcs-api] onPlayerStop: " .. tostring(id))
+end
+function OpsdcsApi:onPlayerChangeSlot(id)
+    log.info("[opsdcs-api] onPlayerChangeSlot: " .. tostring(id))
+end
+function OpsdcsApi:onPlayerTryConnect(addr, ucid, name, id)
+    log.info("[opsdcs-api] onPlayerTryConnect: " .. tostring(addr) .. "/" .. tostring(ucid) .. "/" .. tostring(name) .. "/" .. tostring(id))
+    return true
+end
+function OpsdcsApi:onPlayerTrySendChat(id, message, all)
+    log.info("[opsdcs-api] onPlayerTrySendChat: " .. tostring(id) .. "/" .. tostring(message) .. "/" .. tostring(all))
+    return message
+end
+function OpsdcsApi:onPlayerTryChangeSlot(id, side, slot)
+    log.info("[opsdcs-api] onPlayerTryChangeSlot: " .. tostring(id) .. "/" .. tostring(side) .. "/" .. tostring(slot))
+    return true
+end
+
+------------------------------------------------------------------------------
 
 -- handles camera movement
 function OpsdcsApi:handleCamera()
@@ -280,6 +332,8 @@ function OpsdcsApi:deg2rad(degrees)
     end
     return degrees * (math.pi / 180)
 end
+
+------------------------------------------------------------------------------
 
 -- health check
 function OpsdcsApi:getHealth()
@@ -528,8 +582,24 @@ function OpsdcsApi:getImage(query)
     return 404
 end
 
+------------------------------------------------------------------------------
+
 DCS.setUserCallbacks({
-    onSimulationStart = function() OpsdcsApi:onSimulationStart() end,
-    onSimulationStop = function() OpsdcsApi:onSimulationStop() end,
-    onSimulationFrame = function() OpsdcsApi:onSimulationFrame() end	
+    onSimulationStart = function(...) OpsdcsApi:onSimulationStart(...) end,
+    onSimulationStop = function(...) OpsdcsApi:onSimulationStop(...) end,
+    onSimulationFrame = function(...) OpsdcsApi:onSimulationFrame(...) end,
+    onSimulationPause = function(...) OpsdcsApi:onSimulationPause(...) end,
+    onSimulationResume = function(...) OpsdcsApi:onSimulationResume(...) end,
+    onMissionLoadBegin = function(...) OpsdcsApi:onMissionLoadBegin(...) end,
+    onMissionLoadEnd = function(...) OpsdcsApi:onMissionLoadEnd(...) end,
+    onPlayerConnect = function(...) OpsdcsApi:onPlayerConnect(...) end,
+    onPlayerDisconnect = function(...) OpsdcsApi:onPlayerDisconnect(...) end,
+    onPlayerStart = function(...) OpsdcsApi:onPlayerStart(...) end,
+    onPlayerStop = function(...) OpsdcsApi:onPlayerStop(...) end,
+    onPlayerChangeSlot = function(...) OpsdcsApi:onPlayerChangeSlot(...) end,
+    onPlayerTryConnect = function(...) OpsdcsApi:onPlayerTryConnect(...) end,
+    onPlayerTrySendChat = function(...) OpsdcsApi:onPlayerTrySendChat(...) end,
+    onPlayerTryChangeSlot = function(...) OpsdcsApi:onPlayerTryChangeSlot(...) end,      
 })
+
+log.info("[opsdcs-api] loaded")
