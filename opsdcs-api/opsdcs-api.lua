@@ -17,6 +17,8 @@ function OpsdcsApi:startServer()
     self.server = assert(socket.bind(self.host, self.port))
     self.server:settimeout(0)
     self.targetCamera = nil
+    self.defaultTargetCameraLerp = 0.05
+    self.defaultCameraCommands = { 158, 36 }
     self.staticObjects = {}
     self.hasSimulationStarted = false
     self.hasSimulationPaused = true
@@ -360,8 +362,8 @@ function OpsdcsApi:postSetCameraPosition(data)
             z = orientation.z,
             p = { x = x, y = y, z = z }
         }
-        self.targetCameraLerp = data.lerp or 0.05
-        data.commands = data.commands or { 158, 36 }
+        self.targetCameraLerp = data.lerp or self.defaultTargetCameraLerp
+        data.commands = data.commands or self.defaultCameraCommands
     end
     if data.commands then
         for _, command in ipairs(data.commands) do
