@@ -10,6 +10,7 @@ for livery and kneeboard folders
     AV8BNA
     C-101CC
     C-101EB
+    F-4E
     F-14A-135-GR
     F-14B
     F-15C
