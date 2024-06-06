@@ -1,166 +1,160 @@
 -- OpsdcsApi - simple and lightweight JSON API for DCS
 
 -- debug
--- pcall(function()
---     package.cpath = package.cpath .. ';C:/Users/ops/.vscode/extensions/tangzx.emmylua-0.6.18/debugger/emmy/windows/x64/?.dll'
---     local dbg = require('emmy_core')
---     dbg.tcpConnect('localhost', 9966)
--- end)
+-- pcall(function() package.cpath = package.cpath .. ";C:/Users/ops/.vscode/extensions/tangzx.emmylua-0.6.18/debugger/emmy/windows/x64/?.dll"; local dbg = require("emmy_core"); dbg.tcpConnect("localhost", 9966) end)
 
-OpsdcsApi = {}
+OpsdcsApi = { host = "127.0.0.1", port = 31481, logging = true }
 
--- create socket once sim is started
-function OpsdcsApi:onSimulationStart()
-    log.info("[opsdcs-api] onSimulationStart")
-    local socket = require("socket")
-    self.server = assert(socket.bind("127.0.0.1", 31481))
-    self.server:settimeout(0)
-    self.gserver = assert(socket.bind("127.0.0.1", 31480))  -- just for dwe support
-    self.gserver:settimeout(0)
-    self.targetCamera = nil  -- camera position for lerping
-    self.staticObjects = {}  -- stores dynamically created static objects
+-- log helper
+function OpsdcsApi:log(message, ...)
+    if self.logging then log.info("[opsdcs-api] " .. string.format(message, ...)) end
 end
 
--- close sockets
-function OpsdcsApi:onSimulationStop()
-    log.info("[opsdcs-api] onSimulationStop")
+-- starts server
+function OpsdcsApi:startServer()
+    local socket = require("socket")
+    self:log("starting server")
+    self.server = assert(socket.bind(self.host, self.port))
+    self.server:settimeout(0)
+    self.targetCamera = nil
+    self.staticObjects = {}
+    self.hasSimulationStarted = false
+    self.hasSimulationPaused = true
+    self.isMissionLoading = false
+    self.gserver = assert(socket.bind(self.host, 31480)); self.gserver:settimeout(0)  -- for dwe
+end
+
+-- stops server
+function OpsdcsApi:stopServer()
+    self:log("stopping server")
     if self.server then
         self.server:close()
         self.server = nil
     end
-    if self.gserver then
-        self.gserver:close()
-        self.gserver = nil
-    end
+    if self.gserver then self.gserver:close() self.gserver = nil end  -- for dwe
+end
+
+-- simulation start (main menu)
+function OpsdcsApi:onSimulationStart()
+    self:log("onSimulationStart")
+    self.staticObjects = {}
+    self.hasSimulationStarted = true
+end
+
+-- simulation stopped
+function OpsdcsApi:onSimulationStop()
+    self:log("onSimulationStop")
+    self.hasSimulationStarted = false
+    self.hasSimulationPaused = true
 end
 
 -- simulation paused
 function OpsdcsApi:onSimulationPause()
-    log.info("[opsdcs-api] onSimulationPause")
+    self:log("onSimulationPause")
+    self.hasSimulationPaused = true
 end
 
 -- simulation resumed
 function OpsdcsApi:onSimulationResume()
-    log.info("[opsdcs-api] onSimulationResume")
+    self:log("onSimulationResume")
+    self.hasSimulationPaused = false
 end
 
 -- runs every frame (starting in main menu)
 function OpsdcsApi:onSimulationFrame()
-    for _, server in ipairs({self.server, self.gserver}) do
-        if server then
-            local client = server:accept()
-            if client then
-                client:settimeout(60)
-                local request, err = client:receive()
-                if not err then
-                    local method, path, slug, queryString = request:match("^(%w+)%s(/[^%?]+)([^%?]*)%??(.*)%sHTTP/%d%.%d$")
-                    local headers = self:getHeaders(client)
-                    local data = self:getBodyData(client, headers)
-                    if slug == "" then slug = nil end
-                    local query = {}
-                    for key, value in queryString:gmatch("([^&=?]+)=([^&=?]+)") do
-                        query[key] = value
+    if self.isMissionLoading then return end  -- do nothing during loading
+    for _, server in ipairs({self.server, self.gserver}) do if server then  -- for dwe
+        local client = server:accept()
+        if client then
+            client:settimeout(60)
+            local request, err = client:receive()
+            if not err then
+                local method, path, slug, queryString = request:match("^(%w+)%s(/[^%?]+)([^%?]*)%??(.*)%sHTTP/%d%.%d$")
+                local headers = self:getHeaders(client)
+                local data = self:getBodyData(client, headers)
+                if slug == "" then slug = nil end
+                local query = {}
+                for key, value in queryString:gmatch("([^&=?]+)=([^&=?]+)") do
+                    query[key] = value
+                end
+                if method == "OPTIONS" then
+                    client:send(self:responseOptions())
+                else
+                    local code, result = nil, nil
+                    if method == "GET" and path == "/health" then
+                        code, result = self:getHealth()
+                    elseif method == "GET" and path == "/current-mission" then
+                        code, result = self:getCurrentMission()
+                    elseif method == "POST" and path == "/lua" then
+                        code, result = self:postLua(data)
+                    elseif method == "GET" and path == "/static-objects" then
+                        code, result = self:getStaticObjects()
+                    elseif method == "POST" and path == "/static-objects" then
+                        code, result = self:postStaticObjects(data)
+                    elseif method == "DELETE" and path == "/static-objects" then
+                        code, result = self:deleteStaticObjects(slug, data)
+                    elseif method == "POST" and path == "/groups" then
+                        code, result = self:postGroups(data)
+                    elseif method == "POST" and path == "/set-camera-position" then
+                        code, result = self:postSetCameraPosition(data)
+                    elseif method == "GET" and path == "/export-world-objects" then
+                        code, result = self:getExportWorldObjects()
+                    elseif method == "GET" and path == "/db-countries" then
+                        code, result = self:getDbCountries()
+                    elseif method == "GET" and path == "/db-countries-by-name" then
+                        code, result = self:getDbCountriesByName()
+                    elseif method == "GET" and path == "/db-units" then
+                        code, result = self:getDbUnits()
+                    elseif method == "GET" and path == "/db-weapons" then
+                        code, result = self:getDbWeapons()
+                    elseif method == "GET" and path == "/db-callnames" then
+                        code, result = self:getDbCallnames()
+                    elseif method == "GET" and path == "/db-sensors" then
+                        code, result = self:getDbSensors()
+                    elseif method == "GET" and path == "/db-pods" then
+                        code, result = self:getDbPods()
+                    elseif method == "GET" and path == "/db-years" then
+                        code, result = self:getDbYears()
+                    elseif method == "GET" and path == "/db-years-launchers" then
+                        code, result = self:getDbYearsLaunchers()
+                    elseif method == "GET" and path == "/db-farp-objects" then
+                        code, result = self:getDbFarpObjects()
+                    elseif method == "GET" and path == "/db-objects" then
+                        code, result = self:getDbObjects()
+                    elseif method == "GET" and path == "/db-theatres" then
+                        code, result = self:getDbTheatres()
+                    elseif method == "GET" and path == "/db-terrains" then
+                        code, result = self:getDbTerrains()
+                    elseif method == "GET" and path == "/mission-data" then  -- for dwe
+                        code, result = self:getCurrentMission()
+                    elseif method == "DELETE" and path == "/clear-all" then  -- for dwe
+                        code, result = self:deleteStaticObjects("all")
                     end
-                    if method == "OPTIONS" then
-                        client:send(self:responseOptions())
+                    if code == 200 then
+                        client:send(self:response200(result))
                     else
-                        local code, result = nil, nil
-                        if method == "GET" and path == "/health" then
-                            code, result = self:getHealth()
-                        elseif method == "GET" and path == "/mission-data" then
-                            code, result = self:getMissionData()
-                        elseif method == "POST" and path == "/lua" then
-                            code, result = self:postLua(data)
-                        elseif method == "GET" and path == "/static-objects" then
-                            code, result = self:getStaticObjects()
-                        elseif method == "POST" and path == "/static-objects" then
-                            code, result = self:postStaticObjects(data)
-                        elseif method == "POST" and path == "/delete-static-objects" then
-                            code, result = self:postDeleteStaticObjects(data)
-                        elseif method == "DELETE" and path == "/clear-all" then
-                            code, result = self:deleteAllStaticObjects()
-                        elseif method == "POST" and path == "/set-camera-position" then
-                            code, result = self:postSetCameraPosition(data)
-                        elseif method == "GET" and path == "/export-world-objects" then
-                            code, result = self:getExportWorldObjects()
-                        elseif method == "GET" and path == "/db-countries" then
-                            code, result = self:getDbCountries()
-                        elseif method == "GET" and path == "/db-countries-by-name" then
-                            code, result = self:getDbCountriesByName()
-                        elseif method == "GET" and path == "/db-units" then
-                            code, result = self:getDbUnits()
-                        elseif method == "GET" and path == "/db-weapons" then
-                            code, result = self:getDbWeapons()
-                        elseif method == "GET" and path == "/db-callnames" then
-                            code, result = self:getDbCallnames()
-                        elseif method == "GET" and path == "/db-sensors" then
-                            code, result = self:getDbSensors()
-                        elseif method == "GET" and path == "/db-pods" then
-                            code, result = self:getDbPods()
-                        elseif method == "GET" and path == "/db-years" then
-                            code, result = self:getDbYears()
-                        elseif method == "GET" and path == "/db-years-launchers" then
-                            code, result = self:getDbYearsLaunchers()
-                        elseif method == "GET" and path == "/db-farp-objects" then
-                            code, result = self:getDbFarpObjects()
-                        elseif method == "GET" and path == "/db-objects" then
-                            code, result = self:getDbObjects()
-                        elseif method == "GET" and path == "/db-theatres" then
-                            code, result = self:getDbTheatres()
-                        elseif method == "GET" and path == "/db-terrains" then
-                            code, result = self:getDbTerrains()
-                        end
-                        if code == 200 then
-                            client:send(self:response200(result))
-                        else
-                            client:send(self:response404())
-                        end
+                        client:send(self:response404())
                     end
                 end
-                client:close()
             end
+            client:close()
         end
-    end
+    end end  -- for dwe
     self:handleCamera()
 end
 
--- mission begin/end
+-- mission load begin/end
 function OpsdcsApi:onMissionLoadBegin()
-    log.info("[opsdcs-api] onMissionLoadBegin")
+    self:log("onMissionLoadBegin")
+    self.isMissionLoading = true
 end
-function OpsdcsApi:onMissionLoadEnd(x)
-    log.info("[opsdcs-api] onMissionLoadEnd")
-end
-
--- server callbacks
-function OpsdcsApi:onPlayerConnect(id)
-    log.info("[opsdcs-api] onPlayerConnect: " .. tostring(id))
-end
-function OpsdcsApi:onPlayerDisconnect(id)
-    log.info("[opsdcs-api] onPlayerDisconnect: " .. tostring(id))
-end
-function OpsdcsApi:onPlayerStart(id)
-    log.info("[opsdcs-api] onPlayerStart: " .. tostring(id))
-end
-function OpsdcsApi:onPlayerStop(id)
-    log.info("[opsdcs-api] onPlayerStop: " .. tostring(id))
-end
-function OpsdcsApi:onPlayerChangeSlot(id)
-    log.info("[opsdcs-api] onPlayerChangeSlot: " .. tostring(id))
-end
-function OpsdcsApi:onPlayerTryConnect(addr, ucid, name, id)
-    log.info("[opsdcs-api] onPlayerTryConnect: " .. tostring(addr) .. "/" .. tostring(ucid) .. "/" .. tostring(name) .. "/" .. tostring(id))
-    return true
-end
-function OpsdcsApi:onPlayerTrySendChat(id, message, all)
-    log.info("[opsdcs-api] onPlayerTrySendChat: " .. tostring(id) .. "/" .. tostring(message) .. "/" .. tostring(all))
-    return message
-end
-function OpsdcsApi:onPlayerTryChangeSlot(id, side, slot)
-    log.info("[opsdcs-api] onPlayerTryChangeSlot: " .. tostring(id) .. "/" .. tostring(side) .. "/" .. tostring(slot))
-    return true
+function OpsdcsApi:onMissionLoadEnd()
+    self:log("onMissionLoadEnd")
+    self.isMissionLoading = false
 end
 
+------------------------------------------------------------------------------
+-- helper functions
 ------------------------------------------------------------------------------
 
 -- handles camera movement
@@ -307,25 +301,26 @@ function OpsdcsApi:deg2rad(degrees)
 end
 
 ------------------------------------------------------------------------------
+-- endpoints
+------------------------------------------------------------------------------
 
 -- health check
 function OpsdcsApi:getHealth()
     local result = {
-        missionServerRunning = true,
-        missionRunning = DCS.getCurrentMission() ~= nil,
+        hasSimulationStarted = self.hasSimulationStarted,
+        hasSimulationPaused = self.hasSimulationPaused,
+        isServer = DCS.isServer(),
+        isMultiplayer = DCS.isMultiplayer(),
+        isTrackPlaying = DCS.isTrackPlaying()
     }
+    result.missionServerRunning = true  -- for dwe
+    result.missionRunning = self.hasSimulationStarted  -- for dwe
     return 200, result
 end
 
--- returns mission data
-function OpsdcsApi:getMissionData()
-    local result = DCS.getCurrentMission()
-    return 200, result
-end
-
--- returns dynamically created static objects
-function OpsdcsApi:getStaticObjects()
-    local result = self.staticObjects
+-- returns current mission data
+function OpsdcsApi:getCurrentMission()
+    local result = DCS.getCurrentMission() or {}
     return 200, result
 end
 
@@ -365,6 +360,12 @@ function OpsdcsApi:postSetCameraPosition(data)
     return 200
 end
 
+-- returns dynamically created static objects
+function OpsdcsApi:getStaticObjects()
+    local result = self.staticObjects
+    return 200, result
+end
+
 -- creates static objects
 function OpsdcsApi:postStaticObjects(data)
     local result = {}
@@ -398,23 +399,30 @@ function OpsdcsApi:postStaticObjects(data)
 end
 
 -- deletes static objects
-function OpsdcsApi:postDeleteStaticObjects(data)
-    for _, name in ipairs(data) do
-        local luaCode = [[a_do_script('StaticObject.getByName("]] .. name .. [["):destroy()')]]
-        net.dostring_in("mission", luaCode)
-        self.staticObjects[name] = nil
+function OpsdcsApi:deleteStaticObjects(slug, data)
+    if slug == "all" then
+        for name, _ in pairs(self.staticObjects) do
+            local luaCode = [[a_do_script('StaticObject.getByName("]] .. name .. [["):destroy()')]]
+            net.dostring_in("mission", luaCode)
+            self.staticObjects[name] = nil
+        end
+    else
+        for _, name in ipairs(data) do
+            local luaCode = [[a_do_script('StaticObject.getByName("]] .. name .. [["):destroy()')]]
+            net.dostring_in("mission", luaCode)
+            self.staticObjects[name] = nil
+        end
     end
     return 200
 end
 
--- deletes all static objects
-function OpsdcsApi:deleteAllStaticObjects()
-    for name, _ in pairs(self.staticObjects) do
-        local luaCode = [[a_do_script('StaticObject.getByName("]] .. name .. [["):destroy()')]]
-        net.dostring_in("mission", luaCode)
-        self.staticObjects[name] = nil
+-- creates groups
+function OpsdcsApi:postGroups(data)
+    local result = {}
+    for _, group in ipairs(data) do
+        -- @todo
     end
-    return 200
+    return 200, result
 end
 
 -- returns Export world objects
@@ -465,33 +473,33 @@ function OpsdcsApi:getDbPods()
     return 200, result
 end
 
--- returns _G.dbYears
+-- returns dbYears
 function OpsdcsApi:getDbYears()
-    local result = _G.dbYears
+    local result = dbYears
     return 200, result
 end
 
--- returns _G.dbYearsLaunchers
+-- returns dbYearsLaunchers
 function OpsdcsApi:getDbYearsLaunchers()
-    local result = _G.dbYearsLaunchers
+    local result = dbYearsLaunchers
     return 200, result
 end
 
--- returns _G.FARP_data.FARP_objects
+-- returns FARP_data.FARP_objects
 function OpsdcsApi:getDbFarpObjects()
-    local result = _G.FARP_data.FARP_objects
+    local result = FARP_data.FARP_objects
     return 200, result
 end
 
--- returns _G.Objects
+-- returns Objects
 function OpsdcsApi:getDbObjects()
-    local result = _G.Objects
+    local result = Objects
     return 200, result
 end
 
--- returns _G.theatresByName
+-- returns theatresByName
 function OpsdcsApi:getDbTheatres()
-    local result = _G.theatresByName
+    local result = theatresByName
     return 200, result
 end
 
@@ -511,21 +519,32 @@ end
 ------------------------------------------------------------------------------
 
 DCS.setUserCallbacks({
-    onSimulationStart = function(...) OpsdcsApi:onSimulationStart(...) end,
-    onSimulationStop = function(...) OpsdcsApi:onSimulationStop(...) end,
-    onSimulationFrame = function(...) OpsdcsApi:onSimulationFrame(...) end,
-    onSimulationPause = function(...) OpsdcsApi:onSimulationPause(...) end,
-    onSimulationResume = function(...) OpsdcsApi:onSimulationResume(...) end,
-    onMissionLoadBegin = function(...) OpsdcsApi:onMissionLoadBegin(...) end,
-    onMissionLoadEnd = function(...) OpsdcsApi:onMissionLoadEnd(...) end,
-    onPlayerConnect = function(...) OpsdcsApi:onPlayerConnect(...) end,
-    onPlayerDisconnect = function(...) OpsdcsApi:onPlayerDisconnect(...) end,
-    onPlayerStart = function(...) OpsdcsApi:onPlayerStart(...) end,
-    onPlayerStop = function(...) OpsdcsApi:onPlayerStop(...) end,
-    onPlayerChangeSlot = function(...) OpsdcsApi:onPlayerChangeSlot(...) end,
-    onPlayerTryConnect = function(...) OpsdcsApi:onPlayerTryConnect(...) end,
-    onPlayerTrySendChat = function(...) OpsdcsApi:onPlayerTrySendChat(...) end,
-    onPlayerTryChangeSlot = function(...) OpsdcsApi:onPlayerTryChangeSlot(...) end,      
+    onSimulationStart = function() OpsdcsApi:onSimulationStart() end,
+    onSimulationStop = function() OpsdcsApi:onSimulationStop() end,
+    onSimulationFrame = function() OpsdcsApi:onSimulationFrame() end,
+    onSimulationPause = function() OpsdcsApi:onSimulationPause() end,
+    onSimulationResume = function() OpsdcsApi:onSimulationResume() end,
+    onMissionLoadBegin = function() OpsdcsApi:onMissionLoadBegin() end,
+    onMissionLoadEnd = function() OpsdcsApi:onMissionLoadEnd() end,
+    -- n/i
+    onPlayerConnect = function(id) OpsdcsApi:log("onPlayerConnect: %d", id) end,
+    onPlayerDisconnect = function(id) OpsdcsApi:log("onPlayerDisconnect: %d", id) end,
+    onPlayerStart = function(id) OpsdcsApi:log("onPlayerStart: %d", id) end,
+    onPlayerStop = function(id) OpsdcsApi:log("onPlayerStop: %d", id) end,
+    onPlayerChangeSlot = function(id) OpsdcsApi:log("onPlayerChangeSlot: %d", id) end,
+    onPlayerTryConnect = function(addr, ucid, name, id) OpsdcsApi:log("onPlayerTryConnect: %s %s %s %d", addr, ucid, name, id) end,
+    onPlayerTrySendChat = function(id, message, all) OpsdcsApi:log("onPlayerTrySendChat: %d %s %s", id, message, all) end,
+    onPlayerTryChangeSlot = function(id, side, slot) OpsdcsApi:log("onPlayerTryChangeSlot: %d %d %d", id, side, slot) end,
+    onGameEvent = function(eventName) OpsdcsApi:log("onGameEvent: %s", eventName) end,
+    onShowBriefing = function() OpsdcsApi:log("onShowBriefing") end,
+    onShowGameMenu = function() OpsdcsApi:log("onShowGameMenu") end,
+    onTriggerMessage = function(message, duration, clearView) OpsdcsApi:log("onTriggerMessage: %s %.2f %s", message, duration, clearView) end,
+    onRadioMessage = function(message, duration) OpsdcsApi:log("onRadioMessage: %s %.2f", message, duration) end,
+    onChatMessage = function (message, id) OpsdcsApi:log("onChatMessage: %s %d", message, id) end,
+    onShowRadioMenu = function(id) OpsdcsApi:log("onShowRadioMenu: %d", id) end,
+    onNetConnect = function(id) OpsdcsApi:log("onNetConnect: %d", id) end,
+    onNetDisconnect = function() OpsdcsApi:log("onNetDisconnect") end,
+    onNetMissionChanged = function(missionName) OpsdcsApi:log("onNetMissionChanged: %s", missionName) end,
 })
 
-log.info("[opsdcs-api] loaded")
+OpsdcsApi:startServer()
