@@ -88,7 +88,7 @@ function OpsdcsApi:onSimulationFrame()
                     elseif method == "POST" and path == "/lua" then
                         code, result = self:postLua(data)
                     elseif method == "GET" and path == "/static-objects" then
-                        code, result = self:getStaticObjects()
+                        code, result = self:getStaticObjects(slug)
                     elseif method == "POST" and path == "/static-objects" then
                         code, result = self:postStaticObjects(data)
                     elseif method == "DELETE" and path == "/static-objects" then
@@ -99,6 +99,10 @@ function OpsdcsApi:onSimulationFrame()
                         code, result = self:postSetCameraPosition(data)
                     elseif method == "GET" and path == "/export-world-objects" then
                         code, result = self:getExportWorldObjects()
+                    elseif method == "GET" and path == "/export-self-data" then
+                        code, result = self:getExportSelfData()
+                    elseif method == "GET" and path == "/player-unit" then
+                        code, result = self:getPlayerUnit()
                     elseif method == "GET" and path == "/db-countries" then
                         code, result = self:getDbCountries()
                     elseif method == "GET" and path == "/db-countries-by-name" then
@@ -125,10 +129,16 @@ function OpsdcsApi:onSimulationFrame()
                         code, result = self:getDbTheatres()
                     elseif method == "GET" and path == "/db-terrains" then
                         code, result = self:getDbTerrains()
+                    elseif method == "POST" and path == "/start-mission-server" then  -- for dwe
+                        code, result = 200, {}
                     elseif method == "GET" and path == "/mission-data" then  -- for dwe
                         code, result = self:getCurrentMission()
                     elseif method == "DELETE" and path == "/clear-all" then  -- for dwe
                         code, result = self:deleteStaticObjects("all")
+                    elseif method == "GET" and path == "/position-player" then  -- for dwe
+                        code, result = self:getExportSelfData()
+                    elseif method == "GET" and path == "/player-id" then  -- for dwe
+                        code, result = self:getPlayerUnit()
                     end
                     if code == 200 then
                         client:send(self:response200(result))
@@ -162,7 +172,7 @@ function OpsdcsApi:handleCamera()
     if self.targetCamera then
         local camera = Export.LoGetCameraPosition()
         if not self:cameraEquals(camera, self.targetCamera, 0.01) then
-            Export.LoSetCameraPosition(self:lerpCamera(camera, self.targetCamera, 0.05))
+            Export.LoSetCameraPosition(self:lerpCamera(camera, self.targetCamera, self.targetCameraLerp))
         else
             self.targetCamera = nil
         end
@@ -350,6 +360,7 @@ function OpsdcsApi:postSetCameraPosition(data)
             z = orientation.z,
             p = { x = x, y = y, z = z }
         }
+        self.targetCameraLerp = data.lerp or 0.05
         data.commands = data.commands or { 158, 36 }
     end
     if data.commands then
@@ -361,8 +372,18 @@ function OpsdcsApi:postSetCameraPosition(data)
 end
 
 -- returns dynamically created static objects
-function OpsdcsApi:getStaticObjects()
-    local result = self.staticObjects
+function OpsdcsApi:getStaticObjects(id)
+    local result = {}
+    if id == nil then
+        result = self.staticObjects
+    else
+        for _, static in pairs(self.staticObjects) do
+            if static.unitId == id then
+                result = static
+                break
+            end
+        end
+    end
     return 200, result
 end
 
@@ -400,6 +421,7 @@ end
 
 -- deletes static objects
 function OpsdcsApi:deleteStaticObjects(slug, data)
+    local result = {}
     if slug == "all" then
         for name, _ in pairs(self.staticObjects) do
             local luaCode = [[a_do_script('StaticObject.getByName("]] .. name .. [["):destroy()')]]
@@ -408,12 +430,16 @@ function OpsdcsApi:deleteStaticObjects(slug, data)
         end
     else
         for _, name in ipairs(data) do
-            local luaCode = [[a_do_script('StaticObject.getByName("]] .. name .. [["):destroy()')]]
-            net.dostring_in("mission", luaCode)
-            self.staticObjects[name] = nil
+            if self.staticObjects[name] then
+                local luaCode = [[a_do_script('StaticObject.getByName("]] .. name .. [["):destroy()')]]
+                net.dostring_in("mission", luaCode)
+                self.staticObjects[name] = nil
+            else
+                table.insert(result, "static object not found: " .. name)
+            end
         end
     end
-    return 200
+    return 200, result
 end
 
 -- creates groups
@@ -428,6 +454,18 @@ end
 -- returns Export world objects
 function OpsdcsApi:getExportWorldObjects()
     local result = Export.LoGetWorldObjects()
+    return 200, result
+end
+
+-- returns player data
+function OpsdcsApi:getExportSelfData()
+    local result = Export.LoGetSelfData()
+    return 200, result
+end
+
+-- returns player unit
+function OpsdcsApi:getPlayerUnit()
+    local result = DCS.getPlayerUnit()
     return 200, result
 end
 
