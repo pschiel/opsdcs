@@ -1,7 +1,7 @@
 -- OpsdcsApi - simple and lightweight JSON API for DCS
 
 -- debug
--- pcall(function() package.cpath = package.cpath .. ";C:/Users/ops/.vscode/extensions/tangzx.emmylua-0.6.18/debugger/emmy/windows/x64/?.dll"; local dbg = require("emmy_core"); dbg.tcpConnect("localhost", 9966) end)
+pcall(function() package.cpath = package.cpath .. ";C:/Users/ops/.vscode/extensions/tangzx.emmylua-0.6.18/debugger/emmy/windows/x64/?.dll"; local dbg = require("emmy_core"); dbg.tcpConnect("localhost", 9966) end)
 
 OpsdcsApi = { host = "127.0.0.1", port = 31481, logging = true }
 
@@ -392,6 +392,7 @@ end
 -- creates static objects
 function OpsdcsApi:postStaticObjects(data)
     local result = {}
+    local luaCode = ""
     for _, static in ipairs(data) do
         local pos = Export.LoGeoCoordinatesToLoCoordinates(static.position[1], static.position[2])
         local staticObject = {
@@ -413,10 +414,13 @@ function OpsdcsApi:postStaticObjects(data)
             canCargo = static.canCargo or nil,
             livery_id = static.livery_id or nil,
         }
-        local luaCode = "a_do_script([[coalition.addStaticObject(" .. static.country .. "," .. self:serializeTable(staticObject) .. ")]])";
-        net.dostring_in("mission", luaCode)
+        luaCode = luaCode .. "coalition.addStaticObject(" .. static.country .. "," .. self:serializeTable(staticObject) .. ");"
         self.staticObjects[staticObject.name] = staticObject
         table.insert(result, staticObject)
+    end
+    if luaCode ~= "" then
+        luaCode = "a_do_script([[" .. luaCode .. "]])"
+        net.dostring_in("mission", luaCode)
     end
     return 200, result
 end
@@ -424,24 +428,27 @@ end
 -- deletes static objects
 function OpsdcsApi:deleteStaticObjects(slug, data)
     local result = {}
+    local luaCode = ""
     if slug == "all" then
         for name, _ in pairs(self.staticObjects) do
-            local luaCode = [[a_do_script('StaticObject.getByName("]] .. name .. [["):destroy()')]]
-            net.dostring_in("mission", luaCode)
+            luaCode = luaCode .. 'local s=StaticObject.getByName("' .. name .. '");if s then s:destroy() end;'
             self.staticObjects[name] = nil
         end
     else
         for _, name in ipairs(data) do
             if self.staticObjects[name] then
-                local luaCode = [[a_do_script('StaticObject.getByName("]] .. name .. [["):destroy()')]]
-                net.dostring_in("mission", luaCode)
+                luaCode = luaCode .. 'local s=StaticObject.getByName("' .. name .. '");if s then s:destroy() end;'
                 self.staticObjects[name] = nil
             else
                 table.insert(result, "static object not found: " .. name)
             end
         end
     end
-    return 200, result
+    if luaCode ~= "" then
+        luaCode = "a_do_script([[" .. luaCode .. "]])"
+        net.dostring_in("mission", luaCode)
+    end
+return 200, result
 end
 
 -- creates groups
