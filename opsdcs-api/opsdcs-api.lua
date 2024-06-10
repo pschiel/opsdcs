@@ -97,6 +97,8 @@ function OpsdcsApi:onSimulationFrame()
                         code, result = self:deleteStaticObjects(slug, data)
                     elseif method == "POST" and path == "/groups" then
                         code, result = self:postGroups(data)
+                    elseif method == "GET" and path == "/camera-position" then
+                        code, result = self:getCameraPosition()
                     elseif method == "POST" and path == "/set-camera-position" then
                         code, result = self:postSetCameraPosition(data)
                     elseif method == "GET" and path == "/export-world-objects" then
@@ -344,6 +346,12 @@ function OpsdcsApi:postLua(data)
     else
         result = loadstring(data.code)()
     end
+    return 200, result
+end
+
+-- get camera position
+function OpsdcsApi:getCameraPosition()
+    local result = Export.LoGetCameraPosition()
     return 200, result
 end
 

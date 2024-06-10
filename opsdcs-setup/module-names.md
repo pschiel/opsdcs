@@ -62,6 +62,7 @@ for livery and kneeboard folders
     Ka-50_3
     Mi-8MT
     Mi-24P
+    OH58D
     SA342L
     SA342M
     SA342Minigun
