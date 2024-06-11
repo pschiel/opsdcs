@@ -6,8 +6,8 @@
 OpsdcsApi = { host = "127.0.0.1", port = 31481, logging = true }
 
 -- log helper
-function OpsdcsApi:log(message, ...)
-    if self.logging then log.info("[opsdcs-api] " .. string.format(message, ...)) end
+function OpsdcsApi:log(message)
+    if self.logging then log.info("[opsdcs-api] " .. message) end
 end
 
 -- starts server
@@ -582,24 +582,24 @@ DCS.setUserCallbacks({
     onMissionLoadBegin = function() OpsdcsApi:onMissionLoadBegin() end,
     onMissionLoadEnd = function() OpsdcsApi:onMissionLoadEnd() end,
     -- n/i
-    onPlayerConnect = function(id) OpsdcsApi:log("onPlayerConnect: %d", id) end,
-    onPlayerDisconnect = function(id) OpsdcsApi:log("onPlayerDisconnect: %d", id) end,
-    onPlayerStart = function(id) OpsdcsApi:log("onPlayerStart: %d", id) end,
-    onPlayerStop = function(id) OpsdcsApi:log("onPlayerStop: %d", id) end,
-    onPlayerChangeSlot = function(id) OpsdcsApi:log("onPlayerChangeSlot: %d", id) end,
-    onPlayerTryConnect = function(addr, ucid, name, id) OpsdcsApi:log("onPlayerTryConnect: %s %s %s %d", addr, ucid, name, id) end,
-    onPlayerTrySendChat = function(id, message, all) OpsdcsApi:log("onPlayerTrySendChat: %d %s %s", id, message, all) end,
-    onPlayerTryChangeSlot = function(id, side, slot) OpsdcsApi:log("onPlayerTryChangeSlot: %d %d %d", id, side, slot) end,
-    onGameEvent = function(eventName) OpsdcsApi:log("onGameEvent: %s", eventName) end,
-    onShowBriefing = function() OpsdcsApi:log("onShowBriefing") end,
-    onShowGameMenu = function() OpsdcsApi:log("onShowGameMenu") end,
-    onTriggerMessage = function(message, duration, clearView) OpsdcsApi:log("onTriggerMessage: %s %.2f %s", message, duration, clearView) end,
-    onRadioMessage = function(message, duration) OpsdcsApi:log("onRadioMessage: %s %.2f", message, duration) end,
-    onChatMessage = function (message, id) OpsdcsApi:log("onChatMessage: %s %d", message, id) end,
-    onShowRadioMenu = function(id) OpsdcsApi:log("onShowRadioMenu: %d", id) end,
-    onNetConnect = function(id) OpsdcsApi:log("onNetConnect: %d", id) end,
-    onNetDisconnect = function() OpsdcsApi:log("onNetDisconnect") end,
-    onNetMissionChanged = function(missionName) OpsdcsApi:log("onNetMissionChanged: %s", missionName) end,
+    onPlayerConnect = function(id) end,
+    onPlayerDisconnect = function(id) end,
+    onPlayerStart = function(id) end,
+    onPlayerStop = function(id) end,
+    onPlayerChangeSlot = function(id) end,
+    onPlayerTryConnect = function(addr, ucid, name, id) end,
+    onPlayerTrySendChat = function(id, message, all) end,
+    onPlayerTryChangeSlot = function(id, side, slot) end,
+    onGameEvent = function(eventName) end,
+    onShowBriefing = function() end,
+    onShowGameMenu = function() end,
+    onTriggerMessage = function(message, duration, clearView) end,
+    onRadioMessage = function(message, duration) end,
+    onChatMessage = function (message, id) end,
+    onShowRadioMenu = function(id) end,
+    onNetConnect = function(id) end,
+    onNetDisconnect = function() end,
+    onNetMissionChanged = function(missionName) end,
 })
 
 OpsdcsApi:startServer()
