@@ -1,7 +1,7 @@
 -- OpsdcsApi - simple and lightweight JSON API for DCS
 
 -- debug
--- pcall(function() package.cpath = package.cpath .. ";C:/Users/ops/.vscode/extensions/tangzx.emmylua-0.6.18/debugger/emmy/windows/x64/?.dll"; local dbg = require("emmy_core"); dbg.tcpConnect("localhost", 9966) end)
+pcall(function() package.cpath = package.cpath .. ";C:/Users/ops/.vscode/extensions/tangzx.emmylua-0.6.18/debugger/emmy/windows/x64/?.dll"; local dbg = require("emmy_core"); dbg.tcpConnect("localhost", 9966) end)
 
 OpsdcsApi = { host = "127.0.0.1", port = 31481, logging = true }
 
@@ -76,6 +76,7 @@ function OpsdcsApi:onSimulationFrame()
                 local data = self:getBodyData(client, headers)
                 if slug == "" then slug = nil end
                 local query = {}
+                queryString = queryString or ""
                 for key, value in queryString:gmatch("([^&=?]+)=([^&=?]+)") do
                     query[key] = value
                 end
@@ -133,6 +134,8 @@ function OpsdcsApi:onSimulationFrame()
                         code, result = self:getDbTheatres()
                     elseif method == "GET" and path == "/db-terrains" then
                         code, result = self:getDbTerrains()
+                    elseif method == "GET" and path == "/coords" then
+                        code, result = self:getCoords(query)
                     elseif method == "POST" and path == "/start-mission-server" then  -- for dwe
                         code, result = 200, {}
                     elseif method == "GET" and path == "/mission-data" then  -- for dwe
@@ -170,6 +173,14 @@ end
 ------------------------------------------------------------------------------
 -- helper functions
 ------------------------------------------------------------------------------
+
+-- url decode
+function OpsdcsApi:urlDecode(str)
+    str = string.gsub(str, "%%(%x%x)", function(hex)
+        return string.char(tonumber(hex, 16))
+    end)
+    return str
+end
 
 -- handles camera movement
 function OpsdcsApi:handleCamera()
@@ -312,6 +323,86 @@ function OpsdcsApi:deg2rad(degrees)
         degrees = degrees + 360
     end
     return degrees * (math.pi / 180)
+end
+
+-- coord to degrees, minutes, seconds
+function OpsdcsApi:toDMS(coord)
+    local deg = math.floor(coord)
+    local min = math.floor((coord - deg) * 60)
+    local sec = ((coord - deg) * 60 - min) * 60
+    return deg, min, sec
+end
+
+-- coord to degrees, decimal minutes
+function OpsdcsApi:toDM(coord)
+    local deg = math.floor(coord)
+    local min = ((coord - deg) * 60)
+    return deg, min
+end
+
+-- coord format LL: N 41°36'00"
+function OpsdcsApi:formatLL(coord, isLat)
+    local direction = (coord >= 0) and (isLat and "N" or "E") or (isLat and "S" or "W")
+    coord = math.abs(coord)
+    local degrees, minutes, seconds = self:toDMS(coord)
+    return string.format("%s %02d°%02d'%02d\"", direction, degrees, minutes, math.floor(seconds))
+end
+
+-- coord format PLL: N 41°36'00.67"
+function OpsdcsApi:formatPLL(coord, isLat)
+    local direction = (coord >= 0) and (isLat and "N" or "E") or (isLat and "S" or "W")
+    coord = math.abs(coord)
+    local degrees, minutes, seconds = self:toDMS(coord)
+    return string.format("%s %02d°%02d'%05.2f\"", direction, degrees, minutes, seconds)
+end
+
+-- coord format LLDM: N 41°36.008'
+function OpsdcsApi:formatLLDM(coord, isLat)
+    local direction = (coord >= 0) and (isLat and "N" or "E") or (isLat and "S" or "W")
+    coord = math.abs(coord)
+    local degrees, minutesFloat = self:toDM(coord)
+    return string.format("%s %02d°%06.3f'", direction, degrees, minutesFloat)
+end
+
+-- parse LL format, return degrees
+function OpsdcsApi:parseLL(input)
+    local direction, degrees, minutes, seconds = input:match("([NSWE])%s*(%d+)°%s*(%d+)'%s*(%d+%.?%d*)\"?")
+    if not direction then
+        return tonumber(input)
+    end
+    local coord = tonumber(degrees) + tonumber(minutes) / 60 + tonumber(seconds) / 3600
+    if direction == "S" or direction == "W" then
+        coord = -coord
+    end
+    return coord
+end
+
+-- parse LLDM format, return degrees
+function OpsdcsApi:parseLLDM(input)
+    local direction, degrees, minutes = input:match("([NSWE])%s*(%d+)°%s*(%d+%.?%d*)'")
+    if not direction then
+        return tonumber(input)
+    end
+    local coord = tonumber(degrees) + tonumber(minutes) / 60
+    if direction == "S" or direction == "W" then
+        coord = -coord
+    end
+    return coord
+end
+
+-- parse any LL coordinate format, return degrees
+function OpsdcsApi:parseCoordinate(input)
+    input = self:urlDecode(input)
+    input = input:gsub("%s+", "")
+    if input:match("°.*'") then
+        if input:match("%d+%.?%d*\"?") then
+            return self:parseLL(input)
+        elseif input:match("%d+%.?%d*'") then
+            return self:parseLLDM(input)
+        end
+    else
+        return tonumber(input)
+    end
 end
 
 ------------------------------------------------------------------------------
@@ -567,6 +658,31 @@ function OpsdcsApi:getDbTerrains()
         local hasRadio, radio = pcall(function() loadfile("./Mods/terrains/" .. terrain .. "/radio.lua")() return radio end)
         local hasTowns, towns = pcall(function() loadfile("./Mods/terrains/" .. terrain .. "/map/towns.lua")() return towns end)
         result[terrain] = { beacons = hasBeacons and beacons or nil, radio = hasRadio and radio or nil, towns = hasTowns and towns or nil }
+    end
+    return 200, result
+end
+
+-- converts any coordinate format
+function OpsdcsApi:getCoords(query)
+    local Terrain = require("terrain")
+    local x, z, result = nil, nil, {}
+    if query.x and query.z then
+        x, z =tonumber(query.x), tonumber(query.z)
+    elseif query.lat and query.lon then
+        local lat, lon = self:parseCoordinate(query.lat), self:parseCoordinate(query.lon)
+        x, z = Terrain.convertLatLonToMeters(lat, lon)
+    elseif query.mgrs then
+        x, z = Terrain.convertMGRStoMeters(self:urlDecode(query.mgrs))
+    end
+    if x and z then
+        result.CCS = { x = x, z = z }
+        local lat, lon = Terrain.convertMetersToLatLon(x, z)
+        result.LL = { lat = self:formatLL(lat, true), lon = self:formatLL(lon, false) }
+        result.PLL = { lat = self:formatPLL(lat, true), lon = self:formatPLL(lon, false) }
+        result.LLDM = { lat = self:formatLLDM(lat, true), lon = self:formatLLDM(lon, false) }
+        result.MGRS = Terrain.GetMGRScoordinates(x, z)
+        local alt, seabed = Terrain.GetSurfaceHeightWithSeabed(x, z)
+        result.height = { alt = alt, seabed = seabed }
     end
     return 200, result
 end

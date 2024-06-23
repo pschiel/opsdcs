@@ -38,8 +38,8 @@ for livery and kneeboard folders
     Su-25T
     Su-27
     Su-33
-  
-  ## piston
+
+## piston
     Bf-109K-4
     Christen Eagle II
     FW-190A8

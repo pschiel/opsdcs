@@ -1,14 +1,12 @@
 # terrain names
 
-for usage with `dcs_updater.exe install XY_terrain`
-
-    CAUCASUS_terrain
-    FALKLANDS_terrain
-    KOLA_terrain
-    MARIANAISLANDS_terrain
-    NEVADA_terrain
-    NORMANDY_terrain
-    PERSIANGULF_terrain
-    SINAIMAP_terrain
-    SYRIA_terrain
-    THECHANNEL_terrain
+    dcs_updater.exe install CAUCASUS_terrain
+    dcs_updater.exe install FALKLANDS_terrain
+    dcs_updater.exe install KOLA_terrain
+    dcs_updater.exe install MARIANAISLANDS_terrain
+    dcs_updater.exe install NEVADA_terrain
+    dcs_updater.exe install NORMANDY_terrain
+    dcs_updater.exe install PERSIANGULF_terrain
+    dcs_updater.exe install SINAIMAP_terrain
+    dcs_updater.exe install SYRIA_terrain
+    dcs_updater.exe install THECHANNEL_terrain
