@@ -18,12 +18,11 @@
 
 ## Enable debugging
 
-1. Insert code snippet into `DCS World/Scripts/MissionScripting.lua`
+1. Insert code snippet into `DCS World/Scripts/MissionScripting.lua` (global mission debugging) or before any script you want to debug
 
     ```
     pcall(function() package.cpath = package.cpath .. ';C:/Users/USERNAME/.vscode/extensions/tangzx.emmylua-0.6.18/debugger/emmy/windows/x64/?.dll'; local dbg = require('emmy_core'); dbg.tcpConnect('localhost', 9966) end)
     ```
-    (verify correct path, needs change when extension updates)
 
 2. Desanitize `DCS World/Scripts/MissionScripting.lua` to enable mission scripting debugging and fiddle server (for DCS LUA Runner)
 
