@@ -20,6 +20,8 @@ POST http://127.0.0.1:31481/lua - executes lua
 
 GET http://127.0.0.1:31481/player-unit - returns player unit
 
+GET http://127.0.0.1:31481/coords - coordinate conversion
+
 ### dynamic static objects
 
 GET http://127.0.0.1:31481/static-objects - returns created static objects
@@ -28,7 +30,7 @@ POST http://127.0.0.1:31481/static-objects - creates static objects
 
 DELETE http://127.0.0.1:31481/static-objects - deletes static objects
 
-DELETE http://127.0.0.1:31481/clear-all - deletes all static objects
+DELETE http://127.0.0.1:31481/static-objects/all - deletes all static objects
 
 ### camera
 
@@ -69,5 +71,3 @@ GET http://127.0.0.1:31481/db-years-launchers - returns years/launchers info
 GET http://127.0.0.1:31481/db-theatres - returns installed theatres info
 
 GET http://127.0.0.1:31481/db-terrains - returns beacons, radio and towns info from terrains
-
-GET http://127.0.0.1:31481/coords - coordinate conversion

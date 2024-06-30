@@ -1,4 +1,14 @@
 -- Race Timer and Altitude Scoring
+
+-- TODO
+-- refactor
+-- multiple courses (+guide)
+-- multiplayer
+-- respawn
+-- zone props (cones, smoke, fire)
+-- race options (start on move, on pass)
+-- sounds
+
 --
 -- works on zone names "race-start", "race-end", "race-checkpoint-1", "race-checkpoint-2", ...
 -- sets user flags for all zones (same name)
