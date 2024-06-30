@@ -14,9 +14,11 @@ API is available once a simulation starts.
 
 GET http://127.0.0.1:31481/health - health check
 
-GET http://127.0.0.1:31481/mission-data - returns mission data
+GET http://127.0.0.1:31481/current-mission - returns mission data
 
 POST http://127.0.0.1:31481/lua - executes lua
+
+GET http://127.0.0.1:31481/player-unit - returns player unit
 
 ### dynamic static objects
 
@@ -24,17 +26,21 @@ GET http://127.0.0.1:31481/static-objects - returns created static objects
 
 POST http://127.0.0.1:31481/static-objects - creates static objects
 
-POST http://127.0.0.1:31481/delete-static-objects - deletes static objects
+DELETE http://127.0.0.1:31481/static-objects - deletes static objects
 
 DELETE http://127.0.0.1:31481/clear-all - deletes all static objects
 
 ### camera
 
-POST http://127.0.0.1:31481/set-camera-position - sets camera position (smooth lerped)
+GET http://127.0.0.1:31481/camera-position - gets camera position
+
+POST http://127.0.0.1:31481/camera-position - sets camera position (smooth lerped)
 
 ### export
 
 GET http://127.0.0.1:31481/export-world-objects - returns world objects
+
+GET http://127.0.0.1:31481/export-self-data - returns self data
 
 ### db
 
@@ -63,3 +69,5 @@ GET http://127.0.0.1:31481/db-years-launchers - returns years/launchers info
 GET http://127.0.0.1:31481/db-theatres - returns installed theatres info
 
 GET http://127.0.0.1:31481/db-terrains - returns beacons, radio and towns info from terrains
+
+GET http://127.0.0.1:31481/coords - coordinate conversion

@@ -1,7 +1,7 @@
 -- OpsdcsApi - simple and lightweight JSON API for DCS
 
 -- debug
-pcall(function() package.cpath = package.cpath .. ";C:/Users/ops/.vscode/extensions/tangzx.emmylua-0.6.18/debugger/emmy/windows/x64/?.dll"; local dbg = require("emmy_core"); dbg.tcpConnect("localhost", 9966) end)
+--pcall(function() package.cpath = package.cpath .. ";C:/Users/ops/.vscode/extensions/tangzx.emmylua-0.6.18/debugger/emmy/windows/x64/?.dll"; local dbg = require("emmy_core"); dbg.tcpConnect("localhost", 9966) end)
 
 OpsdcsApi = { host = "127.0.0.1", port = 31481, logging = true }
 
@@ -100,7 +100,7 @@ function OpsdcsApi:onSimulationFrame()
                         code, result = self:postGroups(data)
                     elseif method == "GET" and path == "/camera-position" then
                         code, result = self:getCameraPosition()
-                    elseif method == "POST" and path == "/set-camera-position" then
+                    elseif method == "POST" and path == "/camera-position" then
                         code, result = self:postSetCameraPosition(data)
                     elseif method == "GET" and path == "/export-world-objects" then
                         code, result = self:getExportWorldObjects()
@@ -140,6 +140,8 @@ function OpsdcsApi:onSimulationFrame()
                         code, result = 200, {}
                     elseif method == "GET" and path == "/mission-data" then  -- for dwe
                         code, result = self:getCurrentMission()
+                    elseif method == "POST" and path == "/set-camera-position" then -- for dwe
+                        code, result = self:postSetCameraPosition(data)
                     elseif method == "DELETE" and path == "/clear-all" then  -- for dwe
                         code, result = self:deleteStaticObjects("all")
                     elseif method == "GET" and path == "/position-player" then  -- for dwe
