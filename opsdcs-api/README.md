@@ -6,7 +6,8 @@ simple and lightweight JSON API for DCS (DWE compatible)
 
 copy [opsdcs-api.lua](opsdcs-api.lua) into `Saved Games/DCS/Scripts/Hooks`
 
-API is available once a simulation starts.
+API is available once a simulation starts (main menu).
+There is NO sanitizing required.
 
 ## Usage
 
@@ -16,7 +17,7 @@ GET http://127.0.0.1:31481/health - health check
 
 GET http://127.0.0.1:31481/current-mission - returns mission data
 
-POST http://127.0.0.1:31481/lua - executes lua
+POST http://127.0.0.1:31481/lua - executes lua in any environment
 
 GET http://127.0.0.1:31481/player-unit - returns player unit
 
