@@ -830,10 +830,11 @@ local reconEventHandler = {}
 
 function reconEventHandler:onEvent(event)
 	if world.event.S_EVENT_UNIT_LOST == event.id or world.event.S_EVENT_KILL == event.id or world.event.S_EVENT_DEAD == event.id then --dead event is used for deleting recon marks
+		local unit = nil
 		if world.event.S_EVENT_KILL == event.id then
-			local unit = event.target
+			unit = event.target
 		else
-			local unit = event.initiator
+			unit = event.initiator
 		end
 
 		if unit == nil or unit.getCoalition == nil then return end

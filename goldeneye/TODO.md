@@ -1,0 +1,22 @@
+# TODO
+
+- [x] mission patterns for hook
+- [x] player spawn, detect sp player
+- [ ] detect mp player
+- [ ] f10 payloads
+- [ ] f10 cam commands
+- [ ] marker + infos
+- [ ] unit dead
+- [ ] mp poc chat/gui hook
+- [x] persistence
+- [ ] config
+- [ ] arcade/sim
+- [ ] truck
+- [ ] exceptions
+- [ ] old data
+- [ ] screenshots
+- [ ] screenshots pic overlay
+- [ ] stable cam switch (gui frame queue)
+- [ ] grouping/details
+- [ ] sounds
+- [ ] sp/mp mode

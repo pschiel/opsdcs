@@ -1,0 +1,78 @@
+goldeneye
+---------
+- aircraft: has cameras
+- cameras: name, min/max alt, max roll/pitch, fov, duration, offset
+- target exceptions: list of objects/statics?
+- capture exceptions: list of objects
+
+- dcsbot: addUserPoints?
+- recon instances (per player): net.get_player_info -> playerID
+- findTargets: frustrum search calc, unit/static/scenery
+- set/remove marks: hp, pressure, type
+- film loop
+- ammo check?
+- events: birth (slot change), dead (remove marks), takeoff (enable), land (result)
+
+recon v2
+--------
+- airframes: has cameras
+- cameras: name, typename, unitname, pitch, roll, yaw, horiz/vert fov, dist, infra, filmcount
+- points per unit/infra
+- markers
+- low/high film?
+- accuracy<threshold (hardcode), random offset ?
+
+- return film: not in air + near friendly airbase
+- capture units/statics: pyramid volume
+- audit: add/remove markers
+- markers: group, infra, aa
+- events: lost/kill/dead (mark), birth (menu)
+
+opsdcs-recon
+------------
+- camera defintions seperate
+  - name
+  - cameraType ("frame", "video")
+  - mountType ("mounted", "handheld")
+  - horizFOV, vertFOV
+  - detectionRange
+  - frameCount
+  - frameInterval (0 = single frame, >0 = toggle on/off)
+- aicraft definitions generic
+  - unit type
+  - list of cameras
+    - name
+    - x, y, z: position (only for mounted)
+    - pitch, roll, yaw: orientation (only for mounted)
+- convenient switches/toggles
+  - bind space and backspace (SP only)
+  - bind unused cockpit switch (SP only)
+  - use f10 via voiceattack
+  - use f10 via gremlin (joystick buttons)
+- camera view mode
+  - sets external cam and FOV/position/orientation
+  - as additional command/toggle per camera
+  - can take screenshots (configurable folder)
+  - needs client hook (for MP)
+- handheld camera
+  - takes orientation from player camera
+  - needs client hook (for MP)
+    - PoC: f10 > server request caminfo via chatmsg > hook responds via chatmsg
+- persistence
+  - saves markers to file (desanitize io required)
+  - loads markers from file (TBD: unclear.. except static positions?)
+- recon-enable configurable
+  - via group name prefix ("Recon")
+  - via group task "reconnaissance"
+- recon-audit configurable
+  - via landed near airbase
+  - via radio
+- all configurable options additionally via zone params
+- add hook (auto inject script into missions with certain prefix)
+- add scoring
+- add sounds
+
+TBD: accuracy? persistence? realistic enable/audit? night? scoring?
+
+
+
