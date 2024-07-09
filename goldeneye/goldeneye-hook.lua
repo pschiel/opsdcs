@@ -9,7 +9,7 @@ GoldeneyeHook = {
         "^recon", -- starts with "recon"
         "recon$", -- ends with "recon"
         "recon.*mission", -- contains "recon" followed by anthing, then "mission"
-        ".*", -- all missions
+        --".*", -- all missions
         "cargocow"
     }
 }
@@ -19,7 +19,7 @@ function GoldeneyeHook:log(message)
     if self.logging then log.info("[goldeneye] " .. message) end
 end
 
--- mission loaded, inject script
+-- mission loaded
 function GoldeneyeHook:onMissionLoadEnd(a, b, c)
     local missionName = DCS.getMissionName()
     self:log("onMissionLoadEnd: " .. missionName)
@@ -32,7 +32,7 @@ function GoldeneyeHook:onMissionLoadEnd(a, b, c)
     end
 end
 
--- inject goldeneye script
+-- inject mission script
 function GoldeneyeHook:injectScript()
     local code = 'a_do_script("'
         .. 'GoldeneyeBasedir=[[' .. GoldeneyeBasedir .. ']];'
