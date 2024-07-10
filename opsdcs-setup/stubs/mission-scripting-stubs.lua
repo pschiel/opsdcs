@@ -39,12 +39,11 @@
 --- @field Northing number
 
 ------------------------------------------------------------------------------
---- SINGLETONS
+--- env
 ------------------------------------------------------------------------------
 
 --- @class env
 --- @description env contains basic logging functions useful for debugging scripting commands. The input text is automatically added to dcs.log in your saved games folder
-_G.env = {}
 --- @field info fun(log:string, showMessageBox:boolean) Prints the passed string to the dcs.log with a prefix of 'info'. The optional variable defines whether or not a message box will pop up when the logging occurs
 --- @field warning fun(log:string, showMessageBox:boolean) Prints the passed string to the dcs.log with a prefix of 'warning'. The optional variable defines whether or not a message box will pop up when the logging occurs.
 --- @field error fun(log:string, showMessageBox:boolean) Prints the passed string to the dcs.log with a prefix of 'error'. The optional variable defines whether or not a message box will pop up when the logging occurs.
@@ -52,184 +51,6 @@ _G.env = {}
 --- @field getValueDictByKey fun(value:string):string Returns a string associated with the passed dictionary key value. If the key is not found within the miz the function will return the string that was passed.
 --- @field mission env.mission The mission file is a lua table present within a .miz file that is accessible to the scripting engine via the table env.mission. This table is almost the entirety of the contents of a given mission.
 --- @field warehouses env.warehouses The warehouses file is a lua table present within a .miz file that is accessible to the scripting engine.
-
---- @class timer
---- @descriptionThe timer singleton has two important uses. 1. Return the mission time. 2. To schedule functions.
-_G.timer = {}
---- @field getTime fun():number Returns the model time in seconds to three decimal places since the mission has started. Time pauses with the game.
---- @field getAbsTime fun():number Returns the game world time in seconds since the mission started. If the value is above 86400, it represents the next day after the mission started.
---- @field getTime0 fun():number Returns the mission start time in seconds. Useful for calculating elapsed time with timer.getAbsTime().
---- @field scheduleFunction fun(functionToCall:function, functionArgs:table, modelTime:number):number Schedules a function to run at a specified future model time. Returns a functionId.
---- @field removeFunction fun(functionId:number) Removes a scheduled function by its functionId, preventing it from executing.
---- @field setFunctionTime fun(functionId:number, modelTime:number) Reschedules an already scheduled function to run at a different model time.
-
---- @class land
---- @description The land singleton contains functions used to get information about the terrain geometry of a given map. Functions include getting data on the type and height of terrain at a specific points and raytracing functions.
-_G.land = {}
---- @field getHeight fun(point:vec2):number Returns the distance from sea level (y-axis) at a given vec2 point.
---- @field getSurfaceHeightWithSeabed fun(point:vec2):number, number Returns both the surface height and the seabed depth at a point.
---- @field getSurfaceType fun(point:vec2):number Returns an enumerator indicating the surface type at a given vec2 point. (returns land.SurfaceType)
---- @field isVisible fun(origin:vec3, destination:vec3):boolean Determines if a line from origin to destination intersects terrain, used for line of sight.
---- @field getIP fun(origin:vec3, direction:vec3, distance:number):vec3 Returns an intercept point where a ray from origin in the specified direction for a given distance intersects with terrain.
---- @field profile fun(start:vec3, end:vec3):table Returns a profile of the land between two points as a table of vec3 vectors.
---- @field getClosestPointOnRoads fun(roadType:string, xCoord:number, yCoord:number):number, number Returns the closest road coordinate (x, y) from a given point based on specified road type ('roads' or 'railroads').
---- @field findPathOnRoads fun(roadType:string, xCoord:number, yCoord:number, destX:number, destY:number):table Returns a path as a table of vec2 points from a start to a destination along specified road type.
-
---- @class atmosphere
---- @description atmosphere is a singleton whose functions return atmospheric data about the mission. Currently limited only to wind data. 
-_G.atmosphere = {}
---- @field getWind fun(point:vec3):vec3 Returns a velocity vector of the wind at a specified 3D point.
---- @field getWindWithTurbulence fun(point:vec3):vec3 Returns a velocity vector of the wind at a specified 3D point, including effects of turbulence.
---- @field getTemperatureAndPressure fun(point:vec3):number, number Returns the temperature (Kelvins) and pressure (Pascals) at a given 3D point.
-
---- @class world
---- @description The world singleton contains functions centered around two different but extremely useful functions. 1. Events and event handlers are all governed within world. 2. A number of functions to get information about the game world.
-_G.world = {}
---- @field addEventHandler fun(handler:EventHandler) Adds a function as an event handler that executes when a simulator event occurs.
---- @field removeEventHandler fun(handler:EventHandler) Removes the specified event handler from handling events.
---- @field getPlayer fun():Unit Returns a table representing the single unit object in the game set as "Player".
---- @field getAirbases fun(coalitionId:number|nil):table Returns a table of airbase objects for a specified coalition or all airbases if no coalition is specified. (coalition.side)
---- @field searchObjects fun(category:table|number, searchVolume:number, handler:function, data:any):table Searches a defined volume for specified objects and can execute a function on each found object. (Object.Category, world.VolumeType)
---- @field getMarkPanels fun():table Returns a table of mark panels and shapes drawn within the mission.
---- @field removeJunk fun(searchVolume:table):number Searches a defined area to remove craters, wreckage, and debris within the volume, excluding scenery objects. (world.VolumeType)
-
---- @class coalition
---- @description The coalition singleton contains functions that gets information on the all of the units within the mission. It also has two of the most powerful functions that are capable of spawning groups and static objects into the mission. 
-_G.coalition = {}
---- @field addGroup fun(countryId:number, groupCategory:number, groupData:table):Group Adds a group of the specified category for the specified country using provided group data. (country.id, Group.Category)
---- @field addStaticObject fun(countryId:number, groupData:table):StaticObject Dynamically spawns a static object for the specified country based on the provided group data. (country.id)
---- @field getGroups fun(coalitionId:number, groupCategory:number|nil):table Returns a table of group objects within the specified coalition and optionally filtered by group category. (coalition.side)
---- @field getStaticObjects fun(coalitionId:number):table Returns a table of static objects within the specified coalition. (coalition.side)
---- @field getAirbases fun(coalitionId:number|nil):table Returns a table of airbase objects for the specified coalition or all airbases if no coalition is specified. (coalition.side)
---- @field getPlayers fun(coalitionId:number):table Returns a table of unit objects currently occupied by players within the specified coalition. (coalition.side)
---- @field getServiceProviders fun(coalitionId:number, service:number):table Returns a table of unit objects that provide a specified service (ATC, AWACS, TANKER, FAC) within the specified coalition. (coalition.side, coalition.service)
---- @field addRefPoints fun(coalitionId:number, refPoint:table) Adds a reference point for the specified coalition, used by JTACs. (coalition.side)
---- @field getRefPoints fun(coalitionId:number):table Returns a table of reference points defined for the specified coalition, used by JTACs. (coalition.side)
---- @field getMainRefPoint fun(coalitionId:number):vec3 Returns the position of the main reference point ("bullseye") for the specified coalition. (coalition.side)
---- @field getCountryCoalition fun(countryId:number):number Returns the coalition ID that a specified country belongs to. (country.id)
-
---- @class trigger
---- @description The trigger singleton contains a number of functions that mimic actions and conditions found within the mission editor triggers.
-_G.trigger = {}
---- @field action triggerAction trigger actions
---- @field misc triggerMisc some misc getters
-
---- @class triggerAction
---- @description trigger actions
---- @field ctfColorTag fun(unitName:string, smokeColor:number) Creates a smoke plume behind a specified aircraft. When passed 0 for smoke type the plume will be disabled. When triggering the on the same unit with a different color the plume will simply change color. (trigger.smokeColor)
---- @field setUserFlag fun(flag:string, value:number|boolean) Sets the value of a user flag.
---- @field explosion fun(position:vec3, power:number) Creates an explosion at a specified position with a specified power.
---- @field smoke fun(position:vec3, color:number) Creates a smoke plume at a specified position with a specified color. (trigger.smokeColor)
---- @field effectSmokeBig fun(position:vec3, preset:number, density:number, name:string) Creates a large smoke effect at a specified position with a specified preset (1-4=smoke/fire, 5-7=smoke), density (0-1), and name. (trigger.effectSmokePreset)
---- @field effectSmokeStop fun(name:string) Stops a smoke effect with a specified name.
---- @field illuminationBomb fun(position:vec3, power:number) Creates an illumination bomb at a specified position with a specified power. (1-1000000)
---- @field signalFlare fun(position:vec3, color:number, azimuth:number) Creates a signal flare at a specified position with a specified color and azimuth. (trigger.flareColor)
---- @field radioTransmission fun(filename:string, point:vec3, modulation:enum, loop:boolean, frequency:number, power:number, name:string) Transmits an audio file from a specific point on a given frequency. (radio.modulation)
---- @field stopRadioTransmission fun(name:string) Stops the named radio transmission.
---- @field setUnitInternalCargo fun(unitName:string, mass:number) Sets the internal cargo mass for a specified unit.
---- @field outSound fun(soundfile:string) Plays a sound file to all players.
---- @field outSoundForCoalition fun(coalition:number, soundfile:string) Plays a sound file to all players in the specified coalition.
---- @field outSoundForCountry fun(country:number, soundfile:string) Plays a sound file to all players in the specified country.
---- @field outSoundForGroup fun(groupId:number, soundfile:string) Plays a sound file to all players in the specified group.
---- @field outSoundForUnit fun(unitId:number, soundfile:string) Plays a sound file to all players in the specified unit.
---- @field outText fun(text:string, displayTime:number, clearview:boolean) Displays text to all players for the specified time.
---- @field outTextForCoalition fun(coalition:number, text:string, displayTime:number, clearview:boolean) Displays text to players in a specified coalition for a set time.
---- @field outTextForCountry fun(country:number, text:string, displayTime:number, clearview:boolean) Displays text to players in a specified country for a set time.
---- @field outTextForGroup fun(groupId:number, text:string, displayTime:number, clearview:boolean) Displays text to players in a specified group for a set time.
---- @field outTextForUnit fun(unitId:number, text:string, displayTime:number, clearview:boolean) Displays text to players in a specified unit for a set time.
---- @field addOtherCommand fun(name:string, userFlagName:string, userFlagValue:number) Adds a command to the "F10 Other" radio menu to set flags within the mission.
---- @field removeOtherCommand fun(name:string) Removes the specified command from the "F10 Other" radio menu.
---- @field addOtherCommandForCoalition fun(coalition:number, name:string, userFlagName:string, userFlagValue:string) Adds a coalition-specific command to the "F10 Other" menu.
---- @field removeOtherCommandForCoalition fun(coalitionId:number, name:string) Removes a coalition-specific command from the "F10 Other" menu.
---- @field addOtherCommandForGroup fun(groupId:number, name:string, userFlagName:string, userFlagValue:string) Adds a group-specific command to the "F10 Other" menu.
---- @field removeOtherCommandForGroup fun(groupId:number, name:string) Removes a group-specific command from the "F10 Other" menu.
---- @field markToAll fun(id:number, text:string, point:vec3, readOnly:boolean, message:string) Adds a mark point to all on the F10 map.
---- @field markToCoalition fun(id:number, text:string, point:vec3, coalitionId:number, readOnly:boolean, message:string) Adds a mark point to a coalition on the F10 map.
---- @field markToGroup fun(id:number, text:string, point:vec3, groupId:number, readOnly:boolean, message:string) Adds a mark point to a group on the F10 map.
---- @field removeMark fun(id:number) Removes a mark from the F10 map.
---- @field markupToAll fun(shapeId:number, coalition:number, id:number, point1:vec3, param:..., color:table, fillColor:table, lineType:number, readOnly:boolean, message:string) Creates a defined shape on the F10 map.
---- @field lineToAll fun(coalition:number, id:number, startPoint:vec3, endPoint:vec3, color:table, lineType:number, readOnly:boolean, message:string) Creates a line on the F10 map. 0=no line, 1=solid, 2=dashed, 3=dotted, 4=dot dash, 5=long dash, 6=two dash--- @field circleToAll fun(coalition:number, id:number, center:vec3, radius:number, color:table, fillColor:table, lineType:number, readOnly:boolean, message:string) Creates a circle on the F10 map.
---- @field rectToAll fun(coalition:number, id:number, startPoint:vec3, endPoint:vec3, color:table, fillColor:table, lineType:number, readOnly:boolean, message:string) Creates a rectangle on the F10 map. 0=no line, 1=solid, 2=dashed, 3=dotted, 4=dot dash, 5=long dash, 6=two dash
---- @field quadToAll fun(coalition:number, id:number, point1:vec3, point2:vec3, point3:vec3, point4:vec3, color:table, fillColor:table, lineType:number, readOnly:boolean, message:string) Creates a quadrilateral on the F10 map. 0=no line, 1=solid, 2=dashed, 3=dotted, 4=dot dash, 5=long dash, 6=two dash
---- @field arrowToAll fun(coalition:number, id:number, startPoint:vec3, endPoint:vec3, color:table, fillColor:table, lineType:number, readOnly:boolean, message:string) Creates an arrow on the F10 map. 0=no line, 1=solid, 2=dashed, 3=dotted, 4=dot dash, 5=long dash, 6=two dash
---- @field textToAll fun(coalition:number, id:number, point:vec3, color:table, fillColor:table, fontSize:number, readOnly:boolean, text:string) Creates text on the F10 map.
---- @field setMarkupRadius fun(id:number, radius:number) Updates the radius of an existing circular mark.
---- @field setMarkupText fun(id:number, text:string) Updates the text of an existing mark.
---- @field setMarkupFontSize fun(id:number, fontSize:number) Updates the font size of text on an existing mark.
---- @field setMarkupColor fun(id:number, color:table) Updates the color of an existing mark.
---- @field setMarkupColorFill fun(id:number, colorFill:table) Updates the fill color of an existing mark.
---- @field setMarkupTypeLine fun(id:number, typeLine:number) Updates the line type of an existing mark. 0=no line, 1=solid, 2=dashed, 3=dotted, 4=dot dash, 5=long dash, 6=two dash
---- @field setMarkupPositionEnd fun(id:number, vec3:table) Updates the endpoint of an existing line or shape mark.
---- @field setMarkupPositionStart fun(id:number, vec3:table) Updates the start point of an existing line or shape mark.
---- @field setAITask fun(Group:Group, taskIndex:number) Sets the specified task index as the only active task for the group.
---- @field pushAITask fun(Group:Group, taskIndex:number) Pushes the specified task index to the front of the tasking queue for the group.
---- @field activateGroup fun(Group:Group) Activates the specified group if set up for "late activation."
---- @field deactivateGroup fun(Group:Group) Deactivates the specified group.
---- @field setGroupAIOn fun(Group:Group) Turns the group's AI on, only for ground and ship groups.
---- @field setGroupAIOff fun(Group:Group) Turns the group's AI off, only for ground and ship groups.
---- @field groupStopMoving fun(Group:Group) Orders the specified ground group to stop moving.
---- @field groupContinueMoving fun(Group:Group) Orders the specified ground group to resume moving.
-
---- @class triggerMisc
---- @description trigger misc
---- @field getUserFlag fun(flag:string):number Returns the value of a user flag.
---- @field getZone fun(zoneName:string):TriggerZone Returns a trigger zone table of a given name
---- @field addZone fun(zoneData:table):TriggerZone Adds a trigger zone to the mission with the provided data.
-
---- @class coord
---- @description The coord singleton contains functions used to convert coordinates between the game's XYZ, Longitude and Latitude, and the MGRS coordinate systems.
-_G.coord = {}
---- @field LLtoLO fun(latitude:number, longitude:number, altitude:number):vec3 Converts latitude, longitude, and altitude to game world coordinates (vec3).
---- @field LOtoLL fun(point:vec3):number, number, number Converts game world coordinates (vec3) to latitude, longitude, and altitude.
---- @field LLtoMGRS fun(latitude:number, longitude:number):MGRS Returns an MGRS table from the latitude and longitude coordinates provided. Note that in order to get the MGRS coordinate from a vec3 you must first use coord.LOtoLL on it. 
---- @field MGRStoLL fun(mgrs:MGRS):number, number, number Converts an MGRS table to latitude, longitude, and altitude.
-
---- @class missionCommands
---- @description The missionCommands singleton allows for greater access and flexibility of use for the F10 Other radio menu. Added commands can contain sub-menus and directly call lua functions.
-_G.missionCommands = {}
---- @field addCommand fun(name:string, path:table|nil, functionToRun:function, anyArgument:any):table Adds a command to the "F10 Other" menu.
---- @field addSubMenu fun(name:string, path:table|nil):table Creates a submenu in the F10 radio menu.
---- @field removeItem fun(path:table|nil) Removes an item or submenu from the F10 radio menu.
---- @field addCommandForCoalition fun(coalitionSide:number, name:string, path:table|nil, functionToRun:function, anyArgument:any):table Adds a coalition-specific command to the F10 menu.
---- @field addSubMenuForCoalition fun(coalitionSide:number, name:string, path:table|nil):table Creates a coalition-specific submenu in the F10 menu.
---- @field removeItemForCoalition fun(coalitionSide:number, path:table|nil) Removes a coalition-specific item or submenu from the F10 menu.
---- @field addCommandForGroup fun(groupId:number, name:string, path:table|nil, functionToRun:function, anyArgument:any):table Adds a group-specific command to the F10 menu.
---- @field addSubMenuForGroup fun(groupId:number, name:string, path:table|nil):table Creates a group-specific submenu in the F10 menu.
---- @field removeItemForGroup fun(groupId:number, path:table|nil) Removes a group-specific item or submenu from the F10 menu.
---- @field doAction fun()
-
---- @class VoiceChat
---- @description The voice chat singleton is a means of creating customized voice chat rooms for players to interact with each other in multiplayer.
-_G.voiceChat = {}
---- @field createRoom fun(roomName:string, side:number, roomType:number) Creates a VoiceChat room for multiplayer interaction. (VoiceChat.Side, VoiceChat.RoomType)
-
---- @class net
---- @description The net singleton are a number of functions from the network API that work in the mission scripting environment. Notably for mission scripting purposes there is now a way to send chat, check if players are in Combined Arms slots, kick people from the server, and move players to certain slots. 
-_G.net = {}
---- @field send_chat fun(message:string, all:boolean) Sends a chat message to all players if true, or team otherwise.
---- @field send_chat_to fun(message:string, playerId:number, fromId:number|nil) Sends a chat message to a specific player, optionally appearing from another player.
---- @field recv_chat fun() Functionality unknown.
---- @field load_mission fun(fileName:string):boolean Loads the specified mission.
---- @field load_next_mission fun():boolean Load the next mission from the server mission list. Returns false if at the end of list.
---- @field get_player_list fun():table Returns a list of players currently connected to the server.
---- @field get_my_player_id fun():number Returns the playerID of the local player; returns 1 for server.
---- @field get_server_id fun():number Returns the playerID of the server; currently always 1.
---- @field get_player_info fun(playerID:number, attribute:string|nil):table Returns player attributes; specific attribute if provided.
---- @field kick fun(playerId:number, message:string):boolean Kicks a player from the server with an optional message.
---- @field get_stat fun(playerID:number, statID:number):number Returns a specific statistic from a given player.
---- @field get_name fun(playerID:number):string Returns the name of a given player.
---- @field get_slot fun(playerID:number):number, number Returns the sideId and slotId of a given player.
---- @field set_slot fun() Functionality unknown.
---- @field force_player_slot fun(playerID:number, sideId:number, slotId:number):boolean Forces a player into a specified slot.
---- @field lua2json fun(lua:any):table Converts a Lua value to a JSON string.
---- @field json2lua fun(json:string):table Converts a JSON string to a Lua value.
---- @field dostring_in fun(environment:string, code:string):string Executes a Lua string in a specified Lua environment within the game. (config: main.cfg/autoexec.cfg state, mission: current mission, export: export.lua)
---- @field log fun(message:string) Writes an "INFO" entry to the DCS log file.
---- @field trace fun() Functionality unknown.
-
-------------------------------------------------------------------------------
---- MISSION
-------------------------------------------------------------------------------
 
 --- @class env.mission
 --- @description helper class for env.mission table
@@ -290,24 +111,20 @@ _G.net = {}
 --- @field funcStartup table startup condition/action lua functions, alphanumeric indexed
 
 --- @class missionTrigrule
---- @description helper class for mission trigrule
+--- @description mission trigrule
 --- @field actions table action objects, alphanumeric indexed
 --- @field comment string
 --- @field eventlist string
 --- @field predicate string trigger, triggerOnce, triggerContinious, triggerStart, triggerFront
 --- @field rules table rule objects, alphanumeric indexed
 
-------------------------------------------------------------------------------
---- WAREHOUSES
-------------------------------------------------------------------------------
-
 --- @class env.warehouses
---- @description helper class for env.warehouses table
+--- @description env.warehouses table
 --- @field airports warehousesAirport[] array of airports
 --- @field warehouses warehousesWarehouse[] array of warehouses
 
 --- @class warehousesAirport
---- @description helper class for mission airports
+--- @description mission airports
 --- @field aircrafts table
 --- @field coalition table
 --- @field diesel table
@@ -327,11 +144,346 @@ _G.net = {}
 --- @field weapons table
 
 --- @class warehousesWarehouse
---- @description helper class for mission warehouses
+--- @description mission warehouses
 --- @todo
 
 ------------------------------------------------------------------------------
---- EVENT HANDLER
+--- timer
+------------------------------------------------------------------------------
+
+--- @class timer
+--- @descriptionThe timer singleton has two important uses. 1. Return the mission time. 2. To schedule functions.
+--- @field getTime fun():number Returns the model time in seconds to three decimal places since the mission has started. Time pauses with the game.
+--- @field getAbsTime fun():number Returns the game world time in seconds since the mission started. If the value is above 86400, it represents the next day after the mission started.
+--- @field getTime0 fun():number Returns the mission start time in seconds. Useful for calculating elapsed time with timer.getAbsTime().
+--- @field scheduleFunction fun(functionToCall:function, functionArgs:table, modelTime:number):number Schedules a function to run at a specified future model time. Returns a functionId.
+--- @field removeFunction fun(functionId:number) Removes a scheduled function by its functionId, preventing it from executing.
+--- @field setFunctionTime fun(functionId:number, modelTime:number) Reschedules an already scheduled function to run at a different model time.
+
+------------------------------------------------------------------------------
+--- land
+------------------------------------------------------------------------------
+
+--- @class land
+--- @description The land singleton contains functions used to get information about the terrain geometry of a given map. Functions include getting data on the type and height of terrain at a specific points and raytracing functions.
+--- @field getHeight fun(point:vec2):number Returns the distance from sea level (y-axis) at a given vec2 point.
+--- @field getSurfaceHeightWithSeabed fun(point:vec2):number, number Returns both the surface height and the seabed depth at a point.
+--- @field getSurfaceType fun(point:vec2):number Returns an enumerator indicating the surface type at a given vec2 point. (returns land.SurfaceType)
+--- @field isVisible fun(origin:vec3, destination:vec3):boolean Determines if a line from origin to destination intersects terrain, used for line of sight.
+--- @field getIP fun(origin:vec3, direction:vec3, distance:number):vec3 Returns an intercept point where a ray from origin in the specified direction for a given distance intersects with terrain.
+--- @field profile fun(start:vec3, end:vec3):table Returns a profile of the land between two points as a table of vec3 vectors.
+--- @field getClosestPointOnRoads fun(roadType:string, xCoord:number, yCoord:number):number, number Returns the closest road coordinate (x, y) from a given point based on specified road type ('roads' or 'railroads').
+--- @field findPathOnRoads fun(roadType:string, xCoord:number, yCoord:number, destX:number, destY:number):table Returns a path as a table of vec2 points from a start to a destination along specified road type.
+
+--- @class land.SurfaceType
+--- @description surface types
+--- @field LAND number Land (1)
+--- @field SHALLOW_WATER number Shallow Water (2)
+--- @field WATER number Water (3)
+--- @field ROAD number Road (4)
+--- @field RUNWAY number Runway (5)
+
+------------------------------------------------------------------------------
+--- atmosphere
+------------------------------------------------------------------------------
+
+--- @class atmosphere
+--- @description atmosphere is a singleton whose functions return atmospheric data about the mission. Currently limited only to wind data. 
+--- @field getWind fun(point:vec3):vec3 Returns a velocity vector of the wind at a specified 3D point.
+--- @field getWindWithTurbulence fun(point:vec3):vec3 Returns a velocity vector of the wind at a specified 3D point, including effects of turbulence.
+--- @field getTemperatureAndPressure fun(point:vec3):number, number Returns the temperature (Kelvins) and pressure (Pascals) at a given 3D point.
+
+------------------------------------------------------------------------------
+--- world
+------------------------------------------------------------------------------
+
+--- @class world
+--- @description The world singleton contains functions centered around two different but extremely useful functions. 1. Events and event handlers are all governed within world. 2. A number of functions to get information about the game world.
+--- @field addEventHandler fun(handler:EventHandler) Adds a function as an event handler that executes when a simulator event occurs.
+--- @field removeEventHandler fun(handler:EventHandler) Removes the specified event handler from handling events.
+--- @field getPlayer fun():Unit Returns a table representing the single unit object in the game set as "Player".
+--- @field getAirbases fun(coalitionId:number|nil):table Returns a table of airbase objects for a specified coalition or all airbases if no coalition is specified. (coalition.side)
+--- @field searchObjects fun(category:table|number, searchVolume:number, handler:function, data:any):table Searches a defined volume for specified objects and can execute a function on each found object. (Object.Category, world.VolumeType)
+--- @field getMarkPanels fun():table Returns a table of mark panels and shapes drawn within the mission.
+--- @field removeJunk fun(searchVolume:table):number Searches a defined area to remove craters, wreckage, and debris within the volume, excluding scenery objects. (world.VolumeType)
+
+--- @class world.event
+--- @description event types
+--- @field S_EVENT_INVALID number Invalid (0)
+--- @field S_EVENT_SHOT number Shot (1)
+--- @field S_EVENT_HIT number Hit (2)
+--- @field S_EVENT_TAKEOFF number Takeoff (3)
+--- @field S_EVENT_LAND number Land (4)
+--- @field S_EVENT_CRASH number Crash (5)
+--- @field S_EVENT_EJECTION number Ejection (6)
+--- @field S_EVENT_REFUELING number Refueling (7)
+--- @field S_EVENT_DEAD number Dead (8)
+--- @field S_EVENT_PILOT_DEAD number Pilot Dead (9)
+--- @field S_EVENT_BASE_CAPTURED number Base Captured (10)
+--- @field S_EVENT_MISSION_START number Mission Start (11)
+--- @field S_EVENT_MISSION_END number Mission End (12)
+--- @field S_EVENT_TOOK_CONTROL number Took Control (13)
+--- @field S_EVENT_REFUELING_STOP number Refueling Stop (14)
+--- @field S_EVENT_BIRTH number Birth (15)
+--- @field S_EVENT_HUMAN_FAILURE number Human Failure (16)
+--- @field S_EVENT_DETAILED_FAILURE number Detailed Failure (17)
+--- @field S_EVENT_ENGINE_STARTUP number Engine Startup (18)
+--- @field S_EVENT_ENGINE_SHUTDOWN number Engine Shutdown (19)
+--- @field S_EVENT_PLAYER_ENTER_UNIT number Player Enter Unit (20)
+--- @field S_EVENT_PLAYER_LEAVE_UNIT number Player Leave Unit (21)
+--- @field S_EVENT_PLAYER_COMMENT number Player Comment (22)
+--- @field S_EVENT_SHOOTING_START number Shooting Start (23)
+--- @field S_EVENT_SHOOTING_END number Shooting End (24)
+--- @field S_EVENT_MARK_ADDED number Mark Added (25)
+--- @field S_EVENT_MARK_CHANGE number Mark Change (26)
+--- @field S_EVENT_MARK_REMOVED number Mark Removed (27)
+--- @field S_EVENT_KILL number Kill (28)
+--- @field S_EVENT_SCORE number Score (29)
+--- @field S_EVENT_UNIT_LOST number Unit Lost (30)
+--- @field S_EVENT_LANDING_AFTER_EJECTION number Landing After Ejection (31)
+--- @field S_EVENT_PARATROOPER_LENDING number Paratrooper Lending (32)
+--- @field S_EVENT_DISCARD_CHAIR_AFTER_EJECTION number Discard Chair After Ejection (33)
+--- @field S_EVENT_WEAPON_ADD number Weapon Add (34)
+--- @field S_EVENT_TRIGGER_ZONE number Trigger Zone (35)
+--- @field S_EVENT_LANDING_QUALITY_MARK number Landing Quality Mark (36)
+--- @field S_EVENT_BDA number BDA (37)
+--- @field S_EVENT_AI_ABORT_MISSION number AI Abort Mission (38)
+--- @field S_EVENT_DAYNIGHT number Day/Night (39)
+--- @field S_EVENT_FLIGHT_TIME number Flight Time (40)
+--- @field S_EVENT_PLAYER_SELF_KILL_PILOT number Player Self Kill Pilot (41)
+--- @field S_EVENT_PLAYER_CAPTURE_AIRFIELD number Player Capture Airfield (42)
+--- @field S_EVENT_EMERGENCY_LANDING number Emergency Landing (43)
+--- @field S_EVENT_UNIT_CREATE_TASK number Unit Create Task (44)
+--- @field S_EVENT_UNIT_DELETE_TASK number Unit Delete Task (45)
+--- @field S_EVENT_SIMULATION_START number Simulation Start (46)
+--- @field S_EVENT_WEAPON_REARM number Weapon Rearm (47)
+--- @field S_EVENT_WEAPON_DROP number Weapon Drop (48)
+--- @field S_EVENT_UNIT_TASK_COMPLETE number Unit Task Complete (49)
+--- @field S_EVENT_UNIT_TASK_STAGE number Unit Task Stage (50)
+--- @field S_EVENT_MAC_SUBTASK_SCORE number MAC Subtask Score (51)
+--- @field S_EVENT_MAC_EXTRA_SCORE number MAC Extra Score (52)
+--- @field S_EVENT_MISSION_RESTART number Mission Restart (53)
+--- @field S_EVENT_MISSION_WINNER number Mission Winner (54)
+--- @field S_EVENT_POSTPONED_TAKEOFF number Postponed Takeoff (55)
+--- @field S_EVENT_POSTPONED_LAND number Postponed Land (56)
+--- @field S_EVENT_MAX number Max (57)
+
+--- @class world.BirthPlace
+--- @description birth places
+--- @field wsBirthPlace_Air number Air (1)
+--- @field wsBirthPlace_Ship number Ship (3)
+--- @field wsBirthPlace_RunWay number Runway (4)
+--- @field wsBirthPlace_Park number Park (5)
+--- @field wsBirthPlace_Heliport_Hot number Heliport Hot (9)
+--- @field wsBirthPlace_Heliport_Cold number Heliport Cold (10)
+--- @field wsBirthPlace_Ship_Cold number Ship Cold (11)
+--- @field wsBirthPlace_Ship_Hot number Ship Hot (12)
+
+--- @class world.VolumeType
+--- @description volume types
+--- @field SEGMENT number Segment (0)
+--- @field BOX number Box (1)
+--- @field SPHERE number Sphere (2)
+--- @field PYRAMID number Pyramid (3)
+
+------------------------------------------------------------------------------
+--- coalition
+------------------------------------------------------------------------------
+
+--- @class coalition
+--- @description The coalition singleton contains functions that gets information on the all of the units within the mission. It also has two of the most powerful functions that are capable of spawning groups and static objects into the mission. 
+--- @field addGroup fun(countryId:number, groupCategory:number, groupData:table):Group Adds a group of the specified category for the specified country using provided group data. (country.id, Group.Category)
+--- @field addStaticObject fun(countryId:number, groupData:table):StaticObject Dynamically spawns a static object for the specified country based on the provided group data. (country.id)
+--- @field getGroups fun(coalitionId:number, groupCategory:number|nil):table Returns a table of group objects within the specified coalition and optionally filtered by group category. (coalition.side)
+--- @field getStaticObjects fun(coalitionId:number):table Returns a table of static objects within the specified coalition. (coalition.side)
+--- @field getAirbases fun(coalitionId:number|nil):table Returns a table of airbase objects for the specified coalition or all airbases if no coalition is specified. (coalition.side)
+--- @field getPlayers fun(coalitionId:number):table Returns a table of unit objects currently occupied by players within the specified coalition. (coalition.side)
+--- @field getServiceProviders fun(coalitionId:number, service:number):table Returns a table of unit objects that provide a specified service (ATC, AWACS, TANKER, FAC) within the specified coalition. (coalition.side, coalition.service)
+--- @field addRefPoints fun(coalitionId:number, refPoint:table) Adds a reference point for the specified coalition, used by JTACs. (coalition.side)
+--- @field getRefPoints fun(coalitionId:number):table Returns a table of reference points defined for the specified coalition, used by JTACs. (coalition.side)
+--- @field getMainRefPoint fun(coalitionId:number):vec3 Returns the position of the main reference point ("bullseye") for the specified coalition. (coalition.side)
+--- @field getCountryCoalition fun(countryId:number):number Returns the coalition ID that a specified country belongs to. (country.id)
+
+--- @class coalition.side
+--- @description coalition sides
+--- @field NEUTRAL number Neutral (0)
+--- @field RED number Red (1)
+--- @field BLUE number Blue (2)
+--- @field ALL number All (-1)
+
+--- @class coalition.service
+--- @description coalition services
+--- @field ATC number ATC (0)
+--- @field AWACS number AWACS (1)
+--- @field TANKER number Tanker (2)
+--- @field FAC number FAC (3)
+
+------------------------------------------------------------------------------
+--- trigger
+------------------------------------------------------------------------------
+
+--- @class trigger
+--- @description The trigger singleton contains a number of functions that mimic actions and conditions found within the mission editor triggers.
+--- @field action trigger.action trigger actions
+--- @field misc trigger.misc some misc getters
+--- @field smokeColor trigger.smokeColor smoke colors
+--- @field flareColor trigger.flareColor flare colors
+
+--- @class trigger.smokeColor
+--- @description smoke colors
+--- @field Green number Green (0)
+--- @field Red number Red (1)
+--- @field White number White (2)
+--- @field Orange number Orange (3)
+--- @field Blue number Blue (4)
+
+--- @class trigger.flareColor
+--- @description flare colors
+--- @field Green number Green (0)
+--- @field Red number Red (1)
+--- @field White number White (2)
+--- @field Yellow number Yellow (3)
+
+--- @class trigger.action
+--- @description trigger actions
+--- @field ctfColorTag fun(unitName:string, smokeColor:number) Creates a smoke plume behind a specified aircraft. When passed 0 for smoke type the plume will be disabled. When triggering the on the same unit with a different color the plume will simply change color. (trigger.smokeColor)
+--- @field setUserFlag fun(flag:string, value:number|boolean) Sets the value of a user flag.
+--- @field explosion fun(position:vec3, power:number) Creates an explosion at a specified position with a specified power.
+--- @field smoke fun(position:vec3, color:number) Creates a smoke plume at a specified position with a specified color. (trigger.smokeColor)
+--- @field effectSmokeBig fun(position:vec3, preset:number, density:number, name:string) Creates a large smoke effect at a specified position with a specified preset (1-4=smoke/fire, 5-7=smoke), density (0-1), and name. (trigger.effectSmokePreset)
+--- @field effectSmokeStop fun(name:string) Stops a smoke effect with a specified name.
+--- @field illuminationBomb fun(position:vec3, power:number) Creates an illumination bomb at a specified position with a specified power. (1-1000000)
+--- @field signalFlare fun(position:vec3, color:number, azimuth:number) Creates a signal flare at a specified position with a specified color and azimuth. (trigger.flareColor)
+--- @field radioTransmission fun(filename:string, point:vec3, modulation:enum, loop:boolean, frequency:number, power:number, name:string) Transmits an audio file from a specific point on a given frequency. (radio.modulation)
+--- @field stopRadioTransmission fun(name:string) Stops the named radio transmission.
+--- @field setUnitInternalCargo fun(unitName:string, mass:number) Sets the internal cargo mass for a specified unit.
+--- @field outSound fun(soundfile:string) Plays a sound file to all players.
+--- @field outSoundForCoalition fun(coalition:number, soundfile:string) Plays a sound file to all players in the specified coalition.
+--- @field outSoundForCountry fun(country:number, soundfile:string) Plays a sound file to all players in the specified country.
+--- @field outSoundForGroup fun(groupId:number, soundfile:string) Plays a sound file to all players in the specified group.
+--- @field outSoundForUnit fun(unitId:number, soundfile:string) Plays a sound file to all players in the specified unit.
+--- @field outText fun(text:string, displayTime:number, clearview:boolean) Displays text to all players for the specified time.
+--- @field outTextForCoalition fun(coalition:number, text:string, displayTime:number, clearview:boolean) Displays text to players in a specified coalition for a set time.
+--- @field outTextForCountry fun(country:number, text:string, displayTime:number, clearview:boolean) Displays text to players in a specified country for a set time.
+--- @field outTextForGroup fun(groupId:number, text:string, displayTime:number, clearview:boolean) Displays text to players in a specified group for a set time.
+--- @field outTextForUnit fun(unitId:number, text:string, displayTime:number, clearview:boolean) Displays text to players in a specified unit for a set time.
+--- @field addOtherCommand fun(name:string, userFlagName:string, userFlagValue:number) Adds a command to the "F10 Other" radio menu to set flags within the mission.
+--- @field removeOtherCommand fun(name:string) Removes the specified command from the "F10 Other" radio menu.
+--- @field addOtherCommandForCoalition fun(coalition:number, name:string, userFlagName:string, userFlagValue:string) Adds a coalition-specific command to the "F10 Other" menu.
+--- @field removeOtherCommandForCoalition fun(coalitionId:number, name:string) Removes a coalition-specific command from the "F10 Other" menu.
+--- @field addOtherCommandForGroup fun(groupId:number, name:string, userFlagName:string, userFlagValue:string) Adds a group-specific command to the "F10 Other" menu.
+--- @field removeOtherCommandForGroup fun(groupId:number, name:string) Removes a group-specific command from the "F10 Other" menu.
+--- @field markToAll fun(id:number, text:string, point:vec3, readOnly:boolean, message:string) Adds a mark point to all on the F10 map.
+--- @field markToCoalition fun(id:number, text:string, point:vec3, coalitionId:number, readOnly:boolean, message:string) Adds a mark point to a coalition on the F10 map.
+--- @field markToGroup fun(id:number, text:string, point:vec3, groupId:number, readOnly:boolean, message:string) Adds a mark point to a group on the F10 map.
+--- @field removeMark fun(id:number) Removes a mark from the F10 map.
+--- @field markupToAll fun(shapeId:number, coalition:number, id:number, point1:vec3, param:..., color:table, fillColor:table, lineType:number, readOnly:boolean, message:string) Creates a defined shape on the F10 map.
+--- @field lineToAll fun(coalition:number, id:number, startPoint:vec3, endPoint:vec3, color:table, lineType:number, readOnly:boolean, message:string) Creates a line on the F10 map. 0=no line, 1=solid, 2=dashed, 3=dotted, 4=dot dash, 5=long dash, 6=two dash--- @field circleToAll fun(coalition:number, id:number, center:vec3, radius:number, color:table, fillColor:table, lineType:number, readOnly:boolean, message:string) Creates a circle on the F10 map.
+--- @field rectToAll fun(coalition:number, id:number, startPoint:vec3, endPoint:vec3, color:table, fillColor:table, lineType:number, readOnly:boolean, message:string) Creates a rectangle on the F10 map. 0=no line, 1=solid, 2=dashed, 3=dotted, 4=dot dash, 5=long dash, 6=two dash
+--- @field quadToAll fun(coalition:number, id:number, point1:vec3, point2:vec3, point3:vec3, point4:vec3, color:table, fillColor:table, lineType:number, readOnly:boolean, message:string) Creates a quadrilateral on the F10 map. 0=no line, 1=solid, 2=dashed, 3=dotted, 4=dot dash, 5=long dash, 6=two dash
+--- @field arrowToAll fun(coalition:number, id:number, startPoint:vec3, endPoint:vec3, color:table, fillColor:table, lineType:number, readOnly:boolean, message:string) Creates an arrow on the F10 map. 0=no line, 1=solid, 2=dashed, 3=dotted, 4=dot dash, 5=long dash, 6=two dash
+--- @field textToAll fun(coalition:number, id:number, point:vec3, color:table, fillColor:table, fontSize:number, readOnly:boolean, text:string) Creates text on the F10 map.
+--- @field setMarkupRadius fun(id:number, radius:number) Updates the radius of an existing circular mark.
+--- @field setMarkupText fun(id:number, text:string) Updates the text of an existing mark.
+--- @field setMarkupFontSize fun(id:number, fontSize:number) Updates the font size of text on an existing mark.
+--- @field setMarkupColor fun(id:number, color:table) Updates the color of an existing mark.
+--- @field setMarkupColorFill fun(id:number, colorFill:table) Updates the fill color of an existing mark.
+--- @field setMarkupTypeLine fun(id:number, typeLine:number) Updates the line type of an existing mark. 0=no line, 1=solid, 2=dashed, 3=dotted, 4=dot dash, 5=long dash, 6=two dash
+--- @field setMarkupPositionEnd fun(id:number, vec3:table) Updates the endpoint of an existing line or shape mark.
+--- @field setMarkupPositionStart fun(id:number, vec3:table) Updates the start point of an existing line or shape mark.
+--- @field setAITask fun(Group:Group, taskIndex:number) Sets the specified task index as the only active task for the group.
+--- @field pushAITask fun(Group:Group, taskIndex:number) Pushes the specified task index to the front of the tasking queue for the group.
+--- @field activateGroup fun(Group:Group) Activates the specified group if set up for "late activation."
+--- @field deactivateGroup fun(Group:Group) Deactivates the specified group.
+--- @field setGroupAIOn fun(Group:Group) Turns the group's AI on, only for ground and ship groups.
+--- @field setGroupAIOff fun(Group:Group) Turns the group's AI off, only for ground and ship groups.
+--- @field groupStopMoving fun(Group:Group) Orders the specified ground group to stop moving.
+--- @field groupContinueMoving fun(Group:Group) Orders the specified ground group to resume moving.
+
+--- @class trigger.misc
+--- @description trigger misc
+--- @field getUserFlag fun(flag:string):number Returns the value of a user flag.
+--- @field getZone fun(zoneName:string):TriggerZone Returns a trigger zone table of a given name
+--- @field addZone fun(zoneData:table):TriggerZone Adds a trigger zone to the mission with the provided data.
+
+------------------------------------------------------------------------------
+--- coord
+------------------------------------------------------------------------------
+
+--- @class coord
+--- @description The coord singleton contains functions used to convert coordinates between the game's XYZ, Longitude and Latitude, and the MGRS coordinate systems.
+--- @field LLtoLO fun(latitude:number, longitude:number, altitude:number):vec3 Converts latitude, longitude, and altitude to game world coordinates (vec3).
+--- @field LOtoLL fun(point:vec3):number, number, number Converts game world coordinates (vec3) to latitude, longitude, and altitude.
+--- @field LLtoMGRS fun(latitude:number, longitude:number):MGRS Returns an MGRS table from the latitude and longitude coordinates provided. Note that in order to get the MGRS coordinate from a vec3 you must first use coord.LOtoLL on it. 
+--- @field MGRStoLL fun(mgrs:MGRS):number, number, number Converts an MGRS table to latitude, longitude, and altitude.
+
+------------------------------------------------------------------------------
+--- missionCommands
+------------------------------------------------------------------------------
+
+--- @class missionCommands
+--- @description The missionCommands singleton allows for greater access and flexibility of use for the F10 Other radio menu. Added commands can contain sub-menus and directly call lua functions.
+--- @field addCommand fun(name:string, path:table|nil, functionToRun:function, anyArgument:any):table Adds a command to the "F10 Other" menu.
+--- @field addSubMenu fun(name:string, path:table|nil):table Creates a submenu in the F10 radio menu.
+--- @field removeItem fun(path:table|nil) Removes an item or submenu from the F10 radio menu.
+--- @field addCommandForCoalition fun(coalitionSide:number, name:string, path:table|nil, functionToRun:function, anyArgument:any):table Adds a coalition-specific command to the F10 menu.
+--- @field addSubMenuForCoalition fun(coalitionSide:number, name:string, path:table|nil):table Creates a coalition-specific submenu in the F10 menu.
+--- @field removeItemForCoalition fun(coalitionSide:number, path:table|nil) Removes a coalition-specific item or submenu from the F10 menu.
+--- @field addCommandForGroup fun(groupId:number, name:string, path:table|nil, functionToRun:function, anyArgument:any):table Adds a group-specific command to the F10 menu.
+--- @field addSubMenuForGroup fun(groupId:number, name:string, path:table|nil):table Creates a group-specific submenu in the F10 menu.
+--- @field removeItemForGroup fun(groupId:number, path:table|nil) Removes a group-specific item or submenu from the F10 menu.
+--- @field doAction fun()
+
+------------------------------------------------------------------------------
+--- VoiceChat
+------------------------------------------------------------------------------
+
+--- @class VoiceChat
+--- @description The voice chat singleton is a means of creating customized voice chat rooms for players to interact with each other in multiplayer.
+--- @field createRoom fun(roomName:string, side:number, roomType:number) Creates a VoiceChat room for multiplayer interaction. (VoiceChat.Side, VoiceChat.RoomType)
+
+--- @class VoiceChat.Side
+--- @description Enumerator for VoiceChat sides.
+--- @field NEUTRAL number Neutral (0)
+--- @field RED number Red (1)
+--- @field BLUE number Blue (2)
+--- @field ALL number All (3)
+
+--- @class VoiceChat.RoomType
+--- @description Enumerator for VoiceChat room types.
+--- @field PERSISTENT number Persistent (0)
+--- @field MULTICREW number Multicrew (1)
+--- @field MANAGEABLE number Manageable (2)
+
+------------------------------------------------------------------------------
+--- net
+------------------------------------------------------------------------------
+
+--- @class net
+--- @description The net singleton are a number of functions from the network API that work in the mission scripting environment. Notably for mission scripting purposes there is now a way to send chat, check if players are in Combined Arms slots, kick people from the server, and move players to certain slots. 
+--- @field send_chat fun(message:string, all:boolean) Sends a chat message to all players if true, or team otherwise.
+--- @field send_chat_to fun(message:string, playerId:number, fromId:number|nil) Sends a chat message to a specific player, optionally appearing from another player.
+--- @field recv_chat fun() Functionality unknown.
+--- @field load_mission fun(fileName:string):boolean Loads the specified mission.
+--- @field load_next_mission fun():boolean Load the next mission from the server mission list. Returns false if at the end of list.
+--- @field get_player_list fun():table Returns a list of players currently connected to the server.
+--- @field get_my_player_id fun():number Returns the playerID of the local player; returns 1 for server.
+--- @field get_server_id fun():number Returns the playerID of the server; currently always 1.
+--- @field get_player_info fun(playerID:number, attribute:string|nil):table Returns player attributes; specific attribute if provided.
+--- @field kick fun(playerId:number, message:string):boolean Kicks a player from the server with an optional message.
+--- @field get_stat fun(playerID:number, statID:number):number Returns a specific statistic from a given player.
+--- @field get_name fun(playerID:number):string Returns the name of a given player.
+--- @field get_slot fun(playerID:number):number, number Returns the sideId and slotId of a given player.
+--- @field set_slot fun() Functionality unknown.
+--- @field force_player_slot fun(playerID:number, sideId:number, slotId:number):boolean Forces a player into a specified slot.
+--- @field lua2json fun(lua:any):table Converts a Lua value to a JSON string.
+--- @field json2lua fun(json:string):table Converts a JSON string to a Lua value.
+--- @field dostring_in fun(environment:string, code:string):string Executes a Lua string in a specified Lua environment within the game. (config: main.cfg/autoexec.cfg state, mission: current mission, export: export.lua)
+--- @field log fun(message:string) Writes an "INFO" entry to the DCS log file.
+--- @field trace fun() Functionality unknown.
+
+------------------------------------------------------------------------------
+--- EventHandler
 ------------------------------------------------------------------------------
 
 --- @class EventHandler
@@ -349,7 +501,7 @@ _G.net = {}
 --- @field weapon Weapon|nil Weapon object that is the cause of the event
 
 ------------------------------------------------------------------------------
---- CLASSES
+--- Object
 ------------------------------------------------------------------------------
 
 --- @class Object
@@ -373,6 +525,17 @@ _G.net = {}
 --- @field life number initial life level
 --- @field box Box3 bounding box of collision geometry
 
+--- @class Object.Category
+--- @description Enumerator for object categories.
+--- @field UNIT number Unit (1)
+--- @field WEAPON number Weapon (2)
+--- @field STATIC number Static object (3)
+--- @field BASE number Base (4)
+--- @field SCENERY number Scenery object (5)
+--- @field CARGO number Cargo (6)
+
+------------------------------------------------------------------------------
+--- SceneryObject
 ------------------------------------------------------------------------------
 
 --- @class SceneryObject:Object
@@ -381,12 +544,16 @@ _G.net = {}
 --- @field getDescByName fun(typename:string):Object.Desc Return a description table of the specified Object type. Object does not need to be in the mission in order to query its data.
 
 ------------------------------------------------------------------------------
+--- CoalitionObject
+------------------------------------------------------------------------------
 
 --- @class CoalitionObject:Object
 --- @description Represents all objects that may belong to a coalition: units, airbases, static objects, weapon.
 --- @field getCoalition fun(self:CoalitionObject):number Returns an enumerator that defines the coalition that the object currently belongs to. 0=neutral, 1=red, 2=blue
 --- @field getCountry fun(self:CoalitionObject):number Returns an enumerator that defines the country that the object currently belongs to.
 
+------------------------------------------------------------------------------
+--- Unit
 ------------------------------------------------------------------------------
 
 --- @class Unit:CoalitionObject
@@ -413,9 +580,48 @@ _G.net = {}
 --- @field getDescentCapacity fun(self:Unit):number|nil Returns the descent capacity, nil if not applicable.
 --- @field getByName fun(name:string):Unit Returns an instance of the calling class for the object of a specified name.
 --- @field getDescByName fun(typename:string):Unit.Desc Return a description table of the specified Object type. Object does not need to be in the mission in order to query its data.
+--- @field Desc Unit.Desc
+--- @field Category Unit.Category
+--- @field RefuelingSystem Unit.RefuelingSystem
+--- @field SensorType Unit.SensorType
+--- @field OpticType Unit.OpticType
+--- @field RadarType Unit.RadarType
 
 --- @class Unit.Desc:Object.Desc
 
+--- @class Unit.Category
+--- @description Enumerator for unit categories.
+--- @field AIRPLANE number Airplane (0)
+--- @field HELICOPTER number Helicopter (1)
+--- @field GROUND_UNIT number Ground unit (2)
+--- @field SHIP number Ship (3)
+--- @field STRUCTURE number Structure (4)
+
+--- @class Unit.RefuelingSystem
+--- @description Enumerator for refueling systems.
+--- @field BOOM_AND_RECEPTACLE number Boom and receptacle (0)
+--- @field PROBE_AND_DROGUE number Probe and drogue (1)
+
+--- @class Unit.SensorType
+--- @description Enumerator for sensor types.
+--- @field OPTIC number Optic (0)
+--- @field RADAR number Radar (1)
+--- @field IRST number IRST (2)
+--- @field RWR number RWR (3)
+
+--- @class Unit.OpticType
+--- @description Enumerator for optic types.
+--- @field TV number TV (0)
+--- @field LLTV number LLTV (1)
+--- @field IR number IR (2)
+
+--- @class Unit.RadarType
+--- @description Enumerator for radar types.
+--- @field AS number Air-to-surface (0)
+--- @field SS number Surface-to-surface (1)
+
+------------------------------------------------------------------------------
+--- Airbase
 ------------------------------------------------------------------------------
 
 --- @class Airbase:CoalitionObject
@@ -440,6 +646,14 @@ _G.net = {}
 --- @description Airbase description table.
 --- @field category Airbase.Category
 
+--- @class Airbase.Category
+--- @description Enumerator for airbase categories.
+--- @field AIRDROME number Airdrome (0)
+--- @field HELIPAD number Helipad (1)
+--- @field SHIP number Ship (2)
+
+------------------------------------------------------------------------------
+--- Weapon
 ------------------------------------------------------------------------------
 
 --- @class Weapon:CoalitionObject
@@ -485,6 +699,41 @@ _G.net = {}
 --- @field altMin number
 --- @field altMax number
 
+--- @class Weapon.Category
+--- @description Enumerator for weapon categories.
+--- @field SHELL number Shell (0)
+--- @field MISSILE number Missile (1)
+--- @field ROCKET number Rocket (2)
+--- @field BOMB number Bomb (3)
+
+--- @class Weapon.GuidanceType
+--- @description Enumerator for weapon guidance types.
+--- @field INS number INS (1)
+--- @field IR number IR (2)
+--- @field RADAR_ACTIVE number Active Radar (3)
+--- @field RADAR_SEMI_ACTIVE number Semi-Active Radar (4)
+--- @field RADAR_PASSIVE number Passive Radar (5)
+--- @field TV number TV (6)
+--- @field LASER number LASER (7)
+--- @field TELE number TELE (8)
+
+--- @class Weapon.MissileCategory
+--- @description Enumerator for missile categories.
+--- @field AAM number AAM (1)
+--- @field SAM number SAM (2)
+--- @field BM number BM (3)
+--- @field ANTI_SHIP number Anti-Ship (4)
+--- @field CRUISE number Cruise (5)
+--- @field OTHER number Other (6)
+
+--- @class Weapon.WarheadType
+--- @description Enumerator for warhead types.
+--- @field AP number AP (0)
+--- @field HE number HE (1)
+--- @field SHAPED_EXPLOSIVE number Shaped Explosive (2)
+
+------------------------------------------------------------------------------
+--- StaticObject
 ------------------------------------------------------------------------------
 
 --- @class StaticObject:CoalitionObject
@@ -497,6 +746,18 @@ _G.net = {}
 --- @field getByName fun(name:string):StaticObject Returns an instance of the calling class for the object of a specified name.
 --- @field getDescByName fun(typename:string):Object.Desc Return a description table of the specified Object type. Object does not need to be in the mission in order to query its data.
 
+--- @class StaticObject.Category
+--- @description Enumerator for static object categories.
+--- @field VOID number Void (0)
+--- @field UNIT number Unit (1)
+--- @field WEAPON number Weapon (2)
+--- @field STATIC number Static object (3)
+--- @field BASE number Base (4)
+--- @field SCENERY number Scenery object (5)
+--- @field CARGO number Cargo (6)
+
+------------------------------------------------------------------------------
+--- Group
 ------------------------------------------------------------------------------
 
 --- @class Group
@@ -516,6 +777,16 @@ _G.net = {}
 --- @field enableEmission fun(self:Group, setting:boolean) Sets radar emissions on or off.
 --- @field getByName fun(name:string):Group Returns an instance of the calling class for the object of a specified name.
 
+--- @class Group.Category
+--- @description Enumerator for group categories.
+--- @field AIRPLANE number Airplane (0)
+--- @field HELICOPTER number Helicopter (1)
+--- @field GROUND number Ground (2)
+--- @field SHIP number Ship (3)
+--- @field TRAIN number Train (4)
+
+------------------------------------------------------------------------------
+--- Controller
 ------------------------------------------------------------------------------
 
 --- @class Controller
@@ -534,6 +805,17 @@ _G.net = {}
 --- @field isTargetDetected fun(self:Controller, target:Object, detectionType1:enum, detectionType2:enum, detectionType3:enum,...):table Returns details if the target is detected.
 --- @field getDetectedTargets fun(self:Controller, detectionType1:enum, detectionType2:enum, detectionType3:enum,...):table Returns a table of detected targets.
 
+--- @class Controller.Detection
+--- @description Enumerator for detection types.
+--- @field VISUAL number Visual (1)
+--- @field OPTIC number Optic (2)
+--- @field RADAR number Radar (4)
+--- @field IRST number IRST (8)
+--- @field RWR number RWR (16)
+--- @field DLINK number DLINK (32)
+
+------------------------------------------------------------------------------
+--- Task
 ------------------------------------------------------------------------------
 
 --- @class Task
@@ -541,6 +823,8 @@ _G.net = {}
 --- @field id string
 --- @field params table
 
+------------------------------------------------------------------------------
+--- Spot
 ------------------------------------------------------------------------------
 
 --- @class Spot
@@ -554,6 +838,13 @@ _G.net = {}
 --- @field getCategory fun(self:Object):Spot.Category Returns the category and sub-category of the object.
 --- @field getPoint fun(self:Object):Vec3 Returns the x, y, and z coordinates of the objects position in 3D space.
 
+--- @class Spot.Category
+--- @description Enumerator for spot categories.
+--- @field INFRA_RED number Infra-red (0)
+--- @field LASER number LASER (1)
+
+------------------------------------------------------------------------------
+--- Warehouse
 ------------------------------------------------------------------------------
 
 --- @class Warehouse
@@ -570,646 +861,340 @@ _G.net = {}
 --- @field getInventory fun(self:Warehouse, itemName:string|table):table Returns a full itemized list of the inventory, empty if category is set to unlimited.
 
 ------------------------------------------------------------------------------
---- ENUMERATORS
+--- country
 ------------------------------------------------------------------------------
 
-Object = {}
+--- @class country
+--- @description The country singleton contains enumerators for all countries in DCS World. These can be used to set the country of a unit or group, or to check the country of an object.
+--- @field id country.id key country, value id
+--- @field names table key id, value country
 
-Object.Category = {
-    UNIT = 1,
-    WEAPON = 2,
-    STATIC = 3,
-    BASE = 4,
-    SCENERY = 5,
-    CARGO = 6
-}
-
-------------------------------------------------------------------------------
-
-Unit = {}
-
-Unit.Category = {
-    AIRPLANE = 0,
-    HELICOPTER = 1,
-    GROUND_UNIT = 2,
-    SHIP = 3,
-    STRUCTURE = 4
-}
-
-Unit.RefuelingSystem = {
-    BOOM_AND_RECEPTACLE = 0,
-    PROBE_AND_DROGUE = 1
-}
-
-Unit.SensorType = {
-    OPTIC = 0,
-    RADAR = 1,
-    IRST = 2,
-    RWR = 3
-}
-
-Unit.OpticType = {
-    TV = 0,
-    LLTV = 1,
-    IR = 2
-}
-
-Unit.RadarType = {
-    AS = 0,
-    SS = 1
-}
-
-------------------------------------------------------------------------------
-
-Airbase = {}
-
-Airbase.Category = {
-    AIRDROME = 0,
-    HELIPAD = 1,
-    SHIP = 2
-}
-
-------------------------------------------------------------------------------
-
-Weapon = {}
-
-Weapon.Category = {
-    SHELL = 0,
-    MISSILE = 1,
-    ROCKET = 2,
-    BOMB = 3
-}
-
-Weapon.GuidanceType = {
-    INS = 1,
-    IR = 2,
-    RADAR_ACTIVE = 3,
-    RADAR_SEMI_ACTIVE = 4,
-    RADAR_PASSIVE = 5,
-    TV = 6,
-    LASER = 7,
-    TELE = 8
-}
-
-Weapon.MissileCategory = {
-    AAM = 1,
-    SAM = 2,
-    BM = 3,
-    ANTI_SHIP = 4,
-    CRUISE = 5,
-    OTHER = 6
-}
-
-Weapon.WarheadType = {
-    AP = 0,
-    HE = 1,
-    SHAPED_EXPLOSIVE = 2
-}
-
-------------------------------------------------------------------------------
-
-StaticObject = {}
-
-StaticObject.Category = {
-    VOID = 0,
-    UNIT = 1,
-    WEAPON = 2,
-    STATIC = 3,
-    BASE = 4,
-    SCENERY = 5,
-    CARGO = 6
-}
+--- @class country.id
+--- @description Enumerator for country IDs.
+--- @field RUSSIA number Russia (0)
+--- @field UKRAINE number Ukraine (1)
+--- @field USA number USA (2)
+--- @field TURKEY number Turkey (3)
+--- @field UK number UK (4)
+--- @field FRANCE number France (5)
+--- @field GERMANY number Germany (6)
+--- @field AGGRESSORS number Aggressors (7)
+--- @field CANADA number Canada (8)
+--- @field SPAIN number Spain (9)
+--- @field THE_NETHERLANDS number The Netherlands (10)
+--- @field BELGIUM number Belgium (11)
+--- @field NORWAY number Norway (12)
+--- @field DENMARK number Denmark (13)
+--- @field GREECE number Greece (14)
+--- @field ISRAEL number Israel (15)
+--- @field GEORGIA number Georgia (16)
+--- @field INSURGENTS number Insurgents (17)
+--- @field ABKHAZIA number Abkhazia (18)
+--- @field SOUTH_OSETIA number South Ossetia (19)
+--- @field ITALY number Italy (20)
+--- @field AUSTRALIA number Australia (21)
+--- @field SWITZERLAND number Switzerland (22)
+--- @field AUSTRIA number Austria (23)
+--- @field BELARUS number Belarus (24)
+--- @field BULGARIA number Bulgaria (25)
+--- @field CHEZH_REPUBLIC number Czech Republic (26)
+--- @field CHINA number China (27)
+--- @field CROATIA number Croatia (28)
+--- @field EGYPT number Egypt (29)
+--- @field FINLAND number Finland (30)
+--- @field GREECE number Greece (31)
+--- @field HUNGARY number Hungary (32)
+--- @field INDIA number India (33)
+--- @field IRAN number Iran (34)
+--- @field IRAQ number Iraq (35)
+--- @field JAPAN number Japan (36)
+--- @field KAZAKHSTAN number Kazakhstan (37)
+--- @field NORTH_KOREA number North Korea (38)
+--- @field PAKISTAN number Pakistan (39)
+--- @field POLAND number Poland (40)
+--- @field ROMANIA number Romania (41)
+--- @field SAUDI_ARABIA number Saudi Arabia (42)
+--- @field SERBIA number Serbia (43)
+--- @field SLOVAKIA number Slovakia (44)
+--- @field SOUTH_KOREA number South Korea (45)
+--- @field SWEDEN number Sweden (46)
+--- @field SYRIA number Syria (47)
+--- @field YEMEN number Yemen (48)
+--- @field VIETNAM number Vietnam (49)
+--- @field VENEZUELA number Venezuela (50)
+--- @field TUNISIA number Tunisia (51)
+--- @field THAILAND number Thailand (52)
+--- @field SUDAN number Sudan (53)
+--- @field PHILIPPINES number Philippines (54)
+--- @field MOROCCO number Morocco (55)
+--- @field MEXICO number Mexico (56)
+--- @field MALAYSIA number Malaysia (57)
+--- @field LIBYA number Libya (58)
+--- @field JORDAN number Jordan (59)
+--- @field INDONESIA number Indonesia (60)
+--- @field HONDURAS number Honduras (61)
+--- @field ETHIOPIA number Ethiopia (62)
+--- @field CHILE number Chile (63)
+--- @field BRAZIL number Brazil (64)
+--- @field BAHRAIN number Bahrain (65)
+--- @field THIRDREICH number Third Reich (66)
+--- @field YUGOSLAVIA number Yugoslavia (67)
+--- @field USSR number USSR (68)
+--- @field ITALIAN_SOCIAL_REPUBLIC number Italian Social Republic (69)
+--- @field ALGERIA number Algeria (70)
+--- @field KUWAIT number Kuwait (71)
+--- @field QATAR number Qatar (72)
+--- @field OMAN number Oman (73)
+--- @field UNITED_ARAB_EMIRATES number United Arab Emirates (74)
+--- @field SOUTH_AFRICA number South Africa (75)
+--- @field CUBA number Cuba (76)
+--- @field PORTUGAL number Portugal (77)
+--- @field GDR number GDR (78)
+--- @field LEBANON number Lebanon (79)
+--- @field CJTF_BLUE number CJTF Blue (80)
+--- @field CJTF_RED number CJTF Red (81)
+--- @field UN_PEACEKEEPERS number UN Peacekeepers (82)
+--- @field Argentina number Argentina (83)
+--- @field Cyprus number Cyprus (84)
+--- @field Slovenia number Slovenia (85)
+--- @field BOLIVIA number Bolivia (86)
+--- @field GHANA number Ghana (87)
+--- @field NIGERIA number Nigeria (88)
+--- @field PERU number Peru (89)
+--- @field ECUADOR number Ecuador (90)
 
 ------------------------------------------------------------------------------
-
-Group = {}
-
-Group.Category = {
-    AIRPLANE = 0,
-    HELICOPTER = 1,
-    GROUND = 2,
-    SHIP = 3,
-    TRAIN = 4
-}
-
+--- AI
 ------------------------------------------------------------------------------
 
-Controller = {}
+--- @class AI
+--- @description The AI singleton contains enumerators for AI tasks and skills, as well as options for air, ground, and naval units.
+--- @field Task AI.Task
+--- @field Skill AI.Skill
+--- @field Option AI.Option
 
-Controller.Detection = {
-    VISUAL = 1,
-    OPTIC = 2,
-    RADAR = 4,
-    IRST = 8,
-    RWR = 16,
-    DLINK = 32
-}
+--- @class AI.Task
+--- @description Enumerator for AI tasks.
+--- @field OrbitPattern AI.Task.OrbitPattern
+--- @field Designation AI.Task.Designation
+--- @field TurnMethod AI.Task.TurnMethod
+--- @field VehicleFormation AI.Task.VehicleFormation
+--- @field AltitudeType AI.Task.AltitudeType
+--- @field WaypointType AI.Task.WaypointType
+--- @field WeaponExpend AI.Task.WeaponExpend
 
-------------------------------------------------------------------------------
+--- @class AI.Task.OrbitPattern
+--- @description Enumerator for orbit patterns.
+--- @field RACE_TRACK string Race-Track ("Race-Track")
+--- @field CIRCLE string Circle ("Circle")
 
-Spot = {}
+--- @class AI.Task.Designation
+--- @description Enumerator for designations.
+--- @field NO string No ("No")
+--- @field WP string Waypoint ("WP")
+--- @field IR_POINTER string IR-Pointer ("IR-Pointer")
+--- @field LASER string Laser ("Laser")
+--- @field AUTO string Auto ("Auto")
 
-Spot.Category = {
-    INFRA_RED = 0,
-    LASER = 1
-}
+--- @class AI.Task.TurnMethod
+--- @description Enumerator for turn methods.
+--- @field FLY_OVER_POINT string Fly Over Point ("Fly Over Point")
+--- @field FIN_POINT string Fin Point ("Fin Point")
 
-------------------------------------------------------------------------------
+--- @class AI.Task.VehicleFormation
+--- @description Enumerator for vehicle formations.
+--- @field VEE string Vee ("Vee")
+--- @field ECHELON_RIGHT string Echelon Right ("EchelonR")
+--- @field OFF_ROAD string Off Road ("Off Road")
+--- @field RANK string Rank ("Rank")
+--- @field ECHELON_LEFT string Echelon Left ("EchelonL")
+--- @field ON_ROAD string On Road ("On Road")
+--- @field CONE string Cone ("Cone")
+--- @field DIAMOND string Diamond ("Diamond")
 
-country = {}
+--- @class AI.Task.AltitudeType
+--- @description Enumerator for altitude types.
+--- @field RADIO string Radio ("RADIO")
+--- @field BARO string Barometric ("BARO")
 
-country.id = {
-    ['RUSSIA'] = 0,
-    ['UKRAINE'] = 1,
-    ['USA'] = 2,
-    ['TURKEY'] = 3,
-    ['UK'] = 4,
-    ['FRANCE'] = 5,
-    ['GERMANY'] = 6,
-    ['AGGRESSORS'] = 7,
-    ['CANADA'] = 8,
-    ['SPAIN'] = 9,
-    ['THE_NETHERLANDS'] = 10,
-    ['BELGIUM'] = 11,
-    ['NORWAY'] = 12,
-    ['DENMARK'] = 13,
-    ['ISRAEL'] = 15,
-    ['GEORGIA'] = 16,
-    ['INSURGENTS'] = 17,
-    ['ABKHAZIA'] = 18,
-    ['SOUTH_OSETIA'] = 19,
-    ['ITALY'] = 20,
-    ['AUSTRALIA'] = 21,
-    ['SWITZERLAND'] = 22,
-    ['AUSTRIA'] = 23,
-    ['BELARUS'] = 24,
-    ['BULGARIA'] = 25,
-    ['CHEZH_REPUBLIC'] = 26,
-    ['CHINA'] = 27,
-    ['CROATIA'] = 28,
-    ['EGYPT'] = 29,
-    ['FINLAND'] = 30,
-    ['GREECE'] = 31,
-    ['HUNGARY'] = 32,
-    ['INDIA'] = 33,
-    ['IRAN'] = 34,
-    ['IRAQ'] = 35,
-    ['JAPAN'] = 36,
-    ['KAZAKHSTAN'] = 37,
-    ['NORTH_KOREA'] = 38,
-    ['PAKISTAN'] = 39,
-    ['POLAND'] = 40,
-    ['ROMANIA'] = 41,
-    ['SAUDI_ARABIA'] = 42,
-    ['SERBIA'] = 43,
-    ['SLOVAKIA'] = 44,
-    ['SOUTH_KOREA'] = 45,
-    ['SWEDEN'] = 46,
-    ['SYRIA'] = 47,
-    ['YEMEN'] = 48,
-    ['VIETNAM'] = 49,
-    ['VENEZUELA'] = 50,
-    ['TUNISIA'] = 51,
-    ['THAILAND'] = 52,
-    ['SUDAN'] = 53,
-    ['PHILIPPINES'] = 54,
-    ['MOROCCO'] = 55,
-    ['MEXICO'] = 56,
-    ['MALAYSIA'] = 57,
-    ['LIBYA'] = 58,
-    ['JORDAN'] = 59,
-    ['INDONESIA'] = 60,
-    ['HONDURAS'] = 61,
-    ['ETHIOPIA'] = 62,
-    ['CHILE'] = 63,
-    ['BRAZIL'] = 64,
-    ['BAHRAIN'] = 65,
-    ['THIRDREICH'] = 66,
-    ['YUGOSLAVIA'] = 67,
-    ['USSR'] = 68,
-    ['ITALIAN_SOCIAL_REPUBLIC'] = 69,
-    ['ALGERIA'] = 70,
-    ['KUWAIT'] = 71,
-    ['QATAR'] = 72,
-    ['OMAN'] = 73,
-    ['UNITED_ARAB_EMIRATES'] = 74,
-    ['SOUTH_AFRICA'] = 75,
-    ['CUBA'] = 76,
-    ['PORTUGAL'] = 77,
-    ['GDR'] = 78,
-    ['LEBANON'] = 79,
-    ['CJTF_BLUE'] = 80,
-    ['CJTF_RED'] = 81,
-    ['UN_PEACEKEEPERS'] = 82,
-    ['Argentina'] = 83,
-    ['Cyprus'] = 84,
-    ['Slovenia'] = 85,
-    ['BOLIVIA'] = 86,
-    ['GHANA'] = 87,
-    ['NIGERIA'] = 88,
-    ['PERU'] = 89,
-    ['ECUADOR'] = 90
-}
+--- @class AI.Task.WaypointType
+--- @description Enumerator for waypoint types.
+--- @field TAKEOFF string TakeOff ("TakeOff")
+--- @field TAKEOFF_PARKING string TakeOffParking ("TakeOffParking")
+--- @field TURNING_POINT string Turning Point ("Turning Point")
+--- @field TAKEOFF_PARKING_HOT string TakeOffParkingHot ("TakeOffParkingHot")
+--- @field LAND string Land ("Land")
 
-country.name = {
-    [0] = 'RUSSIA',
-    [1] = 'UKRAINE',
-    [2] = 'USA',
-    [3] = 'TURKEY',
-    [4] = 'UK',
-    [5] = 'FRANCE',
-    [6] = 'GERMANY',
-    [7] = 'AGGRESSORS',
-    [8] = 'CANADA',
-    [9] = 'SPAIN',
-    [10] = 'THE_NETHERLANDS',
-    [11] = 'BELGIUM',
-    [12] = 'NORWAY',
-    [13] = 'DENMARK',
-    [15] = 'ISRAEL',
-    [16] = 'GEORGIA',
-    [17] = 'INSURGENTS',
-    [18] = 'ABKHAZIA',
-    [19] = 'SOUTH_OSETIA',
-    [20] = 'ITALY',
-    [21] = 'AUSTRALIA',
-    [22] = 'SWITZERLAND',
-    [23] = 'AUSTRIA',
-    [24] = 'BELARUS',
-    [25] = 'BULGARIA',
-    [26] = 'CHEZH_REPUBLIC',
-    [27] = 'CHINA',
-    [28] = 'CROATIA',
-    [29] = 'GREECE',
-    [30] = 'HUNGARY',
-    [31] = 'INDIA',
-    [32] = 'IRELAND',
-    [33] = 'JAPAN',
-    [34] = 'KOREA',
-    [35] = 'LUXEMBOURG',
-    [36] = 'NEW_ZEALAND',
-    [37] = 'POLAND',
-    [38] = 'PORTUGAL',
-    [39] = 'ROMANIA',
-    [40] = 'SLOVAKIA',
-    [41] = 'SLOVENIA',
-    [42] = 'SOUTH_AFRICA',
-    [43] = 'SWEDEN',
-    [73] = 'OMAN',
-    [74] = 'UNITED_ARAB_EMIRATES',
-    [75] = 'SOUTH_AFRICA',
-    [76] = 'CUBA',
-    [77] = 'PORTUGAL',
-    [78] = 'GDR',
-    [79] = 'LEBANON',
-    [80] = 'CJTF_BLUE',
-    [81] = 'CJTF_RED',
-    [82] = 'UN_PEACEKEEPERS',
-    [83] = 'Argentina',
-    [84] = 'Cyprus',
-    [85] = 'Slovenia',
-    [86] = 'BOLIVIA',
-    [87] = 'GHANA',
-    [88] = 'NIGERIA',
-    [89] = 'PERU',
-    [90] = 'ECUADOR'
-}
+--- @class AI.Task.WeaponExpend
+--- @description Enumerator for weapon expenditures.
+--- @field QUARTER string Quarter ("Quarter")
+--- @field TWO string Two ("Two")
+--- @field ONE string One ("One")
+--- @field FOUR string Four ("Four")
+--- @field HALF string Half ("Half")
+--- @field ALL string All ("All")
 
-country.names = country.name
+--- @class AI.Skill
+--- @description Enumerator for AI skills.
+--- @field PLAYER string Player ("PLAYER")
+--- @field CLIENT string Client ("CLIENT")
+--- @field AVERAGE string Average ("AVERAGE")
+--- @field GOOD string Good ("GOOD")
+--- @field HIGH string High ("HIGH")
+--- @field EXCELLENT string Excellent ("EXCELLENT")
 
-------------------------------------------------------------------------------
+--- @class AI.Option
+--- @description Enumerator for AI options.
+--- @field Air AI.Option.Air
+--- @field Ground AI.Option.Ground
+--- @field Naval AI.Option.Naval
 
-AI = {}
+--- @class AI.Option.Air
+--- @description Enumerator for air unit options.
+--- @field id AI.Option.Air.id
+--- @field val AI.Option.Air.val
 
-AI.Task = {}
+--- @class AI.Option.Air.id
+--- @description Enumerator for air unit option IDs.
+--- @field ROE number ROE (0)
+--- @field REACTION_ON_THREAT number Reaction on threat (1)
+--- @field RADAR_USING number Radar using (3)
+--- @field FLARE_USING number Flare using (4)
+--- @field FORMATION number Formation (5)
+--- @field RTB_ON_BINGO number RTB on bingo (6)
+--- @field SILENCE number Silence (7)
+--- @field RTB_ON_OUT_OF_AMMO number RTB on out of ammo (10)
+--- @field ECM_USING number ECM using (13)
+--- @field PROHIBIT_AA number Prohibit AA (14)
+--- @field PROHIBIT_JETT number Prohibit Jett (15)
+--- @field PROHIBIT_AB number Prohibit AB (16)
+--- @field PROHIBIT_AG number Prohibit AG (17)
+--- @field MISSILE_ATTACK number Missile attack (18)
+--- @field PROHIBIT_WP_PASS_REPORT number Prohibit WP pass report (19)
+--- @field OPTION_RADIO_USAGE_CONTACT number Option radio usage contact (21)
+--- @field OPTION_RADIO_USAGE_ENGAGE number Option radio usage engage (22)
+--- @field OPTION_RADIO_USAGE_KILL number Option radio usage kill (23)
+--- @field JETT_TANKS_IF_EMPTY number Jett tanks if empty (25)
+--- @field FORCED_ATTACK number Forced attack (26)
+--- @field PREFER_VERTICAL number Prefer vertical (32)
 
-AI.Task.OrbitPattern = {
-    RACE_TRACK = "Race-Track",
-    CIRCLE = "Circle"
-}
+--- @class AI.Option.Air.val
+--- @description Enumerator for air unit option values.
+--- @field ROE AI.Option.Air.val.ROE
+--- @field REACTION_ON_THREAT AI.Option.Air.val.REACTION_ON_THREAT
+--- @field RADAR_USING AI.Option.Air.val.RADAR_USING
+--- @field FLARE_USING AI.Option.Air.val.FLARE_USING
+--- @field ECM_USING AI.Option.Air.val.ECM_USING
+--- @field MISSILE_ATTACK AI.Option.Air.val.MISSILE_ATTACK
 
-AI.Task.Designation = {
-    NO = "No",
-    WP = "WP",
-    IR_POINTER = "IR-Pointer",
-    LASER = "Laser",
-    AUTO = "Auto"
-}
+--- @class AI.Option.Air.val.ROE
+--- @description Enumerator for rules of engagement.
+--- @field WEAPON_FREE number Weapon free (0)
+--- @field OPEN_FIRE_WEAPON_FREE number Open fire weapon free (1)
+--- @field OPEN_FIRE number Open fire (2)
+--- @field RETURN_FIRE number Return fire (3)
+--- @field WEAPON_HOLD number Weapon hold (4)
 
-AI.Task.TurnMethod = {
-    FLY_OVER_POINT = "Fly Over Point",
-    FIN_POINT = "Fin Point"
-}
+--- @class AI.Option.Air.val.REACTION_ON_THREAT
+--- @description Enumerator for reactions on threat.
+--- @field NO_REACTION number No reaction (0)
+--- @field PASSIVE_DEFENCE number Passive defence (1)
+--- @field EVADE_FIRE number Evade fire (2)
+--- @field BYPASS_AND_ESCAPE number Bypass and escape (3)
+--- @field ALLOW_ABORT_MISSION number Allow abort mission (4)
+--- @field AAA_EVADE_FIRE number AAA evade fire (5)
 
-AI.Task.VehicleFormation = {
-    VEE = "Vee",
-    ECHELON_RIGHT = "EchelonR",
-    OFF_ROAD = "Off Road",
-    RANK = "Rank",
-    ECHELON_LEFT = "EchelonL",
-    ON_ROAD = "On Road",
-    CONE = "Cone",
-    DIAMOND = "Diamond"
-}
+--- @class AI.Option.Air.val.RADAR_USING
+--- @description Enumerator for radar usage.
+--- @field NEVER number Never (0)
+--- @field FOR_ATTACK_ONLY number For attack only (1)
+--- @field FOR_SEARCH_IF_REQUIRED number For search if required (2)
+--- @field FOR_CONTINUOUS_SEARCH number For continuous search (3)
 
-AI.Task.AltitudeType = {
-    RADIO = "RADIO",
-    BARO = "BARO"
-}
+--- @class AI.Option.Air.val.FLARE_USING
+--- @description Enumerator for flare usage.
+--- @field NEVER number Never (0)
+--- @field AGAINST_FIRED_MISSILE number Against fired missile (1)
+--- @field WHEN_FLYING_IN_SAM_WEZ number When flying in SAM WEZ (2)
+--- @field WHEN_FLYING_NEAR_ENEMIES number When flying near enemies (3)
 
-AI.Task.WaypointType = {
-    TAKEOFF = "TakeOff",
-    TAKEOFF_PARKING = "TakeOffParking",
-    TURNING_POINT = "Turning Point",
-    TAKEOFF_PARKING_HOT = "TakeOffParkingHot",
-    LAND = "Land"
-}
+--- @class AI.Option.Air.val.ECM_USING
+--- @description Enumerator for ECM usage.
+--- @field NEVER_USE number Never use (0)
+--- @field USE_IF_ONLY_LOCK_BY_RADAR number Use if only lock by radar (1)
+--- @field USE_IF_DETECTED_LOCK_BY_RADAR number Use if detected lock by radar (2)
+--- @field ALWAYS_USE number Always use (3)
 
-AI.Task.WeaponExpend = {
-    QUARTER = "Quarter",
-    TWO = "Two",
-    ONE = "One",
-    FOUR = "Four",
-    HALF = "Half",
-    ALL = "All"
-}
+--- @class AI.Option.Air.val.MISSILE_ATTACK
+--- @description Enumerator for missile attack options.
+--- @field MAX_RANGE number Max range (0)
+--- @field NEZ_RANGE number NEZ range (1)
+--- @field HALF_WAY_RMAX_NEZ number Half way Rmax NEZ (2)
+--- @field TARGET_THREAT_EST number Target threat est (3)
+--- @field RANDOM_RANGE number Random range (4)
 
-AI.Skill = {"PLAYER", "CLIENT", "AVERAGE", "GOOD", "HIGH", "EXCELLENT"}
+--- @class AI.Option.Ground
+--- @description Enumerator for ground unit options.
+--- @field id AI.Option.Ground.id
+--- @field val AI.Option.Ground.val
 
-AI.Option = {}
+--- @class AI.Option.Ground.id
+--- @description Enumerator for ground unit option IDs.
+--- @field ROE number ROE (0)
+--- @field FORMATION number Formation (5)
+--- @field DISPERSE_ON_ATTACK number Disperse on attack (8)
+--- @field ALARM_STATE number Alarm state (9)
+--- @field ENGAGE_AIR_WEAPONS number Engage air weapons (20)
+--- @field AC_ENGAGEMENT_RANGE_RESTRICTION number AC engagement range restriction (24)
+--- @field Restrict_AAA_min number Restrict AAA min (27)
+--- @field Restrict_Targets number Restrict targets (28)
+--- @field Restrict_AAA_max number Restrict AAA max (29)
 
-AI.Option.Air = {}
+--- @class AI.Option.Ground.val
+--- @description Enumerator for ground unit option values.
+--- @field ALARM_STATE AI.Option.Ground.val.ALARM_STATE
+--- @field ROE AI.Option.Ground.val.ROE
 
-AI.Option.Air.id = {
-    ROE = 0,
-    REACTION_ON_THREAT = 1,
-    RADAR_USING = 3,
-    FLARE_USING = 4,
-    FORMATION = 5,
-    RTB_ON_BINGO = 6,
-    SILENCE = 7,
-    RTB_ON_OUT_OF_AMMO = 10,
-    ECM_USING = 13,
-    PROHIBIT_AA = 14,
-    PROHIBIT_JETT = 15,
-    PROHIBIT_AB = 16,
-    PROHIBIT_AG = 17,
-    MISSILE_ATTACK = 18,
-    PROHIBIT_WP_PASS_REPORT = 19,
-    OPTION_RADIO_USAGE_CONTACT = 21,
-    OPTION_RADIO_USAGE_ENGAGE = 22,
-    OPTION_RADIO_USAGE_KILL = 23,
-    JETT_TANKS_IF_EMPTY = 25,
-    FORCED_ATTACK = 26,
-    PREFER_VERTICAL = 32
-}
+--- @class AI.Option.Ground.val.ALARM_STATE
+--- @description Enumerator for alarm states.
+--- @field AUTO number Auto (0)
+--- @field GREEN number Green (1)
+--- @field RED number Red (2)
 
-AI.Option.Air.val = {}
+--- @class AI.Option.Ground.val.ROE
+--- @description Enumerator for rules of engagement.
+--- @field OPEN_FIRE number Open fire (2)
+--- @field RETURN_FIRE number Return fire (3)
+--- @field WEAPON_HOLD number Weapon hold (4)
 
-AI.Option.Air.val.ROE = {
-    WEAPON_FREE = 0,
-    OPEN_FIRE_WEAPON_FREE = 1,
-    OPEN_FIRE = 2,
-    RETURN_FIRE = 3,
-    WEAPON_HOLD = 4
-}
+--- @class AI.Option.Naval
+--- @description Enumerator for naval unit options.
+--- @field id AI.Option.Naval.id
+--- @field val AI.Option.Naval.val
 
-AI.Option.Air.val.REACTION_ON_THREAT = {
-    NO_REACTION = 0,
-    PASSIVE_DEFENCE = 1,
-    EVADE_FIRE = 2,
-    BYPASS_AND_ESCAPE = 3,
-    ALLOW_ABORT_MISSION = 4,
-    AAA_EVADE_FIRE = 5
-}
+--- @class AI.Option.Naval.id
+--- @description Enumerator for naval unit option IDs.
+--- @field ROE number ROE (0)
 
-AI.Option.Air.val.RADAR_USING = {
-    NEVER = 0,
-    FOR_ATTACK_ONLY = 1,
-    FOR_SEARCH_IF_REQUIRED = 2,
-    FOR_CONTINUOUS_SEARCH = 3
-}
+--- @class AI.Option.Naval.val
+--- @description Enumerator for naval unit option values.
+--- @field ROE AI.Option.Naval.val.ROE
 
-AI.Option.Air.val.FLARE_USING = {
-    NEVER = 0,
-    AGAINST_FIRED_MISSILE = 1,
-    WHEN_FLYING_IN_SAM_WEZ = 2,
-    WHEN_FLYING_NEAR_ENEMIES = 3
-}
-
-AI.Option.Air.val.ECM_USING = {
-    NEVER_USE = 0,
-    USE_IF_ONLY_LOCK_BY_RADAR = 1,
-    USE_IF_DETECTED_LOCK_BY_RADAR = 2,
-    ALWAYS_USE = 3
-}
-
-AI.Option.Air.val.MISSILE_ATTACK = {
-    MAX_RANGE = 0,
-    NEZ_RANGE = 1,
-    HALF_WAY_RMAX_NEZ = 2,
-    TARGET_THREAT_EST = 3,
-    RANDOM_RANGE = 4
-}
-
-AI.Option.Ground = {}
-
-AI.Option.Ground.id = {
-    ROE = 0,
-    FORMATION = 5,
-    DISPERSE_ON_ATTACK = 8,
-    ALARM_STATE = 9,
-    ENGAGE_AIR_WEAPONS = 20,
-    AC_ENGAGEMENT_RANGE_RESTRICTION = 24,
-    Restrict_AAA_min = 27,
-    Restrict_Targets = 28,
-    Restrict_AAA_max = 29
-}
-
-AI.Option.Ground.val = {}
-
-AI.Option.Ground.val.ALARM_STATE = {
-    AUTO = 0,
-    GREEN = 1,
-    RED = 2
-}
-
-AI.Option.Ground.val.ROE = {
-    OPEN_FIRE = 2,
-    RETURN_FIRE = 3,
-    WEAPON_HOLD = 4
-}
-
-AI.Option.Naval = {}
-
-AI.Option.Naval.id = {
-    ROE = 0
-}
-
-AI.Option.Naval.val = {}
-
-AI.Option.Naval.val.ROE = {
-    OPEN_FIRE = 2,
-    RETURN_FIRE = 3,
-    WEAPON_HOLD = 4
-}
+--- @class AI.Option.Naval.val.ROE
+--- @description Enumerator for rules of engagement.
+--- @field OPEN_FIRE number Open fire (2)
+--- @field RETURN_FIRE number Return fire (3)
+--- @field WEAPON_HOLD number Weapon hold (4)
 
 ------------------------------------------------------------------------------
-
-world = {}
-
-world.event = {
-    S_EVENT_INVALID = 0,
-    S_EVENT_SHOT = 1,
-    S_EVENT_HIT = 2,
-    S_EVENT_TAKEOFF = 3,
-    S_EVENT_LAND = 4,
-    S_EVENT_CRASH = 5,
-    S_EVENT_EJECTION = 6,
-    S_EVENT_REFUELING = 7,
-    S_EVENT_DEAD = 8,
-    S_EVENT_PILOT_DEAD = 9,
-    S_EVENT_BASE_CAPTURED = 10,
-    S_EVENT_MISSION_START = 11,
-    S_EVENT_MISSION_END = 12,
-    S_EVENT_TOOK_CONTROL = 13,
-    S_EVENT_REFUELING_STOP = 14,
-    S_EVENT_BIRTH = 15,
-    S_EVENT_HUMAN_FAILURE = 16,
-    S_EVENT_DETAILED_FAILURE = 17,
-    S_EVENT_ENGINE_STARTUP = 18,
-    S_EVENT_ENGINE_SHUTDOWN = 19,
-    S_EVENT_PLAYER_ENTER_UNIT = 20,
-    S_EVENT_PLAYER_LEAVE_UNIT = 21,
-    S_EVENT_PLAYER_COMMENT = 22,
-    S_EVENT_SHOOTING_START = 23,
-    S_EVENT_SHOOTING_END = 24,
-    S_EVENT_MARK_ADDED = 25,
-    S_EVENT_MARK_CHANGE = 26,
-    S_EVENT_MARK_REMOVED = 27,
-    S_EVENT_KILL = 28,
-    S_EVENT_SCORE = 29,
-    S_EVENT_UNIT_LOST = 30,
-    S_EVENT_LANDING_AFTER_EJECTION = 31,
-    S_EVENT_PARATROOPER_LENDING = 32,
-    S_EVENT_DISCARD_CHAIR_AFTER_EJECTION = 33,
-    S_EVENT_WEAPON_ADD = 34,
-    S_EVENT_TRIGGER_ZONE = 35,
-    S_EVENT_LANDING_QUALITY_MARK = 36,
-    S_EVENT_BDA = 37,
-    S_EVENT_AI_ABORT_MISSION = 38,
-    S_EVENT_DAYNIGHT = 39,
-    S_EVENT_FLIGHT_TIME = 40,
-    S_EVENT_PLAYER_SELF_KILL_PILOT = 41,
-    S_EVENT_PLAYER_CAPTURE_AIRFIELD = 42,
-    S_EVENT_EMERGENCY_LANDING = 43,
-    S_EVENT_UNIT_CREATE_TASK = 44,
-    S_EVENT_UNIT_DELETE_TASK = 45,
-    S_EVENT_SIMULATION_START = 46,
-    S_EVENT_WEAPON_REARM = 47,
-    S_EVENT_WEAPON_DROP = 48,
-    S_EVENT_UNIT_TASK_COMPLETE = 49,
-    S_EVENT_UNIT_TASK_STAGE = 50,
-    S_EVENT_MAC_SUBTASK_SCORE = 51,
-    S_EVENT_MAC_EXTRA_SCORE = 52,
-    S_EVENT_MISSION_RESTART = 53,
-    S_EVENT_MISSION_WINNER = 54,
-    S_EVENT_POSTPONED_TAKEOFF = 55,
-    S_EVENT_POSTPONED_LAND = 56,
-    S_EVENT_MAX = 57
-}
-
-world.BirthPlace = {
-    wsBirthPlace_Air = 1,
-    wsBirthPlace_Ship = 3,
-    wsBirthPlace_RunWay = 4,
-    wsBirthPlace_Park = 5,
-    wsBirthPlace_Heliport_Hot = 9,
-    wsBirthPlace_Heliport_Cold = 10,
-    wsBirthPlace_Ship_Cold = 11,
-    wsBirthPlace_Ship_Hot = 12
-}
-
-world.VolumeType = {
-    SEGMENT = 0,
-    BOX = 1,
-    SPHERE = 2,
-    PYRAMID = 3
-}
-
+--- radio
 ------------------------------------------------------------------------------
 
-radio = {}
+--- @class radio
+--- @description The radio singleton contains enumerators for radio modulation types.
+--- @field modulation radio.modulation
 
-radio.modulation = {
-    AM = 0,
-    FM = 1
-}
-
-------------------------------------------------------------------------------
-
-trigger = {}
-
-trigger.smokeColor = {
-    Green = 0,
-    Red = 1,
-    White = 2,
-    Orange = 3,
-    Blue = 4
-}
-
-trigger.flareColor = {
-    Green = 0,
-    Red = 1,
-    White = 2,
-    Yellow = 3
-}
-
-------------------------------------------------------------------------------
-
-coalition = {}
-
-coalition.side = {
-    NEUTRAL = 0,
-    RED = 1,
-    BLUE = 2,
-    ALL = -1
-}
-
-coalition.service = {
-    ATC = 0,
-    AWACS = 1,
-    TANKER = 2,
-    FAC = 3
-}
-
-------------------------------------------------------------------------------
-
-land = {}
-
-land.SurfaceType = {
-    LAND = 1,
-    SHALLOW_WATER = 2,
-    WATER = 3,
-    ROAD = 4,
-    RUNWAY = 5
-}
-
-------------------------------------------------------------------------------
-
-VoiceChat = {}
-
-VoiceChat.Side = {
-    NEUTRAL = 0,
-    RED = 1,
-    BLUE = 2,
-    ALL = 3
-}
-
-VoiceChat.RoomType = {
-    PERSISTENT = 0,
-    MULTICREW = 1,
-    MANAGEABLE = 2
-}
-
-------------------------------------------------------------------------------
+--- @class radio.modulation
+--- @description Enumerator for radio modulation types.
+--- @field AM number AM (0)
+--- @field FM number FM (1)

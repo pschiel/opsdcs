@@ -5,9 +5,20 @@
 ---  - package, require, coroutine, os, io, lfs
 ------------------------------------------------------------------------------
 
-_G.options = {} -- see Config/Options.lua
-_G.webgui = {}
-_G.sound = {}
-_G.input = {}
-_G.editor = {}
-_G.web_browser = {}
+--- @class options
+--- @description see Config/Options.lua
+
+--- @class webgui
+--- @description todo...
+
+--- @class sound
+--- @description todo...
+
+--- @class input
+--- @description todo...
+
+--- @class editor
+--- @description todo...
+
+--- @class web_browser
+--- @description todo...
