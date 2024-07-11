@@ -435,8 +435,16 @@ end
 function OpsdcsApi:postLua(data)
     local result = nil
     if data.env then
-        result = net.dostring_in(data.env, data.code)
+        if data.env == "mse" then
+            -- mission scripting engine (no result)
+            local escapedCode = data.code:gsub("\\", "\\\\"):gsub("'", "\\'")
+            net.dostring_in("mission", "a_do_script('" .. escapedCode .. "')")
+        elseif data.env == "mission" or data.env == "gui" or data.env == "export" then
+            -- any other env
+            result = net.dostring_in(data.env, data.code)
+        end
     else
+        -- default (gui)
         result = loadstring(data.code)()
     end
     return 200, result
