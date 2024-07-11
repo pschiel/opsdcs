@@ -153,11 +153,12 @@
 
 --- @class timer
 --- @descriptionThe timer singleton has two important uses. 1. Return the mission time. 2. To schedule functions.
---- @field getTime fun():number Returns the model time in seconds to three decimal places since the mission has started. Time pauses with the game.
 --- @field getAbsTime fun():number Returns the game world time in seconds since the mission started. If the value is above 86400, it represents the next day after the mission started.
+--- @field getPause fun()
+--- @field getTime fun():number Returns the model time in seconds to three decimal places since the mission has started. Time pauses with the game.
 --- @field getTime0 fun():number Returns the mission start time in seconds. Useful for calculating elapsed time with timer.getAbsTime().
---- @field scheduleFunction fun(functionToCall:function, functionArgs:table, modelTime:number):number Schedules a function to run at a specified future model time. Returns a functionId.
 --- @field removeFunction fun(functionId:number) Removes a scheduled function by its functionId, preventing it from executing.
+--- @field scheduleFunction fun(functionToCall:function, functionArgs:table, modelTime:number):number Schedules a function to run at a specified future model time. Returns a functionId.
 --- @field setFunctionTime fun(functionId:number, modelTime:number) Reschedules an already scheduled function to run at a different model time.
 
 ------------------------------------------------------------------------------
@@ -266,7 +267,11 @@
 --- @field S_EVENT_MISSION_WINNER number Mission Winner (54)
 --- @field S_EVENT_POSTPONED_TAKEOFF number Postponed Takeoff (55)
 --- @field S_EVENT_POSTPONED_LAND number Postponed Land (56)
---- @field S_EVENT_MAX number Max (57)
+--- @field S_EVENT_SIMULATION_FREEZE number Simulation Freeze (57)
+--- @field S_EVENT_SIMULATION_UNFREEZE number Simulation Unfreeze (58)
+--- @field S_EVENT_HUMAN_AIRCRAFT_REPAIR_START number Human Aircraft Repair Start (59)
+--- @field S_EVENT_HUMAN_AIRCRAFT_REPAIR_FINISH number Human Aircraft Repair Start (60)
+--- @field S_EVENT_MAX number Max (61)
 
 --- @class world.BirthPlace
 --- @description birth places
@@ -292,17 +297,23 @@
 
 --- @class coalition
 --- @description The coalition singleton contains functions that gets information on the all of the units within the mission. It also has two of the most powerful functions that are capable of spawning groups and static objects into the mission. 
+--- @field add_dyn_group fun()
 --- @field addGroup fun(countryId:number, groupCategory:number, groupData:table):Group Adds a group of the specified category for the specified country using provided group data. (country.id, Group.Category)
+--- @field addRefPoint fun(coalitionId:number, refPoint:table) Adds a reference point for the specified coalition, used by JTACs. (coalition.side)
 --- @field addStaticObject fun(countryId:number, groupData:table):StaticObject Dynamically spawns a static object for the specified country based on the provided group data. (country.id)
---- @field getGroups fun(coalitionId:number, groupCategory:number|nil):table Returns a table of group objects within the specified coalition and optionally filtered by group category. (coalition.side)
---- @field getStaticObjects fun(coalitionId:number):table Returns a table of static objects within the specified coalition. (coalition.side)
+--- @field checkChooseCargo fun()
+--- @field checkDescent fun()
 --- @field getAirbases fun(coalitionId:number|nil):table Returns a table of airbase objects for the specified coalition or all airbases if no coalition is specified. (coalition.side)
---- @field getPlayers fun(coalitionId:number):table Returns a table of unit objects currently occupied by players within the specified coalition. (coalition.side)
---- @field getServiceProviders fun(coalitionId:number, service:number):table Returns a table of unit objects that provide a specified service (ATC, AWACS, TANKER, FAC) within the specified coalition. (coalition.side, coalition.service)
---- @field addRefPoints fun(coalitionId:number, refPoint:table) Adds a reference point for the specified coalition, used by JTACs. (coalition.side)
---- @field getRefPoints fun(coalitionId:number):table Returns a table of reference points defined for the specified coalition, used by JTACs. (coalition.side)
---- @field getMainRefPoint fun(coalitionId:number):vec3 Returns the position of the main reference point ("bullseye") for the specified coalition. (coalition.side)
+--- @field getAllDescents fun()
 --- @field getCountryCoalition fun(countryId:number):number Returns the coalition ID that a specified country belongs to. (country.id)
+--- @field getDescentsOnBoard fun()
+--- @field getGroups fun(coalitionId:number, groupCategory:number|nil):table Returns a table of group objects within the specified coalition and optionally filtered by group category. (coalition.side)
+--- @field getMainRefPoint fun(coalitionId:number):vec3 Returns the position of the main reference point ("bullseye") for the specified coalition. (coalition.side)
+--- @field getPlayers fun(coalitionId:number):table Returns a table of unit objects currently occupied by players within the specified coalition. (coalition.side)
+--- @field getRefPoints fun(coalitionId:number):table Returns a table of reference points defined for the specified coalition, used by JTACs. (coalition.side)
+--- @field getServiceProviders fun(coalitionId:number, service:number):table Returns a table of unit objects that provide a specified service (ATC, AWACS, TANKER, FAC) within the specified coalition. (coalition.side, coalition.service)
+--- @field getStaticObjects fun(coalitionId:number):table Returns a table of static objects within the specified coalition. (coalition.side)
+--- @field remove_dyn_group fun()
 
 --- @class coalition.side
 --- @description coalition sides
@@ -346,17 +357,25 @@
 
 --- @class trigger.action
 --- @description trigger actions
+--- @field activateGroup fun(Group:Group) Activates the specified group if set up for "late activation."
+--- @field addOtherCommand fun(name:string, userFlagName:string, userFlagValue:number) Adds a command to the "F10 Other" radio menu to set flags within the mission.
+--- @field addOtherCommandForCoalition fun(coalition:number, name:string, userFlagName:string, userFlagValue:string) Adds a coalition-specific command to the "F10 Other" menu.
+--- @field addOtherCommandForGroup fun(groupId:number, name:string, userFlagName:string, userFlagValue:string) Adds a group-specific command to the "F10 Other" menu.
+--- @field arrowToAll fun(coalition:number, id:number, startPoint:vec3, endPoint:vec3, color:table, fillColor:table, lineType:number, readOnly:boolean, message:string) Creates an arrow on the F10 map. 0=no line, 1=solid, 2=dashed, 3=dotted, 4=dot dash, 5=long dash, 6=two dash
+--- @field circleToAll fun()
 --- @field ctfColorTag fun(unitName:string, smokeColor:number) Creates a smoke plume behind a specified aircraft. When passed 0 for smoke type the plume will be disabled. When triggering the on the same unit with a different color the plume will simply change color. (trigger.smokeColor)
---- @field setUserFlag fun(flag:string, value:number|boolean) Sets the value of a user flag.
---- @field explosion fun(position:vec3, power:number) Creates an explosion at a specified position with a specified power.
---- @field smoke fun(position:vec3, color:number) Creates a smoke plume at a specified position with a specified color. (trigger.smokeColor)
+--- @field deactivateGroup fun(Group:Group) Deactivates the specified group.
 --- @field effectSmokeBig fun(position:vec3, preset:number, density:number, name:string) Creates a large smoke effect at a specified position with a specified preset (1-4=smoke/fire, 5-7=smoke), density (0-1), and name. (trigger.effectSmokePreset)
 --- @field effectSmokeStop fun(name:string) Stops a smoke effect with a specified name.
+--- @field explosion fun(position:vec3, power:number) Creates an explosion at a specified position with a specified power.
+--- @field groupContinueMoving fun(Group:Group) Orders the specified ground group to resume moving.
+--- @field groupStopMoving fun(Group:Group) Orders the specified ground group to stop moving.
 --- @field illuminationBomb fun(position:vec3, power:number) Creates an illumination bomb at a specified position with a specified power. (1-1000000)
---- @field signalFlare fun(position:vec3, color:number, azimuth:number) Creates a signal flare at a specified position with a specified color and azimuth. (trigger.flareColor)
---- @field radioTransmission fun(filename:string, point:vec3, modulation:enum, loop:boolean, frequency:number, power:number, name:string) Transmits an audio file from a specific point on a given frequency. (radio.modulation)
---- @field stopRadioTransmission fun(name:string) Stops the named radio transmission.
---- @field setUnitInternalCargo fun(unitName:string, mass:number) Sets the internal cargo mass for a specified unit.
+--- @field lineToAll fun(coalition:number, id:number, startPoint:vec3, endPoint:vec3, color:table, lineType:number, readOnly:boolean, message:string) Creates a line on the F10 map. 0=no line, 1=solid, 2=dashed, 3=dotted, 4=dot dash, 5=long dash, 6=two dash--- @field circleToAll fun(coalition:number, id:number, center:vec3, radius:number, color:table, fillColor:table, lineType:number, readOnly:boolean, message:string) Creates a circle on the F10 map.
+--- @field markToAll fun(id:number, text:string, point:vec3, readOnly:boolean, message:string) Adds a mark point to all on the F10 map.
+--- @field markToCoalition fun(id:number, text:string, point:vec3, coalitionId:number, readOnly:boolean, message:string) Adds a mark point to a coalition on the F10 map.
+--- @field markToGroup fun(id:number, text:string, point:vec3, groupId:number, readOnly:boolean, message:string) Adds a mark point to a group on the F10 map.
+--- @field markupToAll fun(shapeId:number, coalition:number, id:number, point1:vec3, param:..., color:table, fillColor:table, lineType:number, readOnly:boolean, message:string) Creates a defined shape on the F10 map.
 --- @field outSound fun(soundfile:string) Plays a sound file to all players.
 --- @field outSoundForCoalition fun(coalition:number, soundfile:string) Plays a sound file to all players in the specified coalition.
 --- @field outSoundForCountry fun(country:number, soundfile:string) Plays a sound file to all players in the specified country.
@@ -367,44 +386,38 @@
 --- @field outTextForCountry fun(country:number, text:string, displayTime:number, clearview:boolean) Displays text to players in a specified country for a set time.
 --- @field outTextForGroup fun(groupId:number, text:string, displayTime:number, clearview:boolean) Displays text to players in a specified group for a set time.
 --- @field outTextForUnit fun(unitId:number, text:string, displayTime:number, clearview:boolean) Displays text to players in a specified unit for a set time.
---- @field addOtherCommand fun(name:string, userFlagName:string, userFlagValue:number) Adds a command to the "F10 Other" radio menu to set flags within the mission.
---- @field removeOtherCommand fun(name:string) Removes the specified command from the "F10 Other" radio menu.
---- @field addOtherCommandForCoalition fun(coalition:number, name:string, userFlagName:string, userFlagValue:string) Adds a coalition-specific command to the "F10 Other" menu.
---- @field removeOtherCommandForCoalition fun(coalitionId:number, name:string) Removes a coalition-specific command from the "F10 Other" menu.
---- @field addOtherCommandForGroup fun(groupId:number, name:string, userFlagName:string, userFlagValue:string) Adds a group-specific command to the "F10 Other" menu.
---- @field removeOtherCommandForGroup fun(groupId:number, name:string) Removes a group-specific command from the "F10 Other" menu.
---- @field markToAll fun(id:number, text:string, point:vec3, readOnly:boolean, message:string) Adds a mark point to all on the F10 map.
---- @field markToCoalition fun(id:number, text:string, point:vec3, coalitionId:number, readOnly:boolean, message:string) Adds a mark point to a coalition on the F10 map.
---- @field markToGroup fun(id:number, text:string, point:vec3, groupId:number, readOnly:boolean, message:string) Adds a mark point to a group on the F10 map.
---- @field removeMark fun(id:number) Removes a mark from the F10 map.
---- @field markupToAll fun(shapeId:number, coalition:number, id:number, point1:vec3, param:..., color:table, fillColor:table, lineType:number, readOnly:boolean, message:string) Creates a defined shape on the F10 map.
---- @field lineToAll fun(coalition:number, id:number, startPoint:vec3, endPoint:vec3, color:table, lineType:number, readOnly:boolean, message:string) Creates a line on the F10 map. 0=no line, 1=solid, 2=dashed, 3=dotted, 4=dot dash, 5=long dash, 6=two dash--- @field circleToAll fun(coalition:number, id:number, center:vec3, radius:number, color:table, fillColor:table, lineType:number, readOnly:boolean, message:string) Creates a circle on the F10 map.
---- @field rectToAll fun(coalition:number, id:number, startPoint:vec3, endPoint:vec3, color:table, fillColor:table, lineType:number, readOnly:boolean, message:string) Creates a rectangle on the F10 map. 0=no line, 1=solid, 2=dashed, 3=dotted, 4=dot dash, 5=long dash, 6=two dash
+--- @field pushAITask fun(Group:Group, taskIndex:number) Pushes the specified task index to the front of the tasking queue for the group.
 --- @field quadToAll fun(coalition:number, id:number, point1:vec3, point2:vec3, point3:vec3, point4:vec3, color:table, fillColor:table, lineType:number, readOnly:boolean, message:string) Creates a quadrilateral on the F10 map. 0=no line, 1=solid, 2=dashed, 3=dotted, 4=dot dash, 5=long dash, 6=two dash
---- @field arrowToAll fun(coalition:number, id:number, startPoint:vec3, endPoint:vec3, color:table, fillColor:table, lineType:number, readOnly:boolean, message:string) Creates an arrow on the F10 map. 0=no line, 1=solid, 2=dashed, 3=dotted, 4=dot dash, 5=long dash, 6=two dash
---- @field textToAll fun(coalition:number, id:number, point:vec3, color:table, fillColor:table, fontSize:number, readOnly:boolean, text:string) Creates text on the F10 map.
---- @field setMarkupRadius fun(id:number, radius:number) Updates the radius of an existing circular mark.
---- @field setMarkupText fun(id:number, text:string) Updates the text of an existing mark.
---- @field setMarkupFontSize fun(id:number, fontSize:number) Updates the font size of text on an existing mark.
+--- @field radioTransmission fun(filename:string, point:vec3, modulation:enum, loop:boolean, frequency:number, power:number, name:string) Transmits an audio file from a specific point on a given frequency. (radio.modulation)
+--- @field rectToAll fun(coalition:number, id:number, startPoint:vec3, endPoint:vec3, color:table, fillColor:table, lineType:number, readOnly:boolean, message:string) Creates a rectangle on the F10 map. 0=no line, 1=solid, 2=dashed, 3=dotted, 4=dot dash, 5=long dash, 6=two dash
+--- @field removeMark fun(id:number) Removes a mark from the F10 map.
+--- @field removeOtherCommand fun(name:string) Removes the specified command from the "F10 Other" radio menu.
+--- @field removeOtherCommandForCoalition fun(coalitionId:number, name:string) Removes a coalition-specific command from the "F10 Other" menu.
+--- @field removeOtherCommandForGroup fun(groupId:number, name:string) Removes a group-specific command from the "F10 Other" menu.
+--- @field setAITask fun(Group:Group, taskIndex:number) Sets the specified task index as the only active task for the group.
+--- @field setGroupAIOff fun(Group:Group) Turns the group's AI off, only for ground and ship groups.
+--- @field setGroupAIOn fun(Group:Group) Turns the group's AI on, only for ground and ship groups.
 --- @field setMarkupColor fun(id:number, color:table) Updates the color of an existing mark.
 --- @field setMarkupColorFill fun(id:number, colorFill:table) Updates the fill color of an existing mark.
---- @field setMarkupTypeLine fun(id:number, typeLine:number) Updates the line type of an existing mark. 0=no line, 1=solid, 2=dashed, 3=dotted, 4=dot dash, 5=long dash, 6=two dash
+--- @field setMarkupFontSize fun(id:number, fontSize:number) Updates the font size of text on an existing mark.
 --- @field setMarkupPositionEnd fun(id:number, vec3:table) Updates the endpoint of an existing line or shape mark.
 --- @field setMarkupPositionStart fun(id:number, vec3:table) Updates the start point of an existing line or shape mark.
---- @field setAITask fun(Group:Group, taskIndex:number) Sets the specified task index as the only active task for the group.
---- @field pushAITask fun(Group:Group, taskIndex:number) Pushes the specified task index to the front of the tasking queue for the group.
---- @field activateGroup fun(Group:Group) Activates the specified group if set up for "late activation."
---- @field deactivateGroup fun(Group:Group) Deactivates the specified group.
---- @field setGroupAIOn fun(Group:Group) Turns the group's AI on, only for ground and ship groups.
---- @field setGroupAIOff fun(Group:Group) Turns the group's AI off, only for ground and ship groups.
---- @field groupStopMoving fun(Group:Group) Orders the specified ground group to stop moving.
---- @field groupContinueMoving fun(Group:Group) Orders the specified ground group to resume moving.
+--- @field setMarkupRadius fun(id:number, radius:number) Updates the radius of an existing circular mark.
+--- @field setMarkupText fun(id:number, text:string) Updates the text of an existing mark.
+--- @field setMarkupTypeLine fun(id:number, typeLine:number) Updates the line type of an existing mark. 0=no line, 1=solid, 2=dashed, 3=dotted, 4=dot dash, 5=long dash, 6=two dash
+--- @field setUnitInternalCargo fun(unitName:string, mass:number) Sets the internal cargo mass for a specified unit.
+--- @field setUserFlag fun(flag:string, value:number|boolean) Sets the value of a user flag.
+--- @field signalFlare fun(position:vec3, color:number, azimuth:number) Creates a signal flare at a specified position with a specified color and azimuth. (trigger.flareColor)
+--- @field smoke fun(position:vec3, color:number) Creates a smoke plume at a specified position with a specified color. (trigger.smokeColor)
+--- @field stopRadioTransmission fun(name:string) Stops the named radio transmission.
+--- @field textToAll fun(coalition:number, id:number, point:vec3, color:table, fillColor:table, fontSize:number, readOnly:boolean, text:string) Creates text on the F10 map.
 
 --- @class trigger.misc
 --- @description trigger misc
 --- @field getUserFlag fun(flag:string):number Returns the value of a user flag.
 --- @field getZone fun(zoneName:string):TriggerZone Returns a trigger zone table of a given name
 --- @field addZone fun(zoneData:table):TriggerZone Adds a trigger zone to the mission with the provided data.
+--- @field addTrigger fun()
 
 ------------------------------------------------------------------------------
 --- coord
@@ -441,6 +454,7 @@
 --- @class VoiceChat
 --- @description The voice chat singleton is a means of creating customized voice chat rooms for players to interact with each other in multiplayer.
 --- @field createRoom fun(roomName:string, side:number, roomType:number) Creates a VoiceChat room for multiplayer interaction. (VoiceChat.Side, VoiceChat.RoomType)
+--- @todo
 
 --- @class VoiceChat.Side
 --- @description Enumerator for VoiceChat sides.
@@ -506,19 +520,20 @@
 
 --- @class Object
 --- @description Represents an object with body, unique name, category and type.
---- @field isExist fun(self:Object):boolean Returns true if the object currently exists in the mission.
+--- @field Category Object.Category
+--- @field Desc Object.Desc
 --- @field destroy fun(self:Object) Destroys the object, physically removing it from the game world without creating an event.
+--- @field getAttributes fun()
 --- @field getCategory fun(self:Object):Object.Category Returns the category of the object as an enumerator.
---- @field getTypeName fun(self:Object):string Returns the type name of the object.
 --- @field getDesc fun(self:Object):Object.Desc Returns a description table of the object, with entries depending on the object's category.
---- @field hasAttribute fun(self:Object, attribute:string):boolean Returns true if the object has the specified attribute.
 --- @field getName fun(self:Object):string Returns the name of the object as defined in the mission editor or by dynamic spawning.
 --- @field getPoint fun(self:Object):vec3 Returns a vec3 table with x, y, and z coordinates of the object's position in 3D space.
 --- @field getPosition fun(self:Object):Position3 Returns a Position3 table with the object's current position and orientation in 3D space.
+--- @field getTypeName fun(self:Object):string Returns the type name of the object.
 --- @field getVelocity fun(self:Object):vec3 Returns a vec3 table of the object's velocity vectors.
+--- @field hasAttribute fun(self:Object, attribute:string):boolean Returns true if the object has the specified attribute.
 --- @field inAir fun(self:Object):boolean Returns true if the object is in the air.
---- @field Category Object.Category
---- @field Desc Object.Desc
+--- @field isExist fun(self:Object):boolean Returns true if the object currently exists in the mission.
 
 --- @class Object.Desc
 --- @description All objects description tables contain these values. Every other value is dependent on the type of object it is; aircraft, building, ground unit, airbase, etc.
@@ -550,7 +565,9 @@
 --- @class CoalitionObject:Object
 --- @description Represents all objects that may belong to a coalition: units, airbases, static objects, weapon.
 --- @field getCoalition fun(self:CoalitionObject):number Returns an enumerator that defines the coalition that the object currently belongs to. 0=neutral, 1=red, 2=blue
+--- @field getCommunicator fun()
 --- @field getCountry fun(self:CoalitionObject):number Returns an enumerator that defines the country that the object currently belongs to.
+--- @field getForcesName fun()
 
 ------------------------------------------------------------------------------
 --- Unit
@@ -558,34 +575,45 @@
 
 --- @class Unit:CoalitionObject
 --- @description Represents units: airplanes, helicopters, vehicles, ships and armed ground structures.
---- @field isActive fun(self:Unit):boolean Returns true if the unit is activated.
---- @field getPlayerName fun(self:Unit):string|nil Returns the player's name if controlled by a player, nil otherwise.
---- @field getID fun(self:Unit):number Returns the unique mission id of the unit.
---- @field getNumber fun(self:Unit):number Returns the unit's default index within its group.
---- @field getCategoryEx fun(self:Unit):Unit.Category Returns the category of the unit.
---- @field getObjectID fun(self:Unit):number Returns the runtime object ID of the unit.
---- @field getController fun(self:Unit):Controller Returns the controller of the unit.
---- @field getGroup fun(self:Unit):Group Returns the group the unit belongs to.
---- @field getCallsign fun(self:Unit):string Returns the callsign of the unit.
---- @field getLife fun(self:Unit):number Returns the current life of the unit.
---- @field getLife0 fun(self:Unit):number Returns the initial life value of the unit.
---- @field getFuel fun(self:Unit):number Returns the current fuel level as a percentage.
---- @field getAmmo fun(self:Unit):table Returns a table of ammunition details.
---- @field getSensors fun(self:Unit):table Returns a table of available sensors.
---- @field hasSensors fun(self:Unit, sensorType:enum, subCategory:enum):boolean Returns true if the unit has the specified sensors.
---- @field getRadar fun(self:Unit):boolean, Object Returns operational status of radar and the object it is tracking.
---- @field getDrawArgumentValue fun(self:Unit, arg:number):number Returns the value of an animation argument.
---- @field getNearestCargos fun(self:Unit):table|nil Returns a table of nearby cargos, nil if not a helicopter.
---- @field enableEmission fun(self:Unit, setting:boolean) Sets radar emissions on or off.
---- @field getDescentCapacity fun(self:Unit):number|nil Returns the descent capacity, nil if not applicable.
---- @field getByName fun(name:string):Unit Returns an instance of the calling class for the object of a specified name.
---- @field getDescByName fun(typename:string):Unit.Desc Return a description table of the specified Object type. Object does not need to be in the mission in order to query its data.
---- @field Desc Unit.Desc
 --- @field Category Unit.Category
---- @field RefuelingSystem Unit.RefuelingSystem
---- @field SensorType Unit.SensorType
+--- @field Desc Unit.Desc
 --- @field OpticType Unit.OpticType
 --- @field RadarType Unit.RadarType
+--- @field RefuelingSystem Unit.RefuelingSystem
+--- @field SensorType Unit.SensorType
+--- @field disembarking fun()
+--- @field enableEmission fun(self:Unit, setting:boolean) Sets radar emissions on or off.
+--- @field getAirbase fun()
+--- @field getAmmo fun(self:Unit):table Returns a table of ammunition details.
+--- @field getByName fun(name:string):Unit Returns an instance of the calling class for the object of a specified name.
+--- @field getCallsign fun(self:Unit):string Returns the callsign of the unit.
+--- @field getCategoryEx fun(self:Unit):Unit.Category Returns the category of the unit.
+--- @field getCargosOnBoard fun()
+--- @field getController fun(self:Unit):Controller Returns the controller of the unit.
+--- @field getDescByName fun(typename:string):Unit.Desc Return a description table of the specified Object type. Object does not need to be in the mission in order to query its data.
+--- @field getDescentCapacity fun(self:Unit):number|nil Returns the descent capacity, nil if not applicable.
+--- @field getDescentOnBoard fun()
+--- @field getDrawArgumentValue fun(self:Unit, arg:number):number Returns the value of an animation argument.
+--- @field getFuel fun(self:Unit):number Returns the current fuel level as a percentage.
+--- @field getGroup fun(self:Unit):Group Returns the group the unit belongs to.
+--- @field getID fun(self:Unit):number Returns the unique mission id of the unit.
+--- @field getLife fun(self:Unit):number Returns the current life of the unit.
+--- @field getLife0 fun(self:Unit):number Returns the initial life value of the unit.
+--- @field getNearestCargos fun(self:Unit):table|nil Returns a table of nearby cargos, nil if not a helicopter.
+--- @field getNearestCargosForAircraft fun()
+--- @field getNumber fun(self:Unit):number Returns the unit's default index within its group.
+--- @field getObjectID fun(self:Unit):number Returns the runtime object ID of the unit.
+--- @field getPlayerName fun(self:Unit):string|nil Returns the player's name if controlled by a player, nil otherwise.
+--- @field getRadar fun(self:Unit):boolean, Object Returns operational status of radar and the object it is tracking.
+--- @field getSeats fun()
+--- @field getSensors fun(self:Unit):table Returns a table of available sensors.
+--- @field hasCarrier fun()
+--- @field hasSensors fun(self:Unit, sensorType:enum, subCategory:enum):boolean Returns true if the unit has the specified sensors.
+--- @field isActive fun(self:Unit):boolean Returns true if the unit is activated.
+--- @field LoadOnBoard fun()
+--- @field markDisembarkingTask fun()
+--- @field openRamp fun()
+--- @field UnloadCargo fun()
 
 --- @class Unit.Desc:Object.Desc
 
@@ -626,21 +654,24 @@
 
 --- @class Airbase:CoalitionObject
 --- @description Represents airbases: airdromes, helipads and ships with flying decks or landing pads.
---- @field getCallsign fun(self:Airbase):string Returns the callsign of the airbase.
---- @field getUnit fun(self:Airbase, unitIndex:number):Unit|nil Returns the unit or static object associated with the airbase at the specified index.
---- @field getID fun(self:Airbase):number Returns the unique mission ID of the airbase.
---- @field getCategoryEx fun(self:Airbase):Airbase.Category Returns the category of the airbase.
---- @field getParking fun(self:Airbase, available:boolean):table Returns a table of parking data, optionally only available parking.
---- @field getRunways fun(self:Airbase):table Returns a table with runway information.
---- @field getTechObjectPos fun(self:Airbase, objectType:number|string):table Returns a table of vec3 positions for technical objects, typically only "Tower".
---- @field getRadioSilentMode fun(self:Airbase):boolean Returns whether the ATC is in radio silent mode.
---- @field setRadioSilentMode fun(self:Airbase, silent:boolean) Sets the ATC to radio silent mode.
 --- @field autoCapture fun(self:Airbase, setting:boolean) Enables or disables the airbase auto capture mechanic.
 --- @field autoCaptureIsOn fun(self:Airbase):boolean Returns the current setting of the auto capture mechanic.
---- @field setCoalition fun(self:Airbase, coalition:number) Sets the coalition of the airbase.
---- @field getWarehouse fun(self:Airbase):Warehouse Returns the warehouse associated with the airbase.
 --- @field getByName fun(name:string):Airbase Returns an instance of the calling class for the object of a specified name.
+--- @field getCallsign fun(self:Airbase):string Returns the callsign of the airbase.
+--- @field getCategoryEx fun(self:Airbase):Airbase.Category Returns the category of the airbase.
 --- @field getDescByName fun(typename:string):Airbase.Desc Return a description table of the specified Object type. Object does not need to be in the mission in order to query its data.
+--- @field getDispatcherTowerPos fun()
+--- @field getID fun(self:Airbase):number Returns the unique mission ID of the airbase.
+--- @field getNearest fun()
+--- @field getParking fun(self:Airbase, available:boolean):table Returns a table of parking data, optionally only available parking.
+--- @field getRadioSilentMode fun(self:Airbase):boolean Returns whether the ATC is in radio silent mode.
+--- @field getRunways fun(self:Airbase):table Returns a table with runway information.
+--- @field getTechObjectPos fun(self:Airbase, objectType:number|string):table Returns a table of vec3 positions for technical objects, typically only "Tower".
+--- @field getUnit fun(self:Airbase, unitIndex:number):Unit|nil Returns the unit or static object associated with the airbase at the specified index.
+--- @field getWarehouse fun(self:Airbase):Warehouse Returns the warehouse associated with the airbase.
+--- @field setCoalition fun(self:Airbase, coalition:number) Sets the coalition of the airbase.
+--- @field setRadioSilentMode fun(self:Airbase, silent:boolean) Sets the ATC to radio silent mode.
+--- @field getRunways fun()
 
 --- @class Airbase.Desc:Object.Desc
 --- @description Airbase description table.
@@ -762,20 +793,23 @@
 
 --- @class Group
 --- @description Represents a group of units.
---- @field isExist fun(self:Group):boolean Returns true if the group currently exists in the mission.
 --- @field activate fun(self:Group) Activates the group.
 --- @field destroy fun(self:Group) Destroys the group, physically removing it from the game world without creating an event.
---- @field getCategory fun(self:Group):Group.Category Returns the category of the group as an enumerator.
---- @field getCoalition fun(self:Group):number Returns an enumerator that defines the coalition that the group currently belongs to. 0=neutral, 1=red, 2=blue
---- @field getName fun(self:Group):string Returns the name of the group as defined in the mission editor or by dynamic spawning.
---- @field getID fun(self:Group):number Returns the unique mission id of the group.
---- @field getUnit fun(self:Group, unitIndex:number):Unit|nil Returns the unit at the specified index within the group.
---- @field getUnits fun(self:Group):table Returns a table of all units in the group.
---- @field getSize fun(self:Group):number Returns the current size of the group.
---- @field getInitialSize fun(self:Group):number Returns the initial size of the group.
---- @field getController fun(self:Group):Controller Returns the controller of the group.
+--- @field embarking fun()
 --- @field enableEmission fun(self:Group, setting:boolean) Sets radar emissions on or off.
 --- @field getByName fun(name:string):Group Returns an instance of the calling class for the object of a specified name.
+--- @field getCategory fun(self:Group):Group.Category Returns the category of the group as an enumerator.
+--- @field getCategoryEx fun()
+--- @field getCoalition fun(self:Group):number Returns an enumerator that defines the coalition that the group currently belongs to. 0=neutral, 1=red, 2=blue
+--- @field getController fun(self:Group):Controller Returns the controller of the group.
+--- @field getID fun(self:Group):number Returns the unique mission id of the group.
+--- @field getInitialSize fun(self:Group):number Returns the initial size of the group.
+--- @field getName fun(self:Group):string Returns the name of the group as defined in the mission editor or by dynamic spawning.
+--- @field getSize fun(self:Group):number Returns the current size of the group.
+--- @field getUnit fun(self:Group, unitIndex:number):Unit|nil Returns the unit at the specified index within the group.
+--- @field getUnits fun(self:Group):table Returns a table of all units in the group.
+--- @field isExist fun(self:Group):boolean Returns true if the group currently exists in the mission.
+--- @field markGroup fun()
 
 --- @class Group.Category
 --- @description Enumerator for group categories.
@@ -791,19 +825,19 @@
 
 --- @class Controller
 --- @description Represents a controller of a unit or group.
---- @field setTask fun(self:Controller, task:table) Sets a specified task to the units or groups associated with the controller.
---- @field resetTask fun(self:Controller) Resets the current task assigned to the controller.
---- @field pushTask fun(self:Controller, task:table) Pushes a task to the front of the tasking queue.
---- @field popTask fun(self:Controller) Removes the top task from the tasking queue.
---- @field hasTask fun(self:Controller):boolean Returns true if the controller has a task.
---- @field setCommand fun(self:Controller, command:table) Sets a command, an instant action with no impact on active tasks.
---- @field setOption fun(self:Controller, optionId:number|enum, optionValue:number|enum) Sets behavior options that affect all tasks performed by the controller.
---- @field setOnOff fun(self:Controller, value:boolean) Enables or disables the AI controller, not applicable to aircraft or helicopters.
---- @field setAltitude fun(self:Controller, altitude:number, keep:boolean, altType:string) Sets the altitude for aircraft, with an option to maintain it at waypoints.
---- @field setSpeed fun(self:Controller, speed:number, keep:boolean) Sets the speed for the controlled group, with an option to maintain it at waypoints.
---- @field knowTarget fun(self:Controller, object:Object, type:boolean, distance:boolean) Forces the controller to become aware of a specified target.
---- @field isTargetDetected fun(self:Controller, target:Object, detectionType1:enum, detectionType2:enum, detectionType3:enum,...):table Returns details if the target is detected.
 --- @field getDetectedTargets fun(self:Controller, detectionType1:enum, detectionType2:enum, detectionType3:enum,...):table Returns a table of detected targets.
+--- @field hasTask fun(self:Controller):boolean Returns true if the controller has a task.
+--- @field isTargetDetected fun(self:Controller, target:Object, detectionType1:enum, detectionType2:enum, detectionType3:enum,...):table Returns details if the target is detected.
+--- @field knowTarget fun(self:Controller, object:Object, type:boolean, distance:boolean) Forces the controller to become aware of a specified target.
+--- @field popTask fun(self:Controller) Removes the top task from the tasking queue.
+--- @field pushTask fun(self:Controller, task:table) Pushes a task to the front of the tasking queue.
+--- @field resetTask fun(self:Controller) Resets the current task assigned to the controller.
+--- @field setAltitude fun(self:Controller, altitude:number, keep:boolean, altType:string) Sets the altitude for aircraft, with an option to maintain it at waypoints.
+--- @field setCommand fun(self:Controller, command:table) Sets a command, an instant action with no impact on active tasks.
+--- @field setOnOff fun(self:Controller, value:boolean) Enables or disables the AI controller, not applicable to aircraft or helicopters.
+--- @field setOption fun(self:Controller, optionId:number|enum, optionValue:number|enum) Sets behavior options that affect all tasks performed by the controller.
+--- @field setSpeed fun(self:Controller, speed:number, keep:boolean) Sets the speed for the controlled group, with an option to maintain it at waypoints.
+--- @field setTask fun(self:Controller, task:table) Sets a specified task to the units or groups associated with the controller.
 
 --- @class Controller.Detection
 --- @description Enumerator for detection types.
@@ -850,15 +884,17 @@
 --- @class Warehouse
 --- @description The warehouse class gives control over warehouses that exist in airbase objects. These warehouses can limit the aircraft, munitions, and fuel available to coalition aircraft.
 --- @field addItem fun(self:Warehouse, itemName:string|table, count:number) Adds the specified amount of an item to the warehouse.
---- @field getItemCount fun(self:Warehouse, itemName:string|table):number Returns the count of the specified type of item in the warehouse.
---- @field setItem fun(self:Warehouse, itemName:string|table, count:number) Sets the specified amount of an item in the warehouse.
---- @field removeItem fun(self:Warehouse, itemName:string|table, count:number) Removes the specified amount of an item from the warehouse.
 --- @field addLiquid fun(self:Warehouse, liquidType:number, count:number) Adds the specified amount of a liquid to the warehouse.
---- @field getLiquidAmount fun(self:Warehouse, liquidType:number):number Returns the amount of the specified liquid in the warehouse.
---- @field setLiquidAmount fun(self:Warehouse, liquidType:number, count:number) Sets the specified amount of a liquid in the warehouse.
---- @field removeLiquid fun(self:Warehouse, liquidType:number, count:number) Removes the specified amount of a liquid from the warehouse.
---- @field getOwner fun(self:Warehouse):Airbase Returns the airbase associated with the warehouse.
+--- @field getCargoAsWarehouse fun()
 --- @field getInventory fun(self:Warehouse, itemName:string|table):table Returns a full itemized list of the inventory, empty if category is set to unlimited.
+--- @field getItemCount fun(self:Warehouse, itemName:string|table):number Returns the count of the specified type of item in the warehouse.
+--- @field getLiquidAmount fun(self:Warehouse, liquidType:number):number Returns the amount of the specified liquid in the warehouse.
+--- @field getOwner fun(self:Warehouse):Airbase Returns the airbase associated with the warehouse.
+--- @field getResourceMap fun()
+--- @field removeItem fun(self:Warehouse, itemName:string|table, count:number) Removes the specified amount of an item from the warehouse.
+--- @field removeLiquid fun(self:Warehouse, liquidType:number, count:number) Removes the specified amount of a liquid from the warehouse.
+--- @field setItem fun(self:Warehouse, itemName:string|table, count:number) Sets the specified amount of an item in the warehouse.
+--- @field setLiquidAmount fun(self:Warehouse, liquidType:number, count:number) Sets the specified amount of a liquid in the warehouse.
 
 ------------------------------------------------------------------------------
 --- country
@@ -975,11 +1011,11 @@
 
 --- @class AI.Task
 --- @description Enumerator for AI tasks.
---- @field OrbitPattern AI.Task.OrbitPattern
+--- @field AltitudeType AI.Task.AltitudeType
 --- @field Designation AI.Task.Designation
+--- @field OrbitPattern AI.Task.OrbitPattern
 --- @field TurnMethod AI.Task.TurnMethod
 --- @field VehicleFormation AI.Task.VehicleFormation
---- @field AltitudeType AI.Task.AltitudeType
 --- @field WaypointType AI.Task.WaypointType
 --- @field WeaponExpend AI.Task.WeaponExpend
 
