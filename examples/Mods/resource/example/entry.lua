@@ -1,5 +1,4 @@
-declare_plugin('example-resourcemod',
-{
+declare_plugin('example-resourcemod', {
 	installed = true,
 	dirName = current_mod_path,
 	displayName = 'example-resourcemod',

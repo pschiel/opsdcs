@@ -1,0 +1,3 @@
+-- This file is needed in order to specify your point helpers and elements of the cockpit.
+-- Without this, it is virtually impossible for you to hover over switches and knobs in the cockpit or whatever accessory and be able to click it.
+-- (This is also needed for making training missions in DCS)
