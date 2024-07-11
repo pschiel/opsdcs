@@ -1,5 +1,6 @@
 # terrain names
 
+    dcs_updater.exe install AFGHANISTAN_terrain
     dcs_updater.exe install CAUCASUS_terrain
     dcs_updater.exe install FALKLANDS_terrain
     dcs_updater.exe install KOLA_terrain
