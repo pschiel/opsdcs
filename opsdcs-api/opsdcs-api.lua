@@ -445,6 +445,7 @@ end
 -- get camera position
 function OpsdcsApi:getCameraPosition()
     local result = Export.LoGetCameraPosition()
+    result.fov = DCS.getCurrentFOV()
     return 200, result
 end
 
@@ -470,6 +471,9 @@ function OpsdcsApi:postSetCameraPosition(data)
         for _, command in ipairs(data.commands) do
             Export.LoSetCommand(command)
         end
+    end
+    if data.fov then
+        DCS.setCurrentFOV(tonumber(data.fov))
     end
     return 200
 end
