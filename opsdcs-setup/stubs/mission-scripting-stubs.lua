@@ -671,7 +671,6 @@
 --- @field getWarehouse fun(self:Airbase):Warehouse Returns the warehouse associated with the airbase.
 --- @field setCoalition fun(self:Airbase, coalition:number) Sets the coalition of the airbase.
 --- @field setRadioSilentMode fun(self:Airbase, silent:boolean) Sets the ATC to radio silent mode.
---- @field getRunways fun()
 
 --- @class Airbase.Desc:Object.Desc
 --- @description Airbase description table.
@@ -1232,3 +1231,22 @@
 --- @description Enumerator for radio modulation types.
 --- @field AM number AM (0)
 --- @field FM number FM (1)
+
+------------------------------------------------------------------------------
+--- Disposition
+------------------------------------------------------------------------------
+
+--- @class Disposition
+--- @description something
+--- @field DriftRoute fun(pos1:vec3, pos2:vec3, coalitionId:number):table
+--- @field getElipsSideZones fun(numAreas:number, numPositions:number, perim:table, degrees:number, radiusRatio:number):table returns zones around runway strips
+--- @field getPointHeight fun(pos:vec3):number returns terrain height
+--- @field getPointWater fun(pos:vec3, a:number, b:number):boolean checks for water (radius/depth?)
+--- @field getRandom fun(isFloat:boolean, min:number, max:number):number get a random number
+--- @field getRandomIn fun()
+--- @field getRandomSort fun(t:table):table randomly shuffles table
+--- @field getRouteAwayWater fun(thresholdPos:vec3, pos:vec3, a:number, b:number):boolean checks for water (radius/depth?)
+--- @field getRunwayPerimetr fun(runway:table):table returns runway perimeter (runway data from airbase:getRunways)
+--- @field getSimpleZones fun(pos:vec3, radius:number, ) find in an area clear positions with a radius for placing units
+--- @field getThresholdFourZones fun(numPositions:number, perim:table):table returns zones along runway edges (perim)
+--- @field setMarkerPoint fun()
