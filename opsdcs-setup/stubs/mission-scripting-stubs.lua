@@ -1182,9 +1182,7 @@
 --- @field ALARM_STATE number Alarm state (9)
 --- @field ENGAGE_AIR_WEAPONS number Engage air weapons (20)
 --- @field AC_ENGAGEMENT_RANGE_RESTRICTION number AC engagement range restriction (24)
---- @field Restrict_AAA_min number Restrict AAA min (27)
---- @field Restrict_Targets number Restrict targets (28)
---- @field Restrict_AAA_max number Restrict AAA max (29)
+--- @field EVASION_OF_ARM number Evasion of ARM (31)
 
 --- @class AI.Option.Ground.val
 --- @description Enumerator for ground unit option values.
