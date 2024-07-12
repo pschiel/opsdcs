@@ -1237,7 +1237,7 @@
 ------------------------------------------------------------------------------
 
 --- @class Disposition
---- @description something
+--- @description position functions
 --- @field DriftRoute fun(pos1:vec3, pos2:vec3, coalitionId:number):table
 --- @field getElipsSideZones fun(numAreas:number, numPositions:number, perim:table, degrees:number, radiusRatio:number):table returns zones around runway strips
 --- @field getPointHeight fun(pos:vec3):number returns terrain height
