@@ -417,7 +417,7 @@
 --- @field getUserFlag fun(flag:string):number Returns the value of a user flag.
 --- @field getZone fun(zoneName:string):TriggerZone Returns a trigger zone table of a given name
 --- @field addZone fun(zoneData:table):TriggerZone Adds a trigger zone to the mission with the provided data.
---- @field addTrigger fun()
+--- @field addTrigger fun(trig:env.mission.trig):env.mission.trig Adds a trigger to the mission.
 
 ------------------------------------------------------------------------------
 --- coord
