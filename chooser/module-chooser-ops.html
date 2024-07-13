@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>DCS Module Chooser</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <link rel="icon" href="https://www.digitalcombatsimulator.com/images/favicon.ico">
+        <style type="text/css">
+            html, body, .container, #main { height: 100%; }
+            img { width: 90px; height: 128px; margin: 5px; padding: 0; object-fit: cover; object-position: left; cursor: pointer; }
+            .scrollable { height: 100%; overflow-y: auto; }
+            #modules .btn { width: 100px; }
+            #main .btn { min-width: 70px; margin-right: 8px; }
+            h2 { font-size: 18px; font-weight: bold;  }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div id="main" class="row">
+                <div class="col col-md6 scrollable">
+                    <h1>DCS Module Chooser</h1>
+                    <button id="reset" type="button" class="btn btn-secondary">Reset</button>
+                    <input id="sequential" type="checkbox" class="btn-check" checked autocomplete="off">
+                    <label class="btn btn-outline-secondary" for="sequential">Sequential ON</label><br>
+                    <hr/>
+
+                    <div id="filter-simmer" class="row">
+                        <h2>Are you even a simmer?</h2>
+                        <div class="col">
+                            <input type="checkbox" class="btn-check" id="simmer1" name="simmer" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="simmer1">Full-Fidelity only</label>
+                            <input type="checkbox" class="btn-check" id="simmer2" name="simmer" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="simmer2">Not even a little</label>
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div id="filter-cash" class="row needs-simmer2">
+                        <h2>How much money do you have?</h2>
+                        <div class="col">
+                            <input type="checkbox" class="btn-check" id="cash1" name="cash" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="cash1">My mom doesn't give me any</label>
+                            <input type="checkbox" class="btn-check" id="cash2" name="cash" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="cash2">Exactly $ 7,50</label>
+                            <input type="checkbox" class="btn-check" id="cash3" name="cash" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="cash3">I just robbed a grandma</label>
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div id="filter-pilot" class="row needs-simmer1">
+                        <h2>OK to have inferior stuff like missing pilot?</h2>
+                        <div class="col">
+                            <input type="checkbox" class="btn-check" id="pilot1" name="pilot" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="pilot1">Are you kidding</label>
+                            <input type="checkbox" class="btn-check" id="pilot2" name="pilot" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="pilot2">Yes, I lied above</label>
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div id="filter-movie" class="row needs-pilot1">
+                        <h2>What's the best movie?</h2>
+                        <div class="col">
+                            <input type="checkbox" class="btn-check" id="movie1" name="movie" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="movie1">Rambo</label>
+                            <input type="checkbox" class="btn-check" id="movie2" name="movie" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="movie2">Top Gun</label>
+                            <input type="checkbox" class="btn-check" id="movie3" name="movie" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="movie3">Whatever</label>
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div id="filter-rambo" class="row needs-movie1">
+                        <h2>Good guy or bad guy?</h2>
+                        <div class="col">
+                            <input type="checkbox" class="btn-check" id="rambo1" name="rambo" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="rambo1">Good guy</label>
+                            <input type="checkbox" class="btn-check" id="rambo2" name="rambo" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="rambo2">Bad guy</label>
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div id="filter-topgun" class="row needs-movie2">
+                        <h2>Boomer or Zoomer?</h2>
+                        <div class="col">
+                            <input type="checkbox" class="btn-check" id="topgun1" name="topgun" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="topgun1">Boomer</label>
+                            <input type="checkbox" class="btn-check" id="topgun2" name="topgun" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="topgun2">Zoomer</label>
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div id="filter-modern" class="row needs-movie3">
+                        <h2>WW2 or modern?</h2>
+                        <div class="col">
+                            <input type="checkbox" class="btn-check" id="modern1" name="modern" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="modern1">WW2</label>
+                            <input type="checkbox" class="btn-check" id="modern2" name="modern" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="modern2">Modern</label>
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div id="filter-axis" class="row needs-modern1">
+                        <h2>Axis or Allies?</h2>
+                        <div class="col">
+                            <input type="checkbox" class="btn-check" id="axis1" name="axis" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="axis1">Axis</label>
+                            <input type="checkbox" class="btn-check" id="axis2" name="axis" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="axis2">Allies</label>
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div id="filter-nopilotspec" class="row needs-pilot2">
+                        <h2>What sounds best?</h2>
+                        <div class="col">
+                            <input type="checkbox" class="btn-check" id="nopilotspec1" name="nopilotspec" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="nopilotspec1">Kick-Ass Heli</label>
+                            <input type="checkbox" class="btn-check" id="nopilotspec2" name="nopilotspec" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="nopilotspec2">CAS Bomber</label>
+                            <input type="checkbox" class="btn-check" id="nopilotspec3" name="nopilotspec" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="nopilotspec3">I'm an IPad kid</label>
+                            <input type="checkbox" class="btn-check" id="nopilotspec4" name="nopilotspec" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="nopilotspec4">Vodka</label>
+                            <input type="checkbox" class="btn-check" id="nopilotspec5" name="nopilotspec" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="nopilotspec5">Just collecting</label>
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div id="filter-reflected" class="row needs-axis1">
+                        <h2>Do you want a Reflected campaign for it?</h2>
+                        <div class="col">
+                            <input type="checkbox" class="btn-check" id="reflected1" name="reflected" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="reflected1">Yes</label>
+                            <input type="checkbox" class="btn-check" id="reflected2" name="reflected" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="reflected2">No</label>
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div id="filter-bombgun" class="row needs-axis2">
+                        <h2>More bombing or more gunning?</h2>
+                        <div class="col">
+                            <input type="checkbox" class="btn-check" id="bombgun1" name="bombgun" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="bombgun1">Bombing</label>
+                            <input type="checkbox" class="btn-check" id="bombgun2" name="bombgun" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="bombgun2">Gunning</label>
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div id="filter-type" class="row needs-modern2">
+                        <h2>Helo or Jet?</h2>
+                        <div class="col">
+                            <input type="checkbox" class="btn-check" id="type1" name="type" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="type1">Helo</label>
+                            <input type="checkbox" class="btn-check" id="type2" name="type" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="type2">Jet</label>
+                            <input type="checkbox" class="btn-check" id="type3" name="type" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="type3">Trainer</label>
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div id="filter-chill" class="row needs-type1">
+                        <h2>Chill or Action?</h2>
+                        <div class="col">
+                            <input type="checkbox" class="btn-check" id="chill1" name="chill" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="chill1">Chill</label>
+                            <input type="checkbox" class="btn-check" id="chill2" name="chill" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="chill2">Action</label>
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div id="filter-thicc" class="row needs-chill1">
+                        <h2>How thicc you like it?</h2>
+                        <div class="col">
+                            <input type="checkbox" class="btn-check" id="thicc1" name="thicc" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="thicc1">I need thicc</label>
+                            <input type="checkbox" class="btn-check" id="thicc2" name="thicc" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="thicc2">I need tiny</label>
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div id="filter-helofeat" class="row needs-chill2">
+                        <h2>Select helo attack feature</h2>
+                        <div class="col">
+                            <input type="checkbox" class="btn-check" id="helofeat1" name="helofeat" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="helofeat1">Funny periscope</label>
+                            <input type="checkbox" class="btn-check" id="helofeat2" name="helofeat" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="helofeat2">Cheese wheel</label>
+                            <input type="checkbox" class="btn-check" id="helofeat3" name="helofeat" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="helofeat3">Vodka-fueled balls</label>
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div id="filter-updates" class="row needs-type2">
+                        <h2>Do you enjoy updates for your product?</h2>
+                        <div class="col">
+                            <input type="checkbox" class="btn-check" id="updates1" name="updates" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="updates1">Yes, some</label>
+                            <input type="checkbox" class="btn-check" id="updates2" name="updates" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="updates2">Absolutely not</label>
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div id="filter-razbam" class="row needs-updates2">
+                        <h2>Choose one of these</h2>
+                        <div class="col">
+                            <input type="checkbox" class="btn-check" id="razbam1" name="razbam" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="razbam1">Quadruple monitor WSO</label>
+                            <input type="checkbox" class="btn-check" id="razbam2" name="razbam" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="razbam2">Vertical takeoff</label>
+                            <input type="checkbox" class="btn-check" id="razbam3" name="razbam" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="razbam3">I'm French</label>
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div id="filter-tech" class="row needs-updates1">
+                        <h2>How much tech you want?</h2>
+                        <div class="col">
+                            <input type="checkbox" class="btn-check" id="tech1" name="tech" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="tech1">Need MFD bruh</label>
+                            <input type="checkbox" class="btn-check" id="tech2" name="tech" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="tech2">IKEA tech</label>
+                            <input type="checkbox" class="btn-check" id="tech3" name="tech" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="tech3">Double gauge wall</label>
+                            <input type="checkbox" class="btn-check" id="tech4" name="tech" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="tech4">Not much</label>
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div id="filter-guns" class="row needs-tech4">
+                        <h2>How many guns should an aircraft have?</h2>
+                        <div class="col">
+                            <input type="checkbox" class="btn-check" id="guns1" name="guns" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="guns1">At least 6</label>
+                            <input type="checkbox" class="btn-check" id="guns2" name="guns" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="guns2">Some</label>
+                        </div>
+                    </div>
+                    <hr/>
+
+                    <div id="filter-dice1" class="row needs-real2 needs-type3 needs-nopilotspec5">
+                        <h2>Roll a dice</h2>
+                    </div>
+
+                </div>
+
+                <div class="col col-md6 scrollable" id="modules">
+
+                    <img id="flaming_cliffs_2024" class="simmer2 cash3" src="https://www.digitalcombatsimulator.com/upload/iblock/249/47mzz156jq433amdhr041sdk14fg2pxi/dcs-world-flaming-cliffs-2024.jpg"/>
+                    <img id="mig-15bis_flaming_cliffs" class="simmer2 cash3" src="https://www.digitalcombatsimulator.com/upload/iblock/3a4/q9gs1z5bcv60cqkb4sf7igk2ccom8dgr/dcs-world-mig-15bis-flaming-cliffs.jpg"/>
+                    <img id="f-5e_flaming_cliffs" class="simmer2 cash3" cash3 src="https://www.digitalcombatsimulator.com/upload/iblock/88d/30w3xb8h8v4fsele80m46a6fqbavyor1/dcs-world-f-5e-flaming-cliffs.jpg"/>
+                    <img id="f-86f_flaming_cliffs" class="simmer2 cash3" src="https://www.digitalcombatsimulator.com/upload/iblock/9fa/sdfi036dyvt0cwz5umbmbz2ff14yl5oj/dcs-world-f-86f-flaming-cliffs.jpg"/>
+                    <img id="mig-29_flaming_cliffs" class="simmer2 cash2" src="https://www.digitalcombatsimulator.com/upload/iblock/8c3/DCS_MiG-29_700x1000_v1.jpg"/>
+                    <img id="su-33_flaming_cliffs" class="simmer2 cash2" src="https://www.digitalcombatsimulator.com/upload/iblock/11e/DCS-Su-33_700x1000_v1.jpg"/>
+                    <img id="su-27_flaming_cliffs" class="simmer2 cash2" src="https://www.digitalcombatsimulator.com/upload/iblock/87a/su27.jpg"/>
+                    <img id="f-15c_flaming_cliffs" class="simmer2 cash2" src="https://www.digitalcombatsimulator.com/upload/iblock/5ed/f15.jpg"/>
+                    <img id="su-25_flaming_cliffs" class="simmer2 cash2" src="https://www.digitalcombatsimulator.com/upload/iblock/afe/su25.jpg"/>
+                    <img id="a-10a_flaming_cliffs" class="simmer2 cash2" src="https://www.digitalcombatsimulator.com/upload/iblock/fb1/a10a.jpg"/>
+
+                    <img id="a4e" class="simmer2 cash1" src="https://i.ytimg.com/vi/8W2OsFI3qGs/maxresdefault.jpg"/>
+
+                    <img id="ch-47f" class="simmer1 movie3 modern2 pilot1 reflected2 type1 chill1 thicc1 updates1 real1" src="https://www.digitalcombatsimulator.com/upload/iblock/cd1/fdxqxi6v830kw66hy0b5th9on21c9aom/dcs-world-ch-47f.jpg"/>
+                    <img id="kiowa" class="simmer1 movie3 modern2 pilot1 reflected2 type1 chill2 thicc2 helofeat1 updates1 real1" src="https://www.digitalcombatsimulator.com/upload/iblock/a70/1wxuizfhqkwxu88w94w7r684plglof2d/dcs-world-oh-58d-kiowa-warrior.jpg"/>
+                    <img id="ah-64d" class="simmer1 movie3 modern2 pilot1 reflected2 type1 chill2 thicc2 helofeat2 updates1 real1" src="https://www.digitalcombatsimulator.com/upload/iblock/ecb/5t77gt24k5fm6cxxv06dxs204i8d4vor/ah64d-helicopter-flight-simulator.jpg"/>
+                    <img id="black_shark_3" class="simmer1 movie3 modern2 pilot2 nopilotspec1 reflected2 type1 chill2 thicc2 updates1 real1" src="https://www.digitalcombatsimulator.com/upload/iblock/d31/zp4tm0wv32145rihz6d9i5e3jey51n5n/dcs-world-black-shark-3.jpg"/>
+                    <img id="hind" class="simmer1 movie1 rambo2 pilot1 reflected2 type1 chill2 thicc1 updates1 real1" src="https://www.digitalcombatsimulator.com/upload/iblock/3fb/DCS_Mi-24P_Hind.jpg"/>
+                    <img id="dcs_mi8mtv2_magnificent_eight" class="simmer1 movie3 modern2 pilot1 reflected2 type1 chill2 thicc1 helofeat3 updates1 real1" src="https://www.digitalcombatsimulator.com/upload/iblock/0e8/DCS_MI-8-DVD-cover_3.jpg"/>
+                    <img id="dcs_uh1h_huey" class="simmer1 movie1 rambo1 pilot1 reflected1 type1 chill1 thicc2 updates1 real1" src="https://www.digitalcombatsimulator.com/upload/iblock/a09/uh.jpg"/>
+                    <img id="gazelle" class="simmer1 movie3 modern2 pilot1 reflected2 type1 chill1 thicc2 updates1 real1" src="https://www.digitalcombatsimulator.com/upload/iblock/f73/DVD-cover-SA342M-for-ED-final-700x1000.jpg"/>
+
+                    <img id="phantom" class="simmer1 movie3 modern2 pilot1 reflected1 type2 chill2 updates1 real1 tech3" src="https://www.digitalcombatsimulator.com/upload/iblock/1be/97x39ecrwkdm8kgnzg7w2uv4a8roeo4u/dcs-world-f-4e-phantom-ii.jpg"/>
+                    <img id="tomcat" class="simmer1 movie2 topgun1 pilot1 reflected1 type2 chill2 updates1 real1" src="https://www.digitalcombatsimulator.com/upload/iblock/61f/F14.jpg"/>
+                    <img id="f-15e" class="simmer1 movie3 modern2 pilot1 reflected2 type2 chill2 updates2 razbam1 real1" src="https://www.digitalcombatsimulator.com/upload/iblock/5f6/2dlqzcsspco3e1vr07cdwyq371kfnkbq/dcs-world-f-15e.jpg"/>
+                    <img id="viper" class="simmer1 movie3 modern2 pilot1 reflected2 type2 chill2 updates1 real1 tech1" src="https://www.digitalcombatsimulator.com/upload/iblock/35e/DCS_F-16C_700x1000_v3-1.jpg"/>
+                    <img id="hornet" class="simmer1 movie2 topgun2 pilot1 reflected2 type2 chill2 updates1 real1" src="https://www.digitalcombatsimulator.com/upload/iblock/ea2/9ht6o60hq9zfsv8rdyr2tuaop0bap1v9/F18_New_Eshop_cover_700x1000.png"/>
+                    <img id="tank_killer" class="simmer1 movie3 modern2 pilot2 nopilotspec2 reflected2 type2 chill2 updates1 real1" src="https://www.digitalcombatsimulator.com/upload/iblock/4ff/Eshop_cover_700x1000.jpg"/>
+                    <img id="av8bna" class="simmer1 movie3 modern2 pilot1 type2 reflected2 chill2 updates2 razbam2 real1" src="https://www.digitalcombatsimulator.com/upload/iblock/fd7/DCS-AV-8B_700x1000_v2.jpg"/>
+                    <img id="viggen" class="simmer1 movie3 modern2 pilot1 reflected2 type2 chill2 updates1 real1 tech2" src="https://www.digitalcombatsimulator.com/upload/iblock/5f6/AJS-37-Cover-700x1000.jpg"/>
+                    <img id="mirage" class="simmer1 movie3 modern2 pilot2 nopilotspec5 reflected2 type2 chill2 updates1 real1" src="https://www.digitalcombatsimulator.com/upload/iblock/f18/dl6u816w0z5gyozyj52i2omgmmb436lt/dcs-world-mirage-f1.jpg"/>
+                    <img id="thunder" class="simmer1 movie3 modern2 pilot2 nopilotspec3 reflected2 type2 chill2 updates1 real1" src="https://www.digitalcombatsimulator.com/upload/iblock/af5/JF17-Cover-700x1000.jpg"/>
+                    <img id="farmer" class="simmer1 movie3 modern2  pilot2 nopilotspec4 reflected2 type2 chill2 updates2 real1" src="https://www.digitalcombatsimulator.com/upload/iblock/852/MiG-19P_by_RAZBAM.jpg"/>
+                    <img id="tiger" class="simmer1 movie3 modern2 pilot1 reflected2 type2 chill2 updates1 real1" src="https://www.digitalcombatsimulator.com/upload/iblock/017/F-5E-DVD-cover_700x1000px.jpg"/>
+                    <img id="m2000c" class="simmer1 movie3 modern2 pilot1 reflected2 type2 chill2 updates2 razbam3 real1" src="https://www.digitalcombatsimulator.com/upload/iblock/e94/DCS_M-2000_cover_700x1000_v3.jpg"/>
+                    <img id="mig15bis" class="simmer1 movie3 modern2 pilot1 nopilotspec4 reflected2 type2 chill2 updates1 real1 tech4 guns2" src="https://www.digitalcombatsimulator.com/upload/iblock/6d3/DCS_MiG-15_DVD_cover_v4_700x1000px.jpg"/>
+                    <img id="mig21bis" class="simmer1 movie3 modern2 pilot2 nopilotspec4 reflected2 type2 chill2 updates1 real1" src="https://www.digitalcombatsimulator.com/upload/iblock/af1/FP_Hires.jpg"/>
+                    <img id="sabre" class="simmer1 movie3 modern2 pilot1 reflected1 reflected2 type2 chill2 updates1 real1 tech4 guns1" src="https://www.digitalcombatsimulator.com/upload/iblock/d88/F-86F-DVD-cover_700x1000px_v4.jpg"/>
+
+                    <img id="dcs_p51d_mustang" class="simmer1 movie3 modern1 axis2 pilot1 reflected1 bombgun1 chill2 updates1 real1" src="https://www.digitalcombatsimulator.com/upload/iblock/f5d/DCS_P-51D_DVD-Box_700x1000.jpg"/>
+                    <img id="thunderbolt" class="simmer1 movie3 modern1 axis2 pilot2 nopilotspec5 reflected1 chill2 updates1 real1" src="https://www.digitalcombatsimulator.com/upload/iblock/e4f/DCS_P-47D_700x1000_v3.jpg"/>
+                    <img id="mosquito" class="simmer1 movie3 modern1 axis2 pilot2 nopilotspec5 reflected1 chill2 updates1 real1" src="https://www.digitalcombatsimulator.com/upload/iblock/1aa/uoq2rjv3o6hx5ss5598dgtyrsne1ou70/DCS_World_Mosquito_FB_VI.jpg"/>
+                    <img id="anton" class="simmer1 movie3 modern1 axis1 pilot2 nopilotspec5 reflected1 chill2 updates1 real1" src="https://www.digitalcombatsimulator.com/upload/iblock/6d6/DCS_FW-190A-8_700x1000_v1.jpg"/>
+                    <img id="i-16" class="simmer1 movie3 modern1 axis2 pilot2 nopilotspec4 reflected2 chill2 updates1 real1" src="https://www.digitalcombatsimulator.com/upload/iblock/ba9/DCS-I-16-cover-700x1000.jpg"/>
+                    <img id="kurfurst" class="simmer1 movie3 modern1 axis1 pilot1 reflected1 chill2 updates1 real1" src="https://www.digitalcombatsimulator.com/upload/iblock/f94/Bf-109-DVD-cover_700x1000px.jpg"/>
+                    <img id="dora" class="simmer1 movie3 modern1 axis1 pilot1 reflected2 chill2 updates1 real1" src="https://www.digitalcombatsimulator.com/upload/iblock/10d/FW-190-DVD-cover.jpg"/>
+                    <img id="spitfire" class="simmer1 movie3 modern1 axis2 pilot1 reflected1 bombgun2 chill2 updates1 real1" src="https://www.digitalcombatsimulator.com/upload/iblock/f44/DCS_Spitfire_Mk.IX_700x1000.jpg"/>
+
+                    <img id="christen_eagle" class="simmer2 movie3 modern2 pilot2 reflected2 type3 chill1 updates1 real2" src="https://www.digitalcombatsimulator.com/upload/iblock/013/Christen-Eagle-2_Box-Art_v2_700x1000.jpg"/>
+                    <img id="albatros" class="simmer1 movie3 modern2 pilot1 reflected2 type3 chill1 updates1 real2" src="https://www.digitalcombatsimulator.com/upload/iblock/a7c/DCS_L-39_Art_700x1000.jpg"/>
+                    <img id="aviojet" class="simmer1 movie3 modern2 pilot1 reflected2 type3 chill1 updates1 real2" src="https://www.digitalcombatsimulator.com/upload/iblock/f02/product-DCS-C-101.jpg"/>
+                    <img id="mb-339" class="simmer1 movie3 modern2 pilot2 nopilotspec5 reflected2 type3 chill1 updates1 real2" src="https://www.digitalcombatsimulator.com/upload/iblock/e74/ewg3kat14ehimk1m9emwl29cdscztq2k/dcs-world-mb-339.jpg"/>
+                    <img id="yak52" class="simmer1 movie3 modern2 pilot2 nopilotspec4 reflected2 type3 chill1 updates1 real2" src="https://www.digitalcombatsimulator.com/upload/iblock/e60/DCS-Yak-52_700x1000_v2.jpg"/>
+
+                    <!--<img id="supercarrier" src="https://www.digitalcombatsimulator.com/upload/iblock/e2a/DCS_Super-Carrier_700x1000_v5.jpg"/>-->
+                    <!--<img id="dcs_combined_arms" src="https://www.digitalcombatsimulator.com/upload/iblock/511/CA-DVD-cover-international_700x1000px.jpg"/>-->
+                </div>
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            function reset() {
+                $('[id^="filter-"] input').prop('checked', false);
+                filterModules();
+            }
+            function filterModules() {
+                $('#modules img').show();
+                var sequential = $('#sequential').is(':checked');
+                $('[id^="filter-"]').each(function() {
+                    var checked = $(this).find('input:checked');
+                    var classNames = $(this).attr('class');
+                    var classes = classNames.split(/\s+/);
+                    var needsSomething = classNames.includes('needs-');
+                    console.log($(this).attr('id') + ' ' + classNames + ' ' + needsSomething);
+                    var needsFulfilled = 0;
+                    for (var i = 0; i < classes.length; i++) {
+                        if (classes[i].startsWith('needs-')) {
+                            var needsId = classes[i].replace('needs-', '');
+                            if (sequential && $('#' + needsId + ':checked').length > 0) {
+                                needsFulfilled++;
+                            }
+                        }
+                    }
+                    if (!sequential || !needsSomething || needsFulfilled > 0) {
+                        $(this).show().next().show();
+                    } else {
+                        $(this).hide().next().hide();
+                    }
+                    var id = checked.attr('id');
+                    if (!id) return;
+                    var filterName = id.replace('filter-', '');
+                    $('#modules img').not('.' + filterName).hide();
+                });
+            }
+            $(document).ready(function() {
+                const shopUrl = 'https://www.digitalcombatsimulator.com/en/shop/modules/';
+                $('input').on('change', filterModules);
+                $('#reset').on('click', reset);
+                $('#modules img').on('click', function() {
+                    var id = $(this).attr('id');
+                    if (id === 'a4e') {
+                        window.open('https://github.com/heclak/community-a4e-c')
+                    } else {
+                        window.open(shopUrl + id + '/');
+                    }
+                });
+                $('#sequential').on('change', function() {
+                    if ($('#sequential').is(':checked')) {
+                        $('label[for="sequential"]').text("Sequential ON");
+                        reset();
+                    } else {
+                        $('label[for="sequential"]').text("Sequential OFF");
+                    }
+                });
+                $('[id^="filter-"] input').on('click', function(e) {
+                    if ($(this).is(':checked')) {
+                        $(this).siblings().prop('checked', false);        
+                    }
+                    if ($("#sequential").is(':checked')) {
+                        // reset all filters after this one
+                        $(this).parent().parent().nextAll().find('input').prop('checked', false);
+                    }
+                });
+                filterModules();
+            });
+        </script>
+    </body>
+</html>
