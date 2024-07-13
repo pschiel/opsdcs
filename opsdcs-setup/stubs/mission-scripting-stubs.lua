@@ -903,6 +903,8 @@
 --- @description The country singleton contains enumerators for all countries in DCS World. These can be used to set the country of a unit or group, or to check the country of an object.
 --- @field id country.id key country, value id
 --- @field names table key id, value country
+--- @field by_country table infos by country name
+--- @field by_idx table infos by idx
 
 --- @class country.id
 --- @description Enumerator for country IDs.
