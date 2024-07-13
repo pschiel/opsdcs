@@ -18,6 +18,7 @@
 --- @description DCS Control API
 --- @field activateSteamOverlayToStore fun()
 --- @field add_dyn_group fun()
+--- @field checkMultiplayerSpawnConflict fun(takeOffType, id, unitId, type)
 --- @field conquestCoalitionsScore fun()
 --- @field create_client_aircraft fun()
 --- @field dispatchAnalogAction fun()
@@ -25,6 +26,7 @@
 --- @field enter_with_dyngroup fun()
 --- @field exitProcess fun() Commands to close the DCS application.
 --- @field getAchievementsUiInfo fun()
+--- @field getAircraftAmountInAirportWarehouse fun(type, id, isAirdrome)
 --- @field getAirTankerID fun()
 --- @field getAirdromesCoalition fun()
 --- @field getAirdromesState fun()
@@ -36,6 +38,8 @@
 --- @field getCurrentFOV fun()
 --- @field getCurrentMission fun():table Returns the table of the mission as stored in the mission file.
 --- @field getDefaultFOV fun()
+--- @field getDynamicSpawnSettings fun(id, isAirdrome)
+--- @field getFarpsAndCarriersMissionData fun()
 --- @field getGameDuration fun()
 --- @field getGamePattern fun()
 --- @field getGeneratedParams fun()
