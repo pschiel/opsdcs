@@ -47,7 +47,7 @@ For the Mission Scripting environment, just send the code (snippet) to the DCS L
 
 ## Auto-completion via LUA stubs
 
-Copy the [LUA stubs](stubs) into your project, or set `"Lua.workspace.library": {"/path/to/your/stub/files": true}` in VSCode settings.
+Menu > File > Add Folder to Workspace, select [LUA stubs](stubs) folder.
 
 *(Notice: stubs are not complete)*
 
