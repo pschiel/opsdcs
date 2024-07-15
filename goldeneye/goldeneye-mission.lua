@@ -23,6 +23,7 @@ Goldeneye = {
     sensors = {},
     players = {},
     objects = {},
+    sceneryObjects = {},
     nObjects = 0,
     eventNamesById = nil,
 }
@@ -53,6 +54,7 @@ function Goldeneye:start()
     for _, sensorType in ipairs(self.sensorTypes) do
         self:loadScript("sensors/goldeneye-sensor-" .. sensorType .. ".lua")
     end
+    self:loadScript("data/goldeneye-scenery-objects.lua")
     world.addEventHandler(self)
     -- SP
     local player = world.getPlayer()
@@ -236,6 +238,13 @@ function Goldeneye:loadObjects()
     for _, object in pairs(self.objects) do
         trigger.action.smoke(object.point, trigger.smokeColor.Red)
     end
+end
+
+------------------------------------------------------------------------------
+
+-- debug scenery objects scan
+function Goldeneye:scanSceneryObjects()
+    
 end
 
 ------------------------------------------------------------------------------
