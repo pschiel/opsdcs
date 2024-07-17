@@ -353,10 +353,13 @@ end
 
 --- toggles cockpit argument debug display
 function OpsdcsCrew:onArgsDebug()
-    self.isRunningArgsDebug = self.isRunningArgsDebug and false or true
-    if not self.isRunningArgsDebug then return end
-    self.allLastArgs = self:getCockpitArgs(self.argsDebugMaxId)
-    timer.scheduleFunction(self.argsDebugLoop, self, timer.getTime() + 0.5)
+    if self.isRunningArgsDebug then
+        self.isRunningArgsDebug = false
+    else
+        self.isRunningArgsDebug = true
+        self.allLastArgs = self:getCockpitArgs(self.argsDebugMaxId)
+        timer.scheduleFunction(self.argsDebugLoop, self, timer.getTime() + 0.5)
+        end
 end
 
 --- cockpit argument debug display loop
