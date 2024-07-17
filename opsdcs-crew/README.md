@@ -28,7 +28,7 @@ Singleplayer only.
 - Find army dudes for voices
 - F16 Ground Chief start procedure
 - F16 Hotpit procedure
-- Coldstarts: A-10C_2, AH-64D, AJS37, Bf-109K-4, FA-18C, FW_190A8, Ka-50_3, Mi-24P, P-51D, SA342, SpitfireLFMkIX, UH-1H
+- Coldstarts: A-10C_2, AH-64D, AJS37, Bf-109K-4, FA-18C, FW-190A8, Ka-50_3, Mi-24P, P-51D, SA342, SpitfireLFMkIX, UH-1H
 - Guide procedure Heli (see guide.lua)
 - Landing procedure Heli POC
 - Landing procedure Jet POC
