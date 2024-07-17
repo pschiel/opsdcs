@@ -243,6 +243,24 @@ function OpsdcsApi:serializeTable(t)
     return str .. "}"
 end
 
+-- loads file content
+function OpsdcsApi:getFileContent(path)
+    local file, err = io.open( path, "r" )
+    if err then return err end
+    local content = file:read("*a")
+    file:close()
+    return content
+end
+
+-- saves file content
+function OpsdcsApi:saveFileContent(path, content)
+    local file, err = io.open( path, "w+" )
+    if err then return err end
+    file:write(content)
+    file:close()
+    return
+end
+
 -- reads http headers
 function OpsdcsApi:getHeaders(client)
     local headers = {}
@@ -741,4 +759,6 @@ if DCS ~= nil then
     })
 end
 
-OpsdcsApi:startServer()
+if DCS ~= nil then
+    OpsdcsApi:startServer()
+end
