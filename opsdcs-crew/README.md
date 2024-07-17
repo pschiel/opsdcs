@@ -17,10 +17,10 @@ Singleplayer only.
 - Interactive checklist functionality
 - Cockpit args/params debug tool (click on any switch to see arg and value)
 - Hook functionality
-- Detect all args (explain feature)
+- Explain all args
 - OH58D
-  - Coldstart
-  - Shutdown
+  - Coldstart [(Preview)](https://www.youtube.com/watch?v=wwbpFXVOp2M)
+  - Shutdown [(Preview)](https://www.youtube.com/watch?v=COZI8mpOZ4w)
 
 ## Todo
 
