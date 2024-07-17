@@ -1,3 +1,5 @@
+-- todo: yes
+
 OpsdcsCrew["UH-1H"] = {
     procedures = {
         ["coldstart"] = {

@@ -1,3 +1,5 @@
+-- todo: add all stuff from manual, add voices + voice checklist logic
+
 OpsdcsCrew["CH-47F"] = {
     procedures = {
         ["coldstart"] = {

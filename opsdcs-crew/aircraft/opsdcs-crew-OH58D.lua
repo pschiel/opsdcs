@@ -1,3 +1,5 @@
+-- todo: voices + voice checklist logic
+
 OpsdcsCrew["OH58D"] = {
     procedures = {
         ["coldstart"] = {

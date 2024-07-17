@@ -1,3 +1,5 @@
+-- todo: args+params, autochocks, radio menus, voices + voice checklist logic
+
 OpsdcsCrew["F-16C_50"] = {
     procedures = {
         ["coldstart"] = {
