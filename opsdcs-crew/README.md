@@ -1,3 +1,35 @@
 # opsdcs-crew
 
-WIP
+Virtual Crew, Trainer and Interactive Checklists.
+
+Singleplayer only.
+
+## Features
+
+- Interactive checklists, reacting realtime to aircraft parameters
+- Automatic advancing, no "press spacebar" required (unless wanted)
+- Optional hook for auto-injecting in any mission
+- Support for sounds/voices
+- Explain cockpit switches by clicking on them
+
+## Done
+
+- Interactive checklist functionality
+- Cockpit args/params debug tool (click on any switch to see arg and value)
+- Hook functionality
+- Detect all args (explain feature)
+- OH58D
+  - Coldstart
+  - Shutdown
+
+## Todo
+
+- Find army dudes for voices
+- F16 Ground Chief start procedure
+- F16 Hotpit procedure
+- Coldstarts: A-10C_2, AH-64D, AJS37, Bf-109K-4, FA-18C, FW_190A8, Ka-50_3, Mi-24P, P-51D, SA342, SpitfireLFMkIX, UH-1H
+- Guide procedure Heli (see guide.lua)
+- Landing procedure Heli POC
+- Landing procedure Jet POC
+- Non-procedure behaviours
+- 
