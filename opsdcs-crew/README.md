@@ -7,6 +7,7 @@ Singleplayer only.
 ## Features
 
 - Interactive checklists, reacting realtime to aircraft parameters
+- Option for automatic highlight helpers
 - Automatic advancing, no "press spacebar" required (unless wanted)
 - Optional hook for auto-injecting in any mission
 - Support for sounds/voices
