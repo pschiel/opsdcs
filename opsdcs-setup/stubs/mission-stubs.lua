@@ -208,3 +208,20 @@ function set_player_name() end
 function set_welcome_info() end
 function unset_human() end
 function update_briefing() end
+
+-- mission events
+-- a_start_listen_event("setup_HMS", 1)              -- HMS installed
+-- a_start_listen_event("setup_NVG", 2)              -- NVG installed
+-- a_start_listen_event("DisableTurboGear", 3)
+-- a_start_listen_event("EnableTurboGear", 4)
+-- a_start_listen_event("GroundPowerOn", 5)          -- ground power on
+-- a_start_listen_event("GroundPowerOff", 6)         -- ground power off
+-- a_start_listen_event("repair", 7)                 -- repair
+-- a_start_listen_event("WeaponRearmFirstStep", 8)   -- rearming start
+-- a_start_listen_event("WeaponRearmComplete", 9)    -- rearming complete
+-- a_start_listen_event("OnNewNetHelicopter", 10)
+-- a_start_listen_event("initChaffFlarePayload", 11) -- chaff/flare payload
+-- a_start_listen_event("switch_datalink", 12)
+-- a_start_listen_event("OnNewNetPlane", 13)
+-- a_start_listen_event("LinkNOPtoNet", 14)
+-- a_start_listen_event("LinkNOPtoNet", 15)
