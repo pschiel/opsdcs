@@ -20,7 +20,7 @@ OpsdcsCrew["F-16C_50"] = {
     },
     states = {
         ["coldstart-setup-radio"] = {
-            text = "Cold Start - Before Engine Start",
+            text = "Before Engine Start",
             -- auto chocks here
             conditions = {
                 { text = "Set up lights (ANTI COLL, rest as needed)", cond = { } },
@@ -37,7 +37,7 @@ OpsdcsCrew["F-16C_50"] = {
             next_state = "coldstart-check-systems-off",
         },
         ["coldstart-check-systems-off"] = {
-            text = "Cold Start - Systems Power Off Check",
+            text = "Systems Power Off Check",
             conditions = {
                 { text = "MAIN PWR to OFF", cond = { } },
                 { text = "EPU to OFF", cond = { } },
@@ -54,7 +54,7 @@ OpsdcsCrew["F-16C_50"] = {
             next_state = "coldstart-throttle-parking-brake-check",
         },
         ["coldstart-throttle-parking-brake-check"] = {
-            text = "Cold Start - Throttle and Parking Brake Check",
+            text = "Throttle and Parking Brake Check",
             conditions = {
                 { text = "MAIN PWR to BATT", cond = { } },
                 { text = "Set parking brake to UP", cond = { } },
@@ -71,7 +71,7 @@ OpsdcsCrew["F-16C_50"] = {
             next_state = "coldstart-overview",
         },
         ["coldstart-overview"] = {
-            text = "Cold Start - Overview\n\n[F10 menu or SPACE to continue]",
+            text = "Overview\n\n[F10 menu or SPACE to continue]",
             -- actions? clearmenu? menu? hasmenu? (or just all?)
             conditions = {
                 { text = "Radio Check", cond = { "state_done", "coldstart-radio-check" } },
@@ -87,7 +87,7 @@ OpsdcsCrew["F-16C_50"] = {
             next_state = "coldstart-complete",
         },
         ["coldstart-radio-check"] = {
-            text = "Cold Start - Radio Check",
+            text = "Radio Check",
             actions = {
                 -- just the timing, make compatible with manual radio
                 { voice = "player", sound = "chief do you hear me", duration = 2.0 },
@@ -101,47 +101,47 @@ OpsdcsCrew["F-16C_50"] = {
             next_state = "coldstart-overview",
         },
         ["coldstart-engine-start"] = {
-            text = "Cold Start - Engine Start",
+            text = "Engine Start",
             conditions = {},
             next_state = "coldstart-overview",
         },
         ["coldstart-epu-test"] = {
-            text = "Cold Start - EPU Test",
+            text = "EPU Test",
             conditions = {},
             next_state = "coldstart-overview",
         },
         ["coldstart-sec-check"] = {
-            text = "Cold Start - SEC Check",
+            text = "SEC Check",
             conditions = {},
             next_state = "coldstart-overview",
         },
         ["coldstart-bit-test"] = {
-            text = "Cold Start - BIT Test",
+            text = "BIT Test",
             conditions = {},
             next_state = "coldstart-overview",
         },
         ["coldstart-trim-check"] = {
-            text = "Cold Start - Trim Check",
+            text = "Trim Check",
             conditions = {},
             next_state = "coldstart-overview",
         },
         ["coldstart-big-movements"] = {
-            text = "Cold Start - Big Movements",
+            text = "Big Movements",
             conditions = {},
             next_state = "coldstart-overview",
         },
         ["coldstart-brake-check"] = {
-            text = "Cold Start - Brake Check",
+            text = "Brake Check",
             conditions = {},
             next_state = "coldstart-overview",
         },
         ["coldstart-clear-off"] = {
-            text = "Cold Start - Clear Off",
+            text = "Clear Off",
             conditions = {},
             next_state = "coldstart-complete",
         },
         ["coldstart-complete"] = {
-            text = "Cold Start - Complete",
+            text = "Cold start complete",
             conditions = {},
         },
 
