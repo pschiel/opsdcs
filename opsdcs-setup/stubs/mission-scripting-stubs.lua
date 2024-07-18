@@ -167,14 +167,14 @@
 
 --- @class land
 --- @description The land singleton contains functions used to get information about the terrain geometry of a given map. Functions include getting data on the type and height of terrain at a specific points and raytracing functions.
+--- @field findPathOnRoads fun(roadType:string, xCoord:number, yCoord:number, destX:number, destY:number):table @Returns a path as a table of vec2 points from a start to a destination along specified road type.
+--- @field getClosestPointOnRoads fun(roadType:string, xCoord:number, yCoord:number):number, number @Returns the closest road coordinate (x, y) from a given point based on specified road type ('roads' or 'railroads').
 --- @field getHeight fun(point:vec2):number @Returns the distance from sea level (y-axis) at a given vec2 point.
+--- @field getIP fun(origin:vec3, direction:vec3, distance:number):vec3 @Returns an intercept point where a ray from origin in the specified direction for a given distance intersects with terrain.
 --- @field getSurfaceHeightWithSeabed fun(point:vec2):number, number @Returns both the surface height and the seabed depth at a point.
 --- @field getSurfaceType fun(point:vec2):number @Returns an enumerator indicating the surface type at a given vec2 point. (returns land.SurfaceType)
 --- @field isVisible fun(origin:vec3, destination:vec3):boolean @Determines if a line from origin to destination intersects terrain, used for line of sight.
---- @field getIP fun(origin:vec3, direction:vec3, distance:number):vec3 @Returns an intercept point where a ray from origin in the specified direction for a given distance intersects with terrain.
 --- @field profile fun(start:vec3, end:vec3):table @Returns a profile of the land between two points as a table of vec3 vectors.
---- @field getClosestPointOnRoads fun(roadType:string, xCoord:number, yCoord:number):number, number @Returns the closest road coordinate (x, y) from a given point based on specified road type ('roads' or 'railroads').
---- @field findPathOnRoads fun(roadType:string, xCoord:number, yCoord:number, destX:number, destY:number):table @Returns a path as a table of vec2 points from a start to a destination along specified road type.
 
 --- @class land.SurfaceType
 --- @description surface types
@@ -190,9 +190,9 @@
 
 --- @class atmosphere
 --- @description atmosphere is a singleton whose functions return atmospheric data about the mission. Currently limited only to wind data. 
+--- @field getTemperatureAndPressure fun(point:vec3):number, number @Returns the temperature (Kelvins) and pressure (Pascals) at a given 3D point.
 --- @field getWind fun(point:vec3):vec3 @Returns a velocity vector of the wind at a specified 3D point.
 --- @field getWindWithTurbulence fun(point:vec3):vec3 @Returns a velocity vector of the wind at a specified 3D point, including effects of turbulence.
---- @field getTemperatureAndPressure fun(point:vec3):number, number @Returns the temperature (Kelvins) and pressure (Pascals) at a given 3D point.
 
 ------------------------------------------------------------------------------
 --- world
@@ -201,12 +201,12 @@
 --- @class world
 --- @description The world singleton contains functions centered around two different but extremely useful functions. 1. Events and event handlers are all governed within world. 2. A number of functions to get information about the game world.
 --- @field addEventHandler fun(handler:EventHandler) @Adds a function as an event handler that executes when a simulator event occurs.
---- @field removeEventHandler fun(handler:EventHandler) @Removes the specified event handler from handling events.
---- @field getPlayer fun():Unit @Returns a table representing the single unit object in the game set as "Player".
 --- @field getAirbases fun(coalitionId:number|nil):table @Returns a table of airbase objects for a specified coalition or all airbases if no coalition is specified. (coalition.side)
---- @field searchObjects fun(category:table|number, searchVolume:number, handler:function, data:any):table @Searches a defined volume for specified objects and can execute a function on each found object. (Object.Category, world.VolumeType)
 --- @field getMarkPanels fun():table @Returns a table of mark panels and shapes drawn within the mission.
+--- @field getPlayer fun():Unit @Returns a table representing the single unit object in the game set as "Player".
+--- @field removeEventHandler fun(handler:EventHandler) @Removes the specified event handler from handling events.
 --- @field removeJunk fun(searchVolume:table):number @Searches a defined area to remove craters, wreckage, and debris within the volume, excluding scenery objects. (world.VolumeType)
+--- @field searchObjects fun(category:table|number, searchVolume:number, handler:function, data:any):table @Searches a defined volume for specified objects and can execute a function on each found object. (Object.Category, world.VolumeType)
 
 --- @class world.event
 --- @description event types
@@ -297,10 +297,10 @@
 
 --- @class coalition
 --- @description The coalition singleton contains functions that gets information on the all of the units within the mission. It also has two of the most powerful functions that are capable of spawning groups and static objects into the mission. 
---- @field add_dyn_group fun()
 --- @field addGroup fun(countryId:number, groupCategory:number, groupData:table):Group @Adds a group of the specified category for the specified country using provided group data. (country.id, Group.Category)
 --- @field addRefPoint fun(coalitionId:number, refPoint:table) @Adds a reference point for the specified coalition, used by JTACs. (coalition.side)
 --- @field addStaticObject fun(countryId:number, groupData:table):StaticObject @Dynamically spawns a static object for the specified country based on the provided group data. (country.id)
+--- @field add_dyn_group fun()
 --- @field checkChooseCargo fun()
 --- @field checkDescent fun()
 --- @field getAirbases fun(coalitionId:number|nil):table @Returns a table of airbase objects for the specified coalition or all airbases if no coalition is specified. (coalition.side)
@@ -437,15 +437,15 @@
 --- @class missionCommands
 --- @description The missionCommands singleton allows for greater access and flexibility of use for the F10 Other radio menu. Added commands can contain sub-menus and directly call lua functions.
 --- @field addCommand fun(name:string, path:table|nil, functionToRun:function, anyArgument:any):table @Adds a command to the "F10 Other" menu.
---- @field addSubMenu fun(name:string, path:table|nil):table @Creates a submenu in the F10 radio menu.
---- @field removeItem fun(path:table|nil) @Removes an item or submenu from the F10 radio menu.
 --- @field addCommandForCoalition fun(coalitionSide:number, name:string, path:table|nil, functionToRun:function, anyArgument:any):table @Adds a coalition-specific command to the F10 menu.
---- @field addSubMenuForCoalition fun(coalitionSide:number, name:string, path:table|nil):table @Creates a coalition-specific submenu in the F10 menu.
---- @field removeItemForCoalition fun(coalitionSide:number, path:table|nil) @Removes a coalition-specific item or submenu from the F10 menu.
 --- @field addCommandForGroup fun(groupId:number, name:string, path:table|nil, functionToRun:function, anyArgument:any):table @Adds a group-specific command to the F10 menu.
+--- @field addSubMenu fun(name:string, path:table|nil):table @Creates a submenu in the F10 radio menu.
+--- @field addSubMenuForCoalition fun(coalitionSide:number, name:string, path:table|nil):table @Creates a coalition-specific submenu in the F10 menu.
 --- @field addSubMenuForGroup fun(groupId:number, name:string, path:table|nil):table @Creates a group-specific submenu in the F10 menu.
---- @field removeItemForGroup fun(groupId:number, path:table|nil) @Removes a group-specific item or submenu from the F10 menu.
 --- @field doAction fun()
+--- @field removeItem fun(path:table|nil) @Removes an item or submenu from the F10 radio menu.
+--- @field removeItemForCoalition fun(coalitionSide:number, path:table|nil) @Removes a coalition-specific item or submenu from the F10 menu.
+--- @field removeItemForGroup fun(groupId:number, path:table|nil) @Removes a group-specific item or submenu from the F10 menu.
 
 ------------------------------------------------------------------------------
 --- VoiceChat
@@ -475,25 +475,25 @@
 
 --- @class net
 --- @description The net singleton are a number of functions from the network API that work in the mission scripting environment. Notably for mission scripting purposes there is now a way to send chat, check if players are in Combined Arms slots, kick people from the server, and move players to certain slots. 
---- @field send_chat fun(message:string, all:boolean) @Sends a chat message to all players if true, or team otherwise.
---- @field send_chat_to fun(message:string, playerId:number, fromId:number|nil) @Sends a chat message to a specific player, optionally appearing from another player.
---- @field recv_chat fun() @Functionality unknown.
+--- @field dostring_in fun(environment:string, code:string):string @Executes a Lua string in a specified Lua environment within the game. (config: main.cfg/autoexec.cfg state, mission: current mission, export: export.lua)
+--- @field force_player_slot fun(playerID:number, sideId:number, slotId:number):boolean @Forces a player into a specified slot.
+--- @field get_my_player_id fun():number @Returns the playerID of the local player; returns 1 for server.
+--- @field get_name fun(playerID:number):string @Returns the name of a given player.
+--- @field get_player_info fun(playerID:number, attribute:string|nil):table @Returns player attributes; specific attribute if provided.
+--- @field get_player_list fun():table @Returns a list of players currently connected to the server.
+--- @field get_server_id fun():number @Returns the playerID of the server; currently always 1.
+--- @field get_slot fun(playerID:number):number, number @Returns the sideId and slotId of a given player.
+--- @field get_stat fun(playerID:number, statID:number):number @Returns a specific statistic from a given player.
+--- @field json2lua fun(json:string):table @Converts a JSON string to a Lua value.
+--- @field kick fun(playerId:number, message:string):boolean @Kicks a player from the server with an optional message.
 --- @field load_mission fun(fileName:string):boolean @Loads the specified mission.
 --- @field load_next_mission fun():boolean @Load the next mission from the server mission list. Returns false if at the end of list.
---- @field get_player_list fun():table @Returns a list of players currently connected to the server.
---- @field get_my_player_id fun():number @Returns the playerID of the local player; returns 1 for server.
---- @field get_server_id fun():number @Returns the playerID of the server; currently always 1.
---- @field get_player_info fun(playerID:number, attribute:string|nil):table @Returns player attributes; specific attribute if provided.
---- @field kick fun(playerId:number, message:string):boolean @Kicks a player from the server with an optional message.
---- @field get_stat fun(playerID:number, statID:number):number @Returns a specific statistic from a given player.
---- @field get_name fun(playerID:number):string @Returns the name of a given player.
---- @field get_slot fun(playerID:number):number, number @Returns the sideId and slotId of a given player.
---- @field set_slot fun() @Functionality unknown.
---- @field force_player_slot fun(playerID:number, sideId:number, slotId:number):boolean @Forces a player into a specified slot.
---- @field lua2json fun(lua:any):table @Converts a Lua value to a JSON string.
---- @field json2lua fun(json:string):table @Converts a JSON string to a Lua value.
---- @field dostring_in fun(environment:string, code:string):string @Executes a Lua string in a specified Lua environment within the game. (config: main.cfg/autoexec.cfg state, mission: current mission, export: export.lua)
 --- @field log fun(message:string) @Writes an "INFO" entry to the DCS log file.
+--- @field lua2json fun(lua:any):table @Converts a Lua value to a JSON string.
+--- @field recv_chat fun() @Functionality unknown.
+--- @field send_chat fun(message:string, all:boolean) @Sends a chat message to all players if true, or team otherwise.
+--- @field send_chat_to fun(message:string, playerId:number, fromId:number|nil) @Sends a chat message to a specific player, optionally appearing from another player.
+--- @field set_slot fun() @Functionality unknown.
 --- @field trace fun() @Functionality unknown.
 
 ------------------------------------------------------------------------------
@@ -507,11 +507,11 @@
 --- @class Event
 --- @description helper class for event handler parameter
 --- @field id number @Event ID (world.event
---- @field time number @Time in seconds since the mission started
 --- @field initiator Unit @Unit that initiated the event
---- @field target Unit @Unit that is the target of the event
 --- @field place Unit|nil @place
 --- @field subPlace number|nil @sub place (world.BirthPlace)
+--- @field target Unit @Unit that is the target of the event
+--- @field time number @Time in seconds since the mission started
 --- @field weapon Weapon|nil @Weapon object that is the cause of the event
 
 ------------------------------------------------------------------------------
@@ -577,18 +577,20 @@
 --- @description Represents units: airplanes, helicopters, vehicles, ships and armed ground structures.
 --- @field Category Unit.Category
 --- @field Desc Unit.Desc
+--- @field LoadOnBoard fun()
 --- @field OpticType Unit.OpticType
 --- @field RadarType Unit.RadarType
 --- @field RefuelingSystem Unit.RefuelingSystem
 --- @field SensorType Unit.SensorType
+--- @field UnloadCargo fun()
 --- @field disembarking fun()
 --- @field enableEmission fun(self:Unit, setting:boolean) @Sets radar emissions on or off.
 --- @field getAirbase fun()
 --- @field getAmmo fun(self:Unit):table @Returns a table of ammunition details.
 --- @field getByName fun(name:string):Unit @Returns an instance of the calling class for the object of a specified name.
 --- @field getCallsign fun(self:Unit):string @Returns the callsign of the unit.
---- @field getCategoryEx fun(self:Unit):Unit.Category @Returns the category of the unit.
 --- @field getCargosOnBoard fun()
+--- @field getCategoryEx fun(self:Unit):Unit.Category @Returns the category of the unit.
 --- @field getController fun(self:Unit):Controller @Returns the controller of the unit.
 --- @field getDescByName fun(typename:string):Unit.Desc @Return a description table of the specified Object type. Object does not need to be in the mission in order to query its data.
 --- @field getDescentCapacity fun(self:Unit):number|nil @Returns the descent capacity, nil if not applicable.
@@ -610,10 +612,8 @@
 --- @field hasCarrier fun()
 --- @field hasSensors fun(self:Unit, sensorType:enum, subCategory:enum):boolean @Returns true if the unit has the specified sensors.
 --- @field isActive fun(self:Unit):boolean @Returns true if the unit is activated.
---- @field LoadOnBoard fun()
 --- @field markDisembarkingTask fun()
 --- @field openRamp fun()
---- @field UnloadCargo fun()
 
 --- @class Unit.Desc:Object.Desc
 
@@ -688,18 +688,18 @@
 
 --- @class Weapon:CoalitionObject
 --- @description Represents a weapon object: shell, rocket, missile and bomb
+--- @field getCategoryEx fun(self:Weapon):Weapon.Category @Returns an enumerator of the category for the specific object.
 --- @field getLauncher fun(self:Weapon):Unit|nil @Returns the unit that launched the weapon.
 --- @field getTarget fun(self:Weapon):Object|nil @Returns the target object that the weapon is guiding to.
---- @field getCategoryEx fun(self:Weapon):Weapon.Category @Returns an enumerator of the category for the specific object.
 
 --- @class Weapon.Warhead
 --- @description Warhead description table.
 --- @field type Weapon.WarheadType
---- @field mass number|nil
 --- @field caliber number|nil
 --- @field explosiveMass number|nil @for HE and AP(+HE) warheads only
---- @field shapedExplosiveMass number|nil @for shaped explosive warheads only
+--- @field mass number|nil
 --- @field shapedExplosiveArmorThickness number|nil @for shaped explosive warheads only
+--- @field shapedExplosiveMass number|nil @for shaped explosive warheads only
 
 --- @class Weapon.Desc:Object.Desc
 --- @description Weapon description table.
@@ -768,13 +768,13 @@
 
 --- @class StaticObject:CoalitionObject
 --- @description Represents static objects added in the Mission Editor or via scripting commands.
---- @field getID fun(self:StaticObject):number @Returns a number which defines the unique mission id of a given object.
---- @field getLife fun(self:StaticObject):number @Returns the current life of a unit. Also referred to as hit points
+--- @field getByName fun(name:string):StaticObject @Returns an instance of the calling class for the object of a specified name.
 --- @field getCargoDisplayName fun(self:StaticObject):string @Returns a string of a cargo objects mass
 --- @field getCargoWeight fun(self:StaticObject):number @Returns the mass of a cargo object measured in kg.
---- @field getDrawArgumentValue fun(self:StaticObject, arg:number):number @Returns the current value for an animation argument on the external model of the given object.
---- @field getByName fun(name:string):StaticObject @Returns an instance of the calling class for the object of a specified name.
 --- @field getDescByName fun(typename:string):Object.Desc @Return a description table of the specified Object type. Object does not need to be in the mission in order to query its data.
+--- @field getDrawArgumentValue fun(self:StaticObject, arg:number):number @Returns the current value for an animation argument on the external model of the given object.
+--- @field getID fun(self:StaticObject):number @Returns a number which defines the unique mission id of a given object.
+--- @field getLife fun(self:StaticObject):number @Returns the current life of a unit. Also referred to as hit points
 
 --- @class StaticObject.Category
 --- @description Enumerator for static object categories.
@@ -862,14 +862,14 @@
 
 --- @class Spot
 --- @description Represents a spot from laser or IR-pointer.
---- @field createLaser fun(source:Object, localRef:Vec3, point:Vec3, laserCode:number|nil):Spot @Creates a laser ray. localRef is optional; use nil if not needed. If laserCode is absent, defaults to an IR beam.
 --- @field createInfraRed fun(source:Object, localRef:Vec3, point:Vec3):Spot @Creates an infrared ray visible with night vision. localRef is optional; use nil if not needed.
---- @field setPoint fun(self:Spot, vec3:Vec3) @Sets the destination point for the spot.
---- @field getCode fun(self:Spot):number @Returns the laser code used for laser designation. Default and max value is 1688.
---- @field setCode fun(self:Spot, code:number) @Sets the laser code for laser designation. Default and max value is 1688.
+--- @field createLaser fun(source:Object, localRef:Vec3, point:Vec3, laserCode:number|nil):Spot @Creates a laser ray. localRef is optional; use nil if not needed. If laserCode is absent, defaults to an IR beam.
 --- @field destroy fun(self:Object) @Destroys the object, removing it from the game world without an event. If used with a group, the entire group will be destroyed.
 --- @field getCategory fun(self:Object):Spot.Category @Returns the category and sub-category of the object.
+--- @field getCode fun(self:Spot):number @Returns the laser code used for laser designation. Default and max value is 1688.
 --- @field getPoint fun(self:Object):Vec3 @Returns the x, y, and z coordinates of the objects position in 3D space.
+--- @field setCode fun(self:Spot, code:number) @Sets the laser code for laser designation. Default and max value is 1688.
+--- @field setPoint fun(self:Spot, vec3:Vec3) @Sets the destination point for the spot.
 
 --- @class Spot.Category
 --- @description Enumerator for spot categories.
