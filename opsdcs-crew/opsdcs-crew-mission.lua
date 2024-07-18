@@ -359,7 +359,7 @@ function OpsdcsCrew:onArgsDebug()
         self.isRunningArgsDebug = true
         self.allLastArgs = self:getCockpitArgs(self.argsDebugMaxId)
         timer.scheduleFunction(self.argsDebugLoop, self, timer.getTime() + 0.5)
-        end
+    end
 end
 
 --- cockpit argument debug display loop
