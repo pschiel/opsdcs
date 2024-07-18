@@ -138,18 +138,6 @@ function OpsdcsApi:onSimulationFrame()
                     code, result = self:getDbTerrains()
                 elseif method == "GET" and path == "/coords" then
                     code, result = self:getCoords(query)
-                elseif method == "POST" and path == "/start-mission-server" then  -- for dwe
-                    code, result = 200, {}
-                elseif method == "GET" and path == "/mission-data" then  -- for dwe
-                    code, result = self:getCurrentMission()
-                elseif method == "POST" and path == "/set-camera-position" then -- for dwe
-                    code, result = self:postSetCameraPosition(data)
-                elseif method == "DELETE" and path == "/clear-all" then  -- for dwe
-                    code, result = self:deleteStaticObjects("all")
-                elseif method == "GET" and path == "/position-player" then  -- for dwe
-                    code, result = self:getExportSelfData()
-                elseif method == "GET" and path == "/player-id" then  -- for dwe
-                    code, result = self:getPlayerUnit()
                 end
                 if code == 200 then
                     client:send(self:response200(result))
@@ -442,8 +430,6 @@ function OpsdcsApi:getHealth()
         isMultiplayer = DCS.isMultiplayer(),
         isTrackPlaying = DCS.isTrackPlaying()
     }
-    result.missionServerRunning = true  -- for dwe
-    result.missionRunning = self.hasSimulationStarted  -- for dwe
     return 200, result
 end
 
