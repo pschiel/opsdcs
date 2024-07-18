@@ -9,5 +9,6 @@ Goldeneye.sensors["Ska24C"] = {
     type = "Photo Hi res",
     night = false,
     dataLink = false,
+    screenshot = true,
     remarks = "",
 }

@@ -9,5 +9,6 @@ Goldeneye.sensors["Harold-Pod"] = {
     type = "High Res",
     night = false,
     dataLink = false,
+    screenshot = true,
     remarks = "",
 }

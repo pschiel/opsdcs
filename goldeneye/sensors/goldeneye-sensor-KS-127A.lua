@@ -9,5 +9,6 @@ Goldeneye.sensors["KS-127A"] = {
     type = "LOROP",
     night = false,
     dataLink = false,
+    screenshot = false,
     remarks = "Inside the LOROP POD",
 }

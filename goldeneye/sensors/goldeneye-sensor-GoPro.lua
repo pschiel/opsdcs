@@ -9,5 +9,6 @@ Goldeneye.sensors["GoPro"] = {
     type = "blah",
     night = false,
     dataLink = false,
+    screenshot = false,
     remarks = "whatever",
 }

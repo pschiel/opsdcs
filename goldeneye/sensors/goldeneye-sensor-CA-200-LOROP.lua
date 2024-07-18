@@ -9,5 +9,6 @@ Goldeneye.sensors["CA-200-LOROP"] = {
     type = "LOROP",
     night = false,
     dataLink = false,
+    screenshot = false,
     remarks = "",
 }

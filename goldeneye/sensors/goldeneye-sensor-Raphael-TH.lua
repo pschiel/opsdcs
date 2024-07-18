@@ -9,5 +9,6 @@ Goldeneye.sensors["Raphael-TH"] = {
     type = "SLAR",
     night = true,
     dataLink = true,
+    screenshot = false,
     remarks = "No precise target ident",
 }

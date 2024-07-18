@@ -6,8 +6,9 @@ Goldeneye.sensors["ASTAC"] = {
     maxDistance = 200000,
     frameCount = 10800,
     frameInterval = 1,
-    type = "COMINT",
+    type = "ELINT",
     night = true,
     dataLink = true,
-    remarks = "Identifies all active targets",
+    screenshot = false,
+    remarks = "",
 }

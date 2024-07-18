@@ -9,5 +9,6 @@ Goldeneye.sensors["AKK-Long-Range-Pod"] = {
     type = "Photo Hi res",
     night = false,
     dataLink = false,
+    screenshot = true,
     remarks = "",
 }

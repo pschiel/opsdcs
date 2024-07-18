@@ -6,8 +6,9 @@ Goldeneye.sensors["Presto-Pod"] = {
     maxDistance = 9144,
     frameCount = 480,
     frameInterval = 0.5,
-    type = "High Res Vertical oblique MA/HA",
+    type = "High Res Vertical oblmique MA/HA",
     night = false,
     dataLink = false,
+    screenshot = true,
     remarks = "",
 }

@@ -1,5 +1,5 @@
-Goldeneye.sensors["Vka-702"] = {
-    name = "Vka 702",
+Goldeneye.sensors["AAS-18"] = {
+    name = "AAS-18",
     horizFOV = 120,
     vertFOV = 40,
     minDistance = 152,
@@ -10,5 +10,5 @@ Goldeneye.sensors["Vka-702"] = {
     night = true,
     dataLink = false,
     screenshot = false,
-    remarks = "IR Line Scanner",
+    remarks = "",
 }

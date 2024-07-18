@@ -9,5 +9,6 @@ Goldeneye.sensors["Omera-33"] = {
     type = "High Res Vertical MA/HA",
     night = false,
     dataLink = false,
+    screenshot = true,
     remarks = "",
 }

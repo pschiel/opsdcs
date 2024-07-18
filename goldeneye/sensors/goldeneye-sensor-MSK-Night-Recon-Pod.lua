@@ -9,5 +9,6 @@ Goldeneye.sensors["MSK-Night-Recon-Pod"] = {
     type = "IR",
     night = true,
     dataLink = false,
+    screenshot = false,
     remarks = "",
 }
