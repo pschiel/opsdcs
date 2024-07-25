@@ -674,6 +674,7 @@ end
 -- returns terrain data from lua files
 function OpsdcsApi:getDbTerrains()
     local terrains = {
+        -- fixme: bounds are not accurate
         ["Afghanistan"] = { bounds = { 29.1380386, 60.3788263, 39.0009356, 74.7805963 } },
         ["Caucasus"] = { bounds = { 40.3895774, 27.5420023, 47.6790855, 43.7848066 } },
         ["Kola"] = { bounds = { 64.2500055, 8.9591349, 71.8464196, 42.1817912 } },
