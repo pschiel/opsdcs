@@ -301,7 +301,7 @@
 --- @field addRefPoint fun(coalitionId:number, refPoint:table) @Adds a reference point for the specified coalition, used by JTACs. (coalition.side)
 --- @field addStaticObject fun(countryId:number, groupData:table):StaticObject @Dynamically spawns a static object for the specified country based on the provided group data. (country.id)
 --- @field add_dyn_group fun()
---- @field checkChooseCargo fun()
+--- @field checkChooseCargo fun(unitId:number):boolean
 --- @field checkDescent fun()
 --- @field getAirbases fun(coalitionId:number|nil):table @Returns a table of airbase objects for the specified coalition or all airbases if no coalition is specified. (coalition.side)
 --- @field getAllDescents fun()
