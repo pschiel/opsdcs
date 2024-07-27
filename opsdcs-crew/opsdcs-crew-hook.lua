@@ -31,7 +31,7 @@ end
 -- inject mission script
 function OpsdcsCrewHook:injectScript()
     local code = 'a_do_script("'
-        .. 'OpsdcsCrewBasedir=[[' .. OpsdcsCrewBasedir .. ']];'
+        .. 'OpsdcsCrewBasedir=[[' .. OpsdcsCrewBasedir .. ']];OpsdcsCrewInject=true;'
         .. 'dofile(OpsdcsCrewBasedir..[[opsdcs-crew-mission.lua]])'
         .. '")'
     net.dostring_in('mission', code)

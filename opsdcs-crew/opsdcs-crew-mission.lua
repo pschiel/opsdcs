@@ -25,7 +25,8 @@ OpsdcsCrew = {
     numHighlights = 0, -- current number of highlights
     zones = {}, -- opsdcs-crew zones
     isRunning = false, -- when procedure is running
-    basedir = OpsdcsCrewBasedir or "", -- gets set by hook
+    basedir = OpsdcsCrewBasedir or "",
+    isInjected = OpsdcsCrewInject or false,
     supportedTypes = { "CH-47F", "F-16C_50", "OH58D", "UH-1H" }, -- supported types (todo: autocheck)
     argsDebugMaxId = 4000,
 }
@@ -71,13 +72,24 @@ function OpsdcsCrew:log(msg)
     end
 end
 
+--- plays sound (from inside miz, or absolute path when using hook)
+--- @param string filename
+function OpsdcsCrew:playSound(filename)
+    if self.isInjected then
+        local code = 'require("sound").playSound("' .. self.basedir .. filename .. '")'
+        net.dostring_in("gui", code)
+    else
+        trigger.action.outSound(filename)
+    end
+end
+
 --- sets up user input (space and backspace)
 function OpsdcsCrew:setupWaitForUserFlags()
     local code = 'a_clear_flag("pressedSpace");a_clear_flag("pressedBS");c_start_wait_for_user("pressedSpace", "pressedBS")'
     net.dostring_in("mission", code)
 end
 
---- returns all cockpit params
+--- returns all cockpit params @todo refactor usage
 function OpsdcsCrew:getCockpitParams()
     local list = net.dostring_in("export", "return list_cockpit_params()")
     local params = {}
@@ -95,9 +107,15 @@ function OpsdcsCrew:getCockpitParams()
     return params
 end
 
---- returns cockpit args
+--- returns cockpit args @todo refactor usage
 --- @param number maxId @maximum argument id (if nil, get named arguments from aircraft definition)
 function OpsdcsCrew:getCockpitArgs(maxId)
+    if self[self.typeName].argsById == nil then
+        self[self.typeName].argsById = {}
+        for k, v in pairs(self[self.typeName].args) do
+            self[self.typeName].argsById[v] = k
+        end
+    end
     local code
     local keys = {}
     if maxId == nil then
@@ -123,7 +141,7 @@ function OpsdcsCrew:getCockpitArgs(maxId)
     return args
 end
 
---- returns indications from specified devices
+--- returns indications from specified devices @todo refactor usage
 --- @param number maxId @maximum device id (if nil, get only devices from aircraft definition)
 function OpsdcsCrew:getIndications(maxId)
     local code
@@ -344,8 +362,9 @@ end
 function OpsdcsCrew:showMainMenu()
     self:clearMenu()
     for name, procedure in pairs(self[self.typeName].procedures) do
-        self.menu[name] = missionCommands.addCommandForGroup(self.groupId, name, nil, OpsdcsCrew.onProcedure, self, name, procedure)
+        self.menu[name] = missionCommands.addCommandForGroup(self.groupId, procedure.text, nil, OpsdcsCrew.onProcedure, self, name, procedure)
     end
+    self.menu["whats_this"] = missionCommands.addCommandForGroup(self.groupId, "Cockpit Tutor", nil, OpsdcsCrew.onWhatsThis, self)
     if self.debug then
         self.menu["args_debug"] = missionCommands.addCommandForGroup(self.groupId, "Toggle Arguments Debug", nil, OpsdcsCrew.onArgsDebug, self)
     end
@@ -357,7 +376,7 @@ function OpsdcsCrew:onArgsDebug()
         self.isRunningArgsDebug = false
     else
         self.isRunningArgsDebug = true
-        self.allLastArgs = self:getCockpitArgs(self.argsDebugMaxId)
+        self.argsDebugLastArgs = self:getCockpitArgs(self.argsDebugMaxId)
         timer.scheduleFunction(self.argsDebugLoop, self, timer.getTime() + 0.5)
     end
 end
@@ -366,15 +385,50 @@ end
 function OpsdcsCrew:argsDebugLoop()
     local maxDelta = 0.1
     if not self.isRunningArgsDebug then return end
-    self.allCurrentArgs = self:getCockpitArgs(self.argsDebugMaxId)
+    local currentArgs = self:getCockpitArgs(self.argsDebugMaxId)
     for i = 1, self.argsDebugMaxId do
-        local last, current = self.allLastArgs[i], self.allCurrentArgs[i]
+        local last, current = self.argsDebugLastArgs[i], currentArgs[i]
+        self.argsDebugLastArgs[i] = current
         if math.abs(tonumber(last) - tonumber(current)) > maxDelta then
-            trigger.action.outText("arg " .. i .. " changed: " .. last .. " -> " .. current, 10)
+            local argName = i
+            if self[self.typeName].argsById[i] then
+                argName = self[self.typeName].argsById[i]
+            end
+            trigger.action.outText("arg " .. argName .. " changed: " .. last .. " -> " .. current, 10)
         end
-        self.allLastArgs[i] = current
     end
-    timer.scheduleFunction(self.argsDebugLoop, self, timer.getTime() + 0.5)
+    timer.scheduleFunction(self.argsDebugLoop, self, timer.getTime() + 0.1)
+end
+
+--- toggles whats this
+function OpsdcsCrew:onWhatsThis()
+    if self.isRunningWhatsThis then
+        self.isRunningWhatsThis = false
+    else
+        self.isRunningWhatsThis = true
+        self.whatsThisLastArgs = self:getCockpitArgs()
+        timer.scheduleFunction(self.whatsThisLoop, self, timer.getTime() + 0.5)
+    end
+end
+
+--- plays sounds on defined cockpit argument changes
+function OpsdcsCrew:whatsThisLoop()
+    local maxDelta = 0.1
+    if not self.isRunningWhatsThis then return end
+    local currentArgs = self:getCockpitArgs()
+    for i, _ in pairs(self[self.typeName].args) do
+        local last, current = self.whatsThisLastArgs[i], currentArgs[i]
+        self.whatsThisLastArgs[i] = current
+        if math.abs(tonumber(last) - tonumber(current)) > maxDelta then
+            local filename = "sounds/" .. self.typeName .. "/whatsthis-arg-" .. i .. ".ogg"
+            trigger.action.outText("playing sound: " .. filename, 10)
+            self:playSound(filename)
+            -- delay
+            timer.scheduleFunction(self.whatsThisLoop, self, timer.getTime() + 3)
+            return
+        end
+    end
+    timer.scheduleFunction(self.whatsThisLoop, self, timer.getTime() + 0.1)
 end
 
 --- clears f10 menu
