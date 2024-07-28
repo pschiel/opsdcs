@@ -24,9 +24,9 @@ DCS doesn't let us play videos, but we can show images real fast.
 
     This will:
     - play `blah.ogg` and show `blah*.jpg` images
-    - 520 frames/images in total
-    - at 12fps
-    - using active pause
+    - play 520 frames/images in total
+    - play at 12fps
+    - set active pause during playback
     - set a ME flag `cutscene_done` at end of playback
 
 ## Notes
