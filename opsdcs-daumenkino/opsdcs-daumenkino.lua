@@ -1,22 +1,4 @@
--- Daumenkino Videoplayer
---
--- DCS doesn't let us play videos, but we can show images real fast.
---
--- Preparing the video:
--- 1) Save your recording in seperate video and audo track, e.g. "blah.mp4" and "blah.ogg"
--- 2) Download ffmpeg (https://www.ffmpeg.org/download.html)
--- 3) Convert video into seperate images at desired framerate and size:
---    ffmpeg.exe -i blah.mp4 -vf "fps=12,scale=1920:-1" blah_%04d.jpg
---    (note: further compression, resize etc might be needed to reduce overall size)
---
--- Using in mission:
--- 1) Open the miz
--- 2) Create a "sounds" folder inside and copy the "blah.ogg" into it
--- 3) Create a "images" folder inside and copy all images "blah_0001.jpg", ... into it
--- 4) Load this script at mission start (DO_SCRIPT)
--- 5) To play it, use a DO_SCRIPT and call the daumenkino function:
---    Daumenkino:play("blah", 520, 12, true, "cutscene_done")
---    (this will play 520 frames at 12fps, using active pause, and setting the flag "cutscene_done" at the end)
+--- Daumenkino Videoplayer
 
 Daumenkino = {}
 
