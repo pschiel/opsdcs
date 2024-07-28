@@ -11,11 +11,21 @@ local eventsHandler = {
 }
 world.addEventHandler(eventsHandler)
 
+local function getDistance(pos1, pos2)
+    local dx, dy, dz = pos1.x - pos2.x, pos1.y - pos2.y, pos1.z - pos2.z
+    return math.sqrt(dx * dx + dy * dy + dz * dz)
+end
+
 local function trackWeapons()
     for id, weapon in pairs(weapons) do
         if weapon:isExist() then
-            local pos = weapon:getPoint()
-            trigger.action.outText("tracking weapon " .. id .. " at " .. pos.x .. ", " .. pos.y .. ", " .. pos.z, 5)
+            local zone = trigger.misc.getZone("zone1")
+            local distance = getDistance(weapon:getPoint(), zone.point)
+            trigger.action.outText("distance to zone1: " .. distance, 5)
+            if distance < zone.radius then
+                trigger.action.outText("weapon " .. id .. " is in zone1", 5)
+                trigger.action.setUserFlag("weapon_in_zone1", 1)
+            end
         else
             trigger.action.outText("stop tracking weapon " ..id, 5)
             weapons[id] = nil
