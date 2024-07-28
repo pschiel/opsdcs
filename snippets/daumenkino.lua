@@ -1,3 +1,6 @@
+-- create jpgs with: ffmpeg.exe -i video.mp4 -r 25 frame_%04d.jpg
+-- save sound seperately to ogg
+
 local timeDelta = 1/25
 local f = 1
 local maxF = 520
