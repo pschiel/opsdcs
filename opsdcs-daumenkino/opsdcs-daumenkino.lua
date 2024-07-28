@@ -24,7 +24,9 @@ function Daumenkino:loop()
     end
     -- display current frame
     local filename = self.name .. "_" .. string.format("%04d", self.currentFrame) .. ".jpg"
-    net.dostring_in("mission", 'a_out_picture("images/' .. filename .. '", 1, false, 0, "1", "1", 100, "1")')
+    local seconds = 1
+    if self.fps < 1 then seconds = math.ceil(1 / self.fps) end
+    net.dostring_in("mission", 'a_out_picture("images/' .. filename .. '", ' .. (seconds + 1) .. ', false, 0, "1", "1", 100, "1")')
     self.currentFrame = self.currentFrame + 1
     -- after last frame: clear picture and u npause
     if self.currentFrame > self.frames then
