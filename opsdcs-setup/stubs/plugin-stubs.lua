@@ -19,7 +19,7 @@ function plugin_done() return end
 ---------------------------------------------------------------------------
 
 --- Adds an aircraft
---- @param data table
+--- @param data AircraftData
 function add_aircraft(data) return end
 
 --- Adds a launcher
@@ -62,7 +62,7 @@ function declare_weapon() return end
 --- Makes a flyable object.
 --- @param obj_name string @The name of the object.
 --- @param cockpit_path string @The path to the cockpit script (optional).
---- @param fm table @optional flight model. optional_fm = { mod_of_fm_origin, dll_with_fm }
+--- @param fm table @optional flight model. optional_fm = { mod_of_fm_origin, dll_with_fm }. if nil, then SFM is used
 --- @param comm_path string @The path to the comm.lua script.
 function make_flyable(obj_name, cockpit_path, fm, comm_path) return end
 
@@ -278,3 +278,144 @@ function Get_RFGU_GUISettings_Preset() return end
 --- @field nameId string @The ID of the plugin used for options.
 --- @field dir string @The folder path of option settings used.
 --- @field CLSID string @Class ID (any string)
+
+---------------------------------------------------------------------------
+--- Aircraft data
+---------------------------------------------------------------------------
+
+--- @class AircraftData
+--- @description Aircraft data table
+--- @field string Name
+--- @field string DisplayName
+--- @field string Picture
+--- @field number Rate @rewardpoint in mp
+--- @field string Shape
+--- @field string WorldID
+--- @field table ViewSettings
+--- @field table Countries
+--- @field boolean HumanCockpit
+--- @field string HumanCockpitPath
+
+--- @field table net_animation
+
+--- @field table shape_table_data
+--- @field table CanopyGeometry @from makeAirplaneCanopyGeometry()
+
+--- @field string mapclasskey
+--- @field tables attribute
+--- @field table Categories
+
+--- @field string sounderName
+
+-- general characteristics
+--- @field boolean singleInFlight
+--- @field number length
+--- @field number height
+--- @field number wing_area
+--- @field number wing_span
+--- @field table wing_tip_pos
+--- @field number RCS
+--- @field boolean has_speedbrake
+--- @field number stores_number
+--- @field number tanker_type
+--- @field boolean is_tanker
+--- @field number refueling_points_count
+--- @field table refueling_points
+--- @field table crew_members
+--- @field table mechanimations
+--- @field string EmptyWeight
+--- @field string MaxFuelWeight
+--- @field string MaxHeight
+--- @field string MaxSpeed
+--- @field string MaxTakeOffWeight
+--- @field string WingSpan
+
+-- weight & fuel characteristics
+--- @field number M_empty
+--- @field number M_nominal
+--- @field number M_max
+--- @field number M_fuel_max
+--- @field number H_max
+--- @field number CAS_min
+--- @field number average_fuel_consumption
+
+-- AI flight parameters
+--- @field number V_opt
+--- @field number V_take_off
+--- @field number V_land
+--- @field number V_max_sea_level
+--- @field number V_max_h
+--- @field number Vy_max @maximal climb rate
+--- @field number Mach_max
+--- @field number Ny_min @minimal safe acceleration
+--- @field number Ny_max @maximal safe acceleration
+--- @field number Ny_max_e
+--- @field number Ny_max_e
+--- @field number AOA_take_off
+--- @field number bank_angle_max
+--- @field number flaps_maneuver
+--- @field number range @operational range
+
+-- suspension characteristics
+--- @field boolean has_differential_stabilizer
+--- @field number tand_gear_max
+--- @field table nose_gear_pos
+--- @field number nose_gear_wheel_diameter
+--- @field table main_gear_pos
+--- @field number main_gear_wheel_diameter
+
+-- engine characteristics
+--- @field boolean has_afteburner
+--- @field number thrust_sum_max
+--- @field number thrust_sum_ab
+--- @field number engines_count
+--- @field number IR_emission_coeff
+--- @field number IR_emission_coeff_ab
+--- @field table engines_nozzles
+
+-- sensor characteristics
+--- @field boolean radar_can_see_ground
+--- @field number detection_range_max
+--- @field table Sensors
+
+-- radio characteristics
+--- @field boolean TACAN
+--- @field table HumanRadio
+--- @field table panelRadio
+
+-- ECM characteristics
+--- @field table passivCounterm
+--- @field table Countermeasures
+--- @field table passivCounterm
+--- @field table chaff_flare_dispenser
+
+-- armament characteristics
+--- @field table Pylons
+--- @field table Tasks
+--- @field table DefaultTask @from aircraft_task()
+
+-- damage
+--- @field table fires_pos
+--- @field table Damage @from verbose_to_dmg_properties()
+--- @field table DamageParts
+
+-- flight model characteristics
+--- @field table SFM_Data
+
+-- extnernal lights
+--- @field table lights_data
+
+-- land & takeoff
+--- @field table LandRWCategories
+--- @field table TakeOffRWCategories
+
+-- failures
+--- @field table Failures
+
+-- additional properties
+--- @field table AddPropAircraft
+
+-- guns
+--- @field table Guns
+--- @field number ammo_type_default
+--- @field table ammo_type
