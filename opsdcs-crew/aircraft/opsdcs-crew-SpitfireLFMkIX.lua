@@ -1,6 +1,6 @@
 -- todo: yes
 
-OpsdcsCrew["SA342L"] = {
+OpsdcsCrew["SpitfireLFMkIX"] = {
     procedures = {
         ["coldstart"] = {
             text = "Cold Start",
