@@ -1,6 +1,6 @@
 --- Switches SP player to a unit (can be in late activation)
 --- @param unitName string @unit name
---- @param unpause boolean @if set to false, automatic unpause on briefing screen
+--- @param unpause boolean @if set to true, automatic unpause on briefing screen
 local function switchAircraft(unitName, unpause)
     net.dostring_in("gui", "DCS.setPlayerUnit(" .. Unit.getByName(unitName):getID() .. ")")
     if unpause then
