@@ -27,7 +27,7 @@ OpsdcsCrew = {
     isRunning = false, -- when procedure is running
     basedir = OpsdcsCrewBasedir or "",
     isInjected = OpsdcsCrewInject or false,
-    supportedTypes = { "CH-47F", "F-16C_50", "OH58D", "UH-1H" }, -- supported types (todo: autocheck)
+    supportedTypes = { "CH-47F", "F-16C_50", "OH58D", "SA342L", "UH-1H" }, -- supported types (@todo: autocheck, variants)
     argsDebugMaxId = 4000,
 }
 
