@@ -50,7 +50,14 @@ function makeAirplaneCanopyGeometry() return end
 function makeHelicopterCanopyGeometry() return end
 function make_aircraft_carrier_capable() return end
 function make_default_mech_animation() return end
-function make_flyable() return end
+
+--- Makes a flyable object.
+--- @param obj_name string @The name of the object.
+--- @param optional_cockpit_path string @The path to the cockpit script.
+--- @param optional_fm table @optional flight model. optional_fm = { mod_of_fm_origin, dll_with_fm }
+--- @param comm_path string @The path to the comm.lua script.
+function make_flyable(obj_name, optional_cockpit_path, optional_fm, comm_path) return end
+
 function make_payload_rules_list() return end
 function make_view_settings() return end
 
