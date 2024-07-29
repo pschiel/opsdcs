@@ -6,11 +6,6 @@ end
 missionCommands.addCommand("switch aircraft",  nil, switchAircraft)
 
 net.dostring_in("gui", [[
-    local hook = {
-        onSimulationPause = function()
-            DCS.setPause(false)
-            hook.onSimulationPause = nil
-        end
-    }
+    local hook = { onSimulationPause = function() DCS.setPause(false); hook.onSimulationPause = nil end }
     DCS.setUserCallbacks(hook)
 ]])
