@@ -20,5 +20,5 @@ end
 
 missionCommands.addCommand("switch to unit p1",  nil, switchAircraft, "p1", true)
 missionCommands.addCommand("switch to unit p2",  nil, switchAircraft, "p2", true)
-missionCommands.addCommand("switch to unit p3",  nil, switchAircraft, "p3", false)
+missionCommands.addCommand("switch to unit p3",  nil, switchAircraft, "p3", false) -- with pause
 missionCommands.addCommand("switch to unit p4",  nil, switchAircraft, "p4", true)
