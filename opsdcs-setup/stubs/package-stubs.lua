@@ -103,7 +103,7 @@
 --- @field getGroundWindAtPoint fun(pos)
 --- @field getGroundWindComponents fun()
 --- @field getGroundWindVelDir fun()
---- @field getTemperatureAndPressureAtPoint fun(pos)
+--- @field getTemperatureAndPressureAtPoint fun(pos) @returns temperature and pressure at a point. pos = {position = {x=0,y=0,z=0}}
 --- @field getWindAtPoint fun()
 --- @field getWindComponents fun()
 --- @field getWindVelDir fun()
@@ -121,7 +121,7 @@
 --- @field getWaveInfo fun()
 --- @field init fun()
 --- @field pauseMusic fun()
---- @field playMusic fun(playlist)
+--- @field playMusic fun(playlist) @plays a playlist (table of filenames)
 --- @field playPreview fun(file)
 --- @field playSound fun(file)
 --- @field resumeMusic fun()
