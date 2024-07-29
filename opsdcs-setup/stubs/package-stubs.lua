@@ -109,3 +109,25 @@
 --- @field getWindVelDir fun()
 --- @field initAtmospere fun()
 --- @field updateSpeedDirForOtherLevel fun()
+
+------------------------------------------------------------------------------
+--- sound
+------------------------------------------------------------------------------
+
+--- @class sound
+--- @field exit fun()
+--- @field getDevices fun()
+--- @field getLayouts fun()
+--- @field getWaveInfo fun()
+--- @field init fun()
+--- @field pauseMusic fun()
+--- @field playMusic fun(playlist)
+--- @field playPreview fun(file)
+--- @field playSound fun(file)
+--- @field resumeMusic fun()
+--- @field setEffectsGain fun()
+--- @field setMusicGain fun()
+--- @field stopMusic fun()
+--- @field stopPreview fun()
+--- @field update fun()
+--- @field updateSettings fun()
