@@ -1,5 +1,7 @@
 # opsdcs
 
+[dcs-patches](dcs-patches) - A few useful patches for the game install dir
+
 [examples](examples) - Some example templates for various things
 
 [goldeneye](goldeneye) - Reconnaissance script (WIP)
@@ -8,6 +10,10 @@
 
 [opsdcs-crew](opsdcs-crew) - Virtual Crew, Trainer and Interactive Checklists
 
+[opsdcs-daumenkino](opsdcs-daumenkino) - Daumenkino Video Player
+
 [opsdcs-racetimer](opsdcs-racetimer) - Race course timer and altitude scoring script
 
 [opsdcs-setup](opsdcs-setup) - VSCode setup for LUA debugging
+
+[snippets](snippets) - Random snippets saved from the trashbin
