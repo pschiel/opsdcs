@@ -18,13 +18,13 @@ OpsdcsCrew["OH58D"] = {
         ["coldstart-before-engine-start"] = {
             text = "Before Engine Start",
             conditions = {
-                { text = "Close throttle", cond = { "arg_eq", "THROTTLE_HANDLE1", 0 } },
-                { text = "Ignition CB switch to IGN", cond = { "arg_eq", "HLP_IGN", 1 } },
-                { text = "FADEC CB switch to FADEC", cond = { "arg_eq", "HLP_FADEC", 1 } },
+                { text = "Throttle closed", cond = { "arg_eq", "THROTTLE_HANDLE1", 0 }, len = 3 },
+                { text = "Ignition CB switch to IGN", cond = { "arg_eq", "HLP_IGN", 1 }, len = 3 },
+                { text = "FADEC CB switch to FADEC", cond = { "arg_eq", "HLP_FADEC", 1 }, len = 3 },
                 { text = "Anti-collision lights to ANTI COLL", cond = { "arg_eq", "HLP_ANTI_COLL", 1 } },
-                { text = "Turn ignition key to ON", cond = { "arg_eq", "HLP_MAIN_KEY", 1 } },
+                { text = "Ignition key set to ON", cond = { "arg_eq", "HLP_MAIN_KEY", 1 } },
                 { text = "BATT 1 switch to BATT 1", cond = { "arg_eq", "HLP_BATT1", 1 } },
-                { text = "Verify FADEC mode is in AUTO", cond = { "arg_eq", "FADEC_ON_MODE", 0.5 }, highlights = { "HLP_FADEC_BUTTON" } },
+                { text = "Check FADEC mode is in AUTO", cond = { "arg_eq", "FADEC_ON_MODE", 0.5 }, highlights = { "HLP_FADEC_BUTTON" } },
                 { text = "Wait for CAUTION", cond = { "ind_neq", "Caution", nil }, onlyOnce = true },
                 { text = "ACK switch to reset CAUTION", cond = { "ind_eq", "Caution", nil }, highlights = { "HLP_MFK_REC_ACK" },  needAllPrevious = true },
                 { text = "Hold MPD TEST switch up", cond = { "arg_eq", "HLP_MPD_TEST", 1 }, onlyOnce = true },
