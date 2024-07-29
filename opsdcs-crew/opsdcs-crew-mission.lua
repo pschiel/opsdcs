@@ -420,7 +420,7 @@ function OpsdcsCrew:whatsThisLoop()
         local last, current = self.whatsThisLastArgs[i], currentArgs[i]
         self.whatsThisLastArgs[i] = current
         if math.abs(tonumber(last) - tonumber(current)) > maxDelta then
-            local filename = "sounds/" .. self.typeName .. "/whatsthis-arg-" .. i .. ".ogg"
+            local filename = "sounds/" .. self.typeName .. "/cockpit-tutor/" .. i .. ".ogg"
             trigger.action.outText("playing sound: " .. filename, 10)
             self:playSound(filename)
             -- delay
