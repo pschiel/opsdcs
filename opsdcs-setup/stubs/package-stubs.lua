@@ -93,3 +93,19 @@
 --- @field textToME fun()
 --- @field textToMis fun()
 --- @field unpackFiles fun()
+
+------------------------------------------------------------------------------
+--- Weather
+------------------------------------------------------------------------------
+
+--- @class Weather
+--- @field getCloudsDensity fun()
+--- @field getGroundWindAtPoint fun(pos)
+--- @field getGroundWindComponents fun()
+--- @field getGroundWindVelDir fun()
+--- @field getTemperatureAndPressureAtPoint fun(pos)
+--- @field getWindAtPoint fun()
+--- @field getWindComponents fun()
+--- @field getWindVelDir fun()
+--- @field initAtmospere fun()
+--- @field updateSpeedDirForOtherLevel fun()
