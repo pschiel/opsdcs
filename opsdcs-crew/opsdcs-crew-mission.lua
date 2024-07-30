@@ -1,7 +1,6 @@
 --- OpsdcsCrew - Virtual Crew (mission script)
 
 -- if OpsdcsCrew then return end -- do not load twice (mission+hook)
-
 OpsdcsCrew = {
     options = {
         timeDelta = 0.1, -- seconds between updates
@@ -26,7 +25,6 @@ OpsdcsCrew = {
     zones = {}, -- opsdcs-crew zones
     isRunning = false, -- when procedure is running
     basedir = OpsdcsCrewBasedir or "",
-    isInjected = OpsdcsCrewInject or false,
     supportedTypes = { "CH-47F", "F-16C_50", "OH58D", "SA342L", "UH-1H" }, -- supported types (@todo: autocheck, variants)
     argsDebugMaxId = 4000,
 }
@@ -72,14 +70,14 @@ function OpsdcsCrew:log(msg)
     end
 end
 
---- plays sound (from inside miz, or absolute path when using hook)
+--- plays sound (from inside miz, or absolute path when using basedir)
 --- @param string filename
 function OpsdcsCrew:playSound(filename)
-    if self.isInjected then
+    if self.basedir == "" then
+        trigger.action.outSound(filename)
+    else
         local code = 'require("sound").playSound("' .. self.basedir .. filename .. '")'
         net.dostring_in("gui", code)
-    else
-        trigger.action.outSound(filename)
     end
 end
 
