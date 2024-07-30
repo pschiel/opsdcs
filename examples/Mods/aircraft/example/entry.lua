@@ -1,59 +1,87 @@
-declare_plugin('example-aircraftmod', {
+---------------------------------------------------------------------------
+--- Example aircraft mod
+---
+--- see plugins-stubs.lua for available functions
+---------------------------------------------------------------------------
+
+local self_ID = 'example-aircraftmod'
+local binaries = {}
+local useExternalFM = false
+
+declare_plugin(self_ID, {
 	installed = true,
 	dirName = current_mod_path,
-	displayName = 'example-aircraftmod',
-	shortName = 'example-aircraftmod',
-    fileMenuName = 'example-aircraftmod',
+	displayName = _(self_ID),
+	shortName = _(self_ID),
+    fileMenuName = _(self_ID),
 	version = '1.0.0',
 	state = 'installed',
     developerName = 'ops',
-	info = 'example-aircraftmod',
+	info = _('example aircraftmod lorem ipsum'),
     encyclopedia_path = current_mod_path .. '/Encyclopedia',
-    binaries = {},
+    binaries = binaries,
     Skins = {
         {
-            name = 'example-aircraftmod',
+            name = _(self_ID),
             dir = 'Skins/1'
         }
     },
     Missions = {
         {
-            name = 'example-aircraftmod',
+            name = _(self_ID),
             dir = 'Missions'
         }
     },
     LogBook = {
         {
-            name = 'example-aircraftmod',
-            type = 'example-aircraftmod'
+            name = _(self_ID),
+            type = self_ID
         }
     },
     InputProfiles = {
-        ['example-aircraftmod'] = current_mod_path .. '/Input'
+        [self_ID] = current_mod_path .. '/Input'
     },
     Options = {
         {
-            name = 'example-aircraftmod',
-            nameId = 'example-aircraftmod',
+            name = _(self_ID),
+            nameId = self_ID,
             dir = 'Options',
-            CLSID = '{example-aircraftmod-options}'
+            CLSID = '{' .. self_ID .. '-options}'
         }
     }
 })
 
+-- resource paths
 mount_vfs_model_path(current_mod_path .. "/Shapes")
 mount_vfs_model_path(current_mod_path .. "/Cockpit/Shapes")
 mount_vfs_texture_path(current_mod_path .. "/Textures")
 mount_vfs_texture_path(current_mod_path .. "/Cockpit/Textures")
-mount_vfs_texture_path(current_mod_path .. "/Skins/1/ME")	-- for simulator loading window
+mount_vfs_texture_path(current_mod_path .. "/Skins/1/ME")
 mount_vfs_liveries_path(current_mod_path .. "/Liveries")
 mount_vfs_sound_path(current_mod_path .. "/Sounds")
 mount_vfs_animations_path(current_mod_path .. "/Animations")
 
-local FM = nil
-make_flyable('example-aircraftmod', current_mod_path .. '/Cockpit/Scripts/', FM, current_mod_path .. "/Scripts/comm.lua")
+-- aircraft data
+dofile(current_mod_path .. "/" .. self_ID .. ".lua")
 
-local ViewSettings, SnapViews = {}, {}
-make_view_settings('example-aircraftmod', ViewSettings, SnapViews)
+-- views
+dofile(current_mod_path .. "/views.lua")
+make_view_settings(self_ID, ViewSettings, SnapViews)
+
+-- FM
+local FM = nil
+if useExternalFM then
+    dofile(current_mod_path .. "/suspension.lua")
+    FM = {
+        [1] = self_ID,
+        [2] = "DLLName",
+        center_of_mass = { 0, 0, 0 },
+        moment_of_inertia = { 100, 1000, 1234, 100 },
+        suspension = suspension
+    }
+end
+
+-- make flyable
+make_flyable(self_ID, current_mod_path .. '/Cockpit/Scripts/', FM, current_mod_path .. "/comm.lua")
 
 plugin_done()
