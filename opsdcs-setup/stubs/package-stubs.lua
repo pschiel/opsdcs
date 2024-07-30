@@ -131,3 +131,68 @@
 --- @field stopPreview fun()
 --- @field update fun()
 --- @field updateSettings fun()
+
+------------------------------------------------------------------------------
+--- utils
+------------------------------------------------------------------------------
+
+--- @class utils
+--- @field COLOR table
+--- @field PI number
+--- @field adv_round fun(value:number, maxAccuracy:number):number
+--- @field angleDegrees fun(dd:number, mm:number, ss:number):number
+--- @field bitor fun(x:number, y:number):number
+--- @field copyTable fun(dest:table, src:table)
+--- @field createTableCopy fun(src:table):table
+--- @field dofileIn fun(filename:string, env:table):result,errmsg
+--- @field dofileInEx fun(filename:string, env:table, base:table)
+--- @field getTime fun(sec:number):number,number,number @returns hours, minutes, seconds
+--- @field get_azimuth fun(vec:vec3):number
+--- @field get_elevation fun(vec:vec3):number
+--- @field get_lengthZX fun(vec:vec3):number
+--- @field get_vec_length fun(vec:vec3):number
+--- @field hasbit fun(x:number, p:number):boolean
+--- @field invertColor fun(color:number):number
+--- @field loadfileIn fun(filename:string, env:table):function,errmsg @loads a file in an environment.
+--- @field makeColor fun(r:number, g:number, b:number):number
+--- @field parseCordinates fun(str:string):number,number,number @returns latitude, longitude, course
+--- @field round fun(value:number, accuracy:number):number
+--- @field round_qty fun(qty:number):number
+--- @field units table @units of measurement
+--- @field verifyChunk fun(chunk:function, errmsg:string) @returns fun(x:number, parameters:table) with params set
+
+------------------------------------------------------------------------------
+--- db
+------------------------------------------------------------------------------
+
+--- @field Callnames table
+--- @field Countermeasures table
+--- @field Countries table
+--- @field CountriesByName table
+--- @field DefaultCountry table
+--- @field FormationID table
+--- @field Formations table
+--- @field Pods table
+--- @field Seasons table
+--- @field Sensors table
+--- @field Targets table
+--- @field Units table
+--- @field Weapons table
+--- @field aircraftCallnames fun()
+--- @field callnamesRussia table
+--- @field declare_service_life_unit fun()
+--- @field doesCallsignHasNumericPart fun()
+--- @field getCallnames fun()
+--- @field getCallnamesRefPoints fun()
+--- @field getCountryOfOrigin fun()
+--- @field getHistoricalCountres fun()
+--- @field getUnitCallnames fun()
+--- @field getUnitCallnames2 fun()
+--- @field getYearsLauncher fun()
+--- @field getYearsLocal fun()
+--- @field isWesternCallnames fun()
+--- @field localization table
+--- @field objectIconByType table
+--- @field rates table
+--- @field roles table
+--- @field typesNavPoints table
