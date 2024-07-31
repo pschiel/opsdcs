@@ -560,7 +560,7 @@ data.base = {
 }
 
 ---------------------------------------------------------------------------
---- GT
+--- GT templates
 ---------------------------------------------------------------------------
 
 --- @class GT_t
@@ -578,6 +578,15 @@ data.base = {
 --- @field generic_tank table
 --- @field generic_track_IFV table
 --- @field generic_wheel table
+--- @field generic_wheel_IFV table
 --- @field generic_wheel_vehicle table
 --- @field inc_ws fun() @Increment ws
 --- @field ws number
+--- @type GT_t
+GT_t = {}
+
+---------------------------------------------------------------------------
+--- GT
+---------------------------------------------------------------------------
+
+--- @class GT
