@@ -18,6 +18,9 @@ io = {}
 --- @type os
 os = {}
 
+--- when set to true in device init, close lua state after initialization
+need_to_be_closed = true
+
 ------------------------------------------------------------------------------
 --- functions
 ------------------------------------------------------------------------------
@@ -408,24 +411,10 @@ function SetDamage(command, value) end
 function SetFailure(command, value) end
 
 ------------------------------------------------------------------------------
---- ??
+--- Graphic elements
 ------------------------------------------------------------------------------
 
--- need_to_be_closed = false -- close lua state after initialization
-
--- CreateElement
--- "ceBoundingMeshBox"
--- "ceBoundingTexBox"
--- "ceCircle"
--- "ceHWLine"
--- "ceHWSector"
--- "ceHint"
--- "ceMeshPoly"
--- "ceSCircle"
--- "ceSMultiLine"
--- "ceSVarLenLine"
--- "ceSimple"
--- "ceSimpleLineObject"
--- "ceStringPoly"
--- "ceTMultiLine"
--- "ceTexPoly"
+--- Creates a graphic element
+--- @param type string @"ceBoundingMeshBox", "ceBoundingTexBox", "ceCircle", "ceHWLine", "ceHWSector", "ceHint", "ceMeshPoly", "ceSCircle", "ceSMultiLine", "ceSVarLenLine", "ceSimple", "ceSimpleLineObject", "ceStringPoly", "ceTMultiLine", "ceTexPoly"
+--- @return table
+function CreateElement(type) end
