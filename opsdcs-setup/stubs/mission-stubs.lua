@@ -112,7 +112,12 @@ function a_sound_from_unit() end
 function a_sound_from_zone() end
 function a_sound_stop_by_name() end
 function a_start_listen_command(command, flag, count, min, max, device) end
+
+--- Runs device listen_event and sets flag
+--- @param event string device event name
+--- @param flag string flag name
 function a_start_listen_event(event, flag) end
+
 function a_start_world_game_pattern() end
 function a_stop_radio_transmission(name) end
 function a_unit_emission_off(unit) end
@@ -228,24 +233,3 @@ function set_player_name() end
 function set_welcome_info() end
 function unset_human() end
 function update_briefing() end
-
----------------------------------------------------------------------------
---- Notes
----------------------------------------------------------------------------
-
--- mission events
--- a_start_listen_event("setup_HMS", 1)              -- HMS installed
--- a_start_listen_event("setup_NVG", 2)              -- NVG installed
--- a_start_listen_event("DisableTurboGear", 3)
--- a_start_listen_event("EnableTurboGear", 4)
--- a_start_listen_event("GroundPowerOn", 5)          -- ground power on
--- a_start_listen_event("GroundPowerOff", 6)         -- ground power off
--- a_start_listen_event("repair", 7)                 -- repair
--- a_start_listen_event("WeaponRearmFirstStep", 8)   -- rearming start
--- a_start_listen_event("WeaponRearmComplete", 9)    -- rearming complete
--- a_start_listen_event("OnNewNetHelicopter", 10)
--- a_start_listen_event("initChaffFlarePayload", 11) -- chaff/flare payload
--- a_start_listen_event("switch_datalink", 12)
--- a_start_listen_event("OnNewNetPlane", 13)
--- a_start_listen_event("LinkNOPtoNet", 14)
--- a_start_listen_event("LinkNOPtoNet", 15)

@@ -16,18 +16,18 @@ function declare_plugin(name, props) return end
 function plugin_done() return end
 
 ---------------------------------------------------------------------------
---- Adding stuff
+--- Add stuff
 ---------------------------------------------------------------------------
 
 --- Adds an aircraft
---- @param data AircraftData
+--- @param data AircraftData @The aircraft data.
 function add_aircraft(data) return end
 
 --- Adds a launcher
---- @param ws table
+--- @param ws_data table
 --- @param data table
 --- @return table @launcher
-function add_launcher(ws, data) return end
+function add_launcher(ws_data, data) return end
 
 --- ??
 function add_navpoint() return end
@@ -36,8 +36,8 @@ function add_navpoint() return end
 function add_plugin_systems() return end
 
 --- Adds a surface unit
---- @param data table
-function add_surface_unit(data) return end
+--- @param gt_data table @The surface unit data.
+function add_surface_unit(gt_data) return end
 
 --- ??
 function add_unit_to_country() return end
@@ -45,178 +45,274 @@ function add_unit_to_country() return end
 --- ??
 function declare_callbackME() return end
 
---- ??
-function declare_gun_mount() return end
+--- Declares a gun mount.
+--- @param name string @The name of the gun mount.
+--- @param data table @The gun mount data.
+function declare_gun_mount(name, data) return end
 
---- ??
-function declare_loadout() return end
+--- Declares a loadout.
+--- @param data table @The loadout data.
+function declare_loadout(data) return end
 
---- ??
-function declare_sensor() return end
+--- Declares a sensor.
+--- @param data table @The sensor data.
+function declare_sensor(data) return end
 
---- ??
-function declare_service_life() return end
+--- Declares a service life for an object.
+--- @param obj_name string @The name of the object.
+--- @param country_name string @The name of the country.
+--- @param from_year number @The start year.
+--- @param to_year number @The end year.
+function declare_service_life(obj_name, country_name, from_year, to_year) return end
 
---- ??
-function declare_weapon() return end
+--- Declares a weapon.
+--- @param data table @The weapon data.
+function declare_weapon(data) return end
 
 --- Makes a flyable object.
 --- @param obj_name string @The name of the object.
---- @param cockpit_path string @The path to the cockpit script (optional).
+--- @param cockpit_path string @The path to the cockpit scripts (optional).
 --- @param fm table @optional flight model. optional_fm = { mod_of_fm_origin, dll_with_fm }. if nil, then SFM is used
---- @param comm_path string @The path to the comm.lua script.
+--- @param comm_path string @The path to the comm.lua script (radio menu).
 function make_flyable(obj_name, cockpit_path, fm, comm_path) return end
 
---- ??
-function make_payload_rules_list() return end
+--- Makes a payload rules list.
+--- @param stations number[] @Stations requiring CLSIDs.
+--- @param clsids string[] @The required CLSIDs.
+function make_payload_rules_list(stations, clsids) return end
 
---- ??
-function make_view_settings() return end
+--- Makes view settings.
+--- @param obj_name string @The name of the object.
+--- @param viewSettings table @The view settings table.
+--- @param snapViews table @The snap views table.
+function make_view_settings(obj_name, viewSettings, snapViews) return end
 
 ---------------------------------------------------------------------------
---- Engine, FM
+--- Engine, FM parameters
 ---------------------------------------------------------------------------
 
---- ??
-function predefined_engine() return end
+--- Returns predefined engine parameters.
+--- @param name string @The name of the engine.
+--- @return table @The engine parameters.
+function predefined_engine(name) return end
 
---- ??
-function predefined_fm() return end
+--- Returns predefined FM parameters.
+--- @param name string @The name of the FM.
+--- @return table @The FM parameters.
+function predefined_fm(name) return end
 
---- ??
-function specialize_engine_parameters() return end
+--- Returns specialized engine parameters.
+--- @param base_params table @The base engine parameters.
+--- @param params table @The modified parameters.
+--- @return table @The specialized engine parameters.
+function specialize_engine_parameters(base_params, params) return end
 
---- ??
-function specialize_fm_parameters() return end
+--- Returns specialized FM parameters.
+--- @param base_params table @The base FM parameters.
+--- @param params table @The modified parameters.
+--- @return table @The specialized FM parameters.
+function specialize_fm_parameters(base_params, params) return end
 
 ---------------------------------------------------------------------------
 --- Resource paths
 ---------------------------------------------------------------------------
 
---- Loads a filepath to use for plugin animations with VFS.
---- @param path string The file path.
+--- Mounts a animations path.
+--- @param path string The path.
 function mount_vfs_animations_path(path) return end
 
---- Loads a filepath to use for flyable plugin liveries with VFS.
---- @param path string The file path.
+--- Mounts a liveries path.
+--- @param path string The path.
 function mount_vfs_liveries_path(path) return end
 
---- Mounts a filepath to use for plugin EDM files with VFS.
---- @param path string The file path.
+--- Mounts a model path.
+--- @param path string The path.
 function mount_vfs_model_path(path) return end
 
---- Loads a filepath to use for plugin sounds with VFS.
---- @param path string The file path.
+--- Mounts a sound path.
+--- @param path string The path.
 function mount_vfs_sound_path(path) return end
 
---- Mounts a filepath to use for plugin textures with VFS.
---- @param path string The file path.
+--- Mounts a texture path.
+--- @param path string The path.
 function mount_vfs_texture_path(path) return end
 
 ---------------------------------------------------------------------------
---- Effects
+--- Effect parameters
 ---------------------------------------------------------------------------
 
---- ??
-function fire_effect() return end
+--- Returns fire effect parameters.
+--- @param fire_arg table @The fire argument
+--- @param duration number @The duration
+--- @param attenuation number @The attenuation
+--- @param light_pos table @The light position { x, y, z }
+function fire_effect(fire_arg, duration, attenuation, light_pos) return end
 
---- ??
-function gatling_effect() return end
+--- Returns smoke effect parameters.
+--- @param smoke_arg table @The smoke argument
+--- @param duration number @The duration
+function gatling_effect(gatling_arg, duration) return end
 
---- ??
+--- Returns smoke effect parameters.
 function smoke_effect() return end
 
 ---------------------------------------------------------------------------
---- Warheads
+--- Warhead parameters
 ---------------------------------------------------------------------------
 
---- ??
-function antiship_penetrating_warhead() return end
+--- Returns antiship warhead parameters.
+--- @param power number @kg
+--- @param caliber number @caliber in mm
+--- @return table @warhead parameters.
+function antiship_penetrating_warhead(power, caliber) return end
 
---- ??
-function cumulative_warhead() return end
+--- Returns cumulative warhead parameters.
+--- @param a number
+--- @param b number
+--- @return table @warhead parameters.
+function cumulative_warhead(a, b) return end
 
---- ??
+--- Returns directional A2A warhead parameters.
 function directional_a2a_warhead() return end
 
---- ??
-function enhanced_a2a_warhead() return end
+--- Returns enhanced A2A warhead parameters.
+--- @param power number @kg
+--- @param caliber number @caliber in mm
+--- @return table @warhead parameters.
+function enhanced_a2a_warhead(power, caliber) return end
 
---- ??
-function penetrating_warhead() return end
+--- Returns penetrating warhead parameters.
+--- @param power number @kg
+--- @param caliber number @caliber in mm
+--- @return table @warhead parameters.
+function penetrating_warhead(power, caliber) return end
 
---- ??
-function predefined_warhead() return end
+--- Returns predefined warhead parameters.
+--- @param name string @The name of the warhead.
+--- @return table @The warhead parameters.
+function predefined_warhead(name) return end
 
---- ??
-function simple_aa_warhead() return end
+--- Returns simple AA warhead parameters.
+--- @param power number @kg
+--- @return table @warhead parameters.
+function simple_aa_warhead(power) return end
 
---- ??
-function simple_warhead() return end
+--- Returns simple warhead parameters.
+--- @param power number @kg
+--- @param caliber number @caliber in mm
+--- @return table @warhead parameters.
+function simple_warhead(power, caliber) return end
 
 ---------------------------------------------------------------------------
---- ??
+--- Fuze parameters
+---------------------------------------------------------------------------
+
+--- Returns predefined fuze parameters.
+--- @param name string @The name of the fuze.
+--- @return table @The fuze parameters.
+function predefined_fuze(name) return end
+
+--- Returns specialized fuze parameters.
+--- @param base_params table @The base fuze parameters.
+--- @param params table @The modified parameters.
+--- @return table @The specialized fuze parameters.
+function specialize_fuze_parameters(base_params, params) return end
+
+---------------------------------------------------------------------------
+--- Weapons
 ---------------------------------------------------------------------------
 
 --- ??
-function aircraft_task() return end
+function cluster_desc(name, type, data) return end
 
---- ??
-function cluster_desc() return end
-
---- ??
-function combine_cluster() return end
-
---- ??
-function createSuspension() return end
+--- Combines cluster parameters.
+--- @param a table
+--- @param b table
+--- @param name string
+function combine_cluster(a, b, name) return end
 
 --- ??
 function get_bomb_munition() return end
 
---- ??
-function get_predefined_aircraft_gunpod() return end
+--- Returns predefined aircraft gunpod parameters.
+--- @param name string @The name of the gunpod.
+--- @return table @The gunpod parameters.
+function get_predefined_aircraft_gunpod(name) return end
 
---- ??
-function gun_mount() return end
+--- Returns gun mount parameters.
+--- @param name string @The name of the gun mount.
+--- @param ammo_override table @The ammo overrides. { count = 90 }
+--- @param mount_override table @The mount overrides.
+--- @param trigger_override table @The trigger overrides.
+function gun_mount(name, ammo_override, mount_override, trigger_override) return end
 
---- ??
-function lock_player_interaction() return end
+--- Returns pylon parameters.
+--- @param index number @The index of the pylon.
+--- @param weapon_start number @default weapon start (0 - rail, 1 - catapult, > 1 - from hatch)
+--- @param x number @coordinates in aircraft space, can be 0, 0, 0 if connector is used
+--- @param y number @coordinates in aircraft space, can be 0, 0, 0 if connector is used
+--- @param z number @coordinates in aircraft space, can be 0, 0, 0 if connector is used
+--- @param connector_data table @connector data
+--- @param pylon_data table @pylon data
+--- @return table @The pylon parameters.
+function pylon(index, weapon_start, x, y, z, connector_data, pylon_data) return end
 
---- ??
-function makeAirplaneCanopyGeometry() return end
+---------------------------------------------------------------------------
+--- Misc
+---------------------------------------------------------------------------
 
---- ??
-function makeHelicopterCanopyGeometry() return end
+--- Creates aircraft task.
+--- @param task string @task name: "Nothing", "SEAD", "AntishipStrike", "AWACS", "CAS", "CAP", "Escort", "FighterSweep", "GAI", "GroundAttack", "Intercept", "AFAC", "PinpointStrike", "Reconnaissance", "Refueling", "RunwayAttack", "Transport"
+--- @return table @task data
+function aircraft_task(task) return end
+
+--- Locks player interaction.
+--- @param type string @unit type
+function lock_player_interaction(type) return end
 
 --- ??
 function make_aircraft_carrier_capable() return end
 
---- ??
-function make_default_mech_animation() return end
+--- Makes default mech animation.
+--- @param preset string @The preset name
+--- @return table @The mech animation data
+function make_default_mech_animation(preset) return end
 
---- ??
-function predefined_fuze() return end
+--- Makes airplane canopy geometry. LOOK_BAD, LOOK_AVERAGE, LOOK_GOOD
+--- @param a number
+--- @param b number
+--- @param c number
+--- @return table @CanopyGeometry data
+function makeAirplaneCanopyGeometry(a, b, c) return end
 
---- ??
-function pylon() return end
+--- Makes helicopter canopy geometry.
+--- @param a number
+--- @param b number
+--- @param c number
+--- @return table @CanopyGeometry data
+function makeHelicopterCanopyGeometry() return end
 
---- ??
-function set_manual_path() return end
-
---- ??
-function specialize_fuze_parameters() return end
+--- Sets manual path.
+--- @param obj_name string @The name of the object.
+--- @param path string @The path to the manual.
+function set_manual_path(obj_name, path) return end
 
 --- ??
 function turn_on_waypoint_panel() return end
 
---- ??
-function unlock_player_interaction() return end
+--- Unlocks player interaction.
+--- @param type string @unit type
+function unlock_player_interaction(type) return end
 
---- ??
-function verbose_to_dmg_properties() return end
+--- Returns Damage parameters.
+--- @param data table
+--- @return table @The Damage parameters.
+function verbose_to_dmg_properties(data) return end
 
---- ??
-function verbose_to_failures_table() return end
+--- Returns Failures parameters.
+--- @param data table
+--- @return table @The Failures parameters.
+function verbose_to_failures_table(data) return end
 
 ---------------------------------------------------------------------------
 --- GUI functions
