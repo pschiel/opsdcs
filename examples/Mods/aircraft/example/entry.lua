@@ -6,7 +6,7 @@
 
 local self_ID = 'example-aircraftmod'
 local binaries = {}
-local useExternalFM = false
+local useSFM = true
 
 declare_plugin(self_ID, {
 	installed = true,
@@ -70,7 +70,7 @@ make_view_settings(self_ID, ViewSettings, SnapViews)
 
 -- FM
 local FM = nil
-if useExternalFM then
+if not useSFM then
     dofile(current_mod_path .. "/suspension.lua")
     FM = {
         [1] = self_ID,
