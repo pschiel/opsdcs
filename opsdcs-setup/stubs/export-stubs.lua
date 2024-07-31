@@ -9,18 +9,25 @@ package = {}
 --- @param module string
 function require(module) end
 
+--- @type lfs
+lfs = {}
+
+--- @type io
+io = {}
+
+--- @type os
+os = {}
+
 ------------------------------------------------------------------------------
 --- Export functions
 ------------------------------------------------------------------------------
 
 --- @class Export
 --- @description Export functions (available in Export.lua)
---- @field CoroutineResume fun(index:number, tCurrent:number):boolean @This function will be called by Lock On model timer for every coroutine to resume it. Return true to resume, false to stop.
 --- @field GetClickableElemnts fun():table @Gets clickable elements (Misc)
 --- @field GetDevice fun(id:number):table @Gets device (Misc)
 --- @field GetIndicator fun(id:number):table @Gets indicator (Misc)
 --- @field LoCreateCoroutineActivity fun(index:number, tStart:number, tPeriod:number) @Plan your coroutines activity at model times
---- @field LoEnableExternalFlightModel fun() @Call one time in start (Ownship)
 --- @field LoGeoCoordinatesToLoCoordinates fun(longitude_degrees:number, latitude_degrees:number):Vec3 @geo to ll (Always)
 --- @field LoGetADIPitchBankYaw fun():number, number, number @Gets ADI pitch, bank and yaw (Ownship)
 --- @field LoGetAccelerationUnits fun():table @Gets acceleration units (Ownship)
@@ -35,6 +42,8 @@ function require(module) end
 --- @field LoGetCameraPosition fun():Position3 @Gets camera position (Ownship)
 --- @field LoGetControlPanel_HSI fun():table @Gets control panel HSI (Ownship)
 --- @field LoGetEngineInfo fun():table @Gets engine info (Ownship)
+--- @field LoGetF15_TWS_Contacts fun()
+--- @field LoGetFMData fun()
 --- @field LoGetGlideDeviation fun():number @Gets glide deviation (Ownship)
 --- @field LoGetHeightWithObjects fun()
 --- @field LoGetHelicopterFMData fun():table @Heli FM data (Ownship)

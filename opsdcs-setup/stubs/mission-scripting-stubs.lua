@@ -4,6 +4,28 @@
 ------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
+--- These are only available when MissionScripting.lua is desanitized
+------------------------------------------------------------------------------
+
+--- @type table
+package = {}
+
+--- @param module string
+function require(module) end
+
+--- @type lfs
+lfs = {}
+
+--- @type os
+os = {}
+
+--- @type io
+io = {}
+
+--- @type log
+log = {}
+
+------------------------------------------------------------------------------
 --- Utility classes
 ------------------------------------------------------------------------------
 
@@ -531,21 +553,64 @@ VoiceChat.RoomType = {}
 --- net
 ------------------------------------------------------------------------------
 
---- @class net
+--- @class mission.net
 --- @description The net singleton are a number of functions from the network API that work in the mission scripting environment. Notably for mission scripting purposes there is now a way to send chat, check if players are in Combined Arms slots, kick people from the server, and move players to certain slots. 
+--- @field CHAT_ALL number
+--- @field CHAT_TEAM number
+--- @field ERR_BAD_CALLSIGN number
+--- @field ERR_BANNED number
+--- @field ERR_CONNECT_FAILED number
+--- @field ERR_DENIED_TRIAL_ONLY number
+--- @field ERR_INVALID_ADDRESS number
+--- @field ERR_INVALID_PASSWORD number
+--- @field ERR_KICKED number
+--- @field ERR_NOT_ALLOWED number
+--- @field ERR_PROTOCOL_ERROR number
+--- @field ERR_REFUSED number
+--- @field ERR_SERVER_FULL number
+--- @field ERR_TAINTED_CLIENT number
+--- @field ERR_THATS_OKAY number
+--- @field ERR_TIMEOUT number
+--- @field ERR_WRONG_VERSION number
+--- @field GAME_MODE_CONQUEST number
+--- @field GAME_MODE_LAST_MAN_STANDING number
+--- @field GAME_MODE_MISSION number
+--- @field GAME_MODE_TEAM_DEATH_MATCH number
+--- @field PS_CAR number
+--- @field PS_CRASH number
+--- @field PS_EJECT number
+--- @field PS_EXTRA_ALLY_AAA number
+--- @field PS_EXTRA_ALLY_FIGHTERS number
+--- @field PS_EXTRA_ALLY_SAM number
+--- @field PS_EXTRA_ALLY_TRANSPORTS number
+--- @field PS_EXTRA_ALLY_TROOPS number
+--- @field PS_EXTRA_ENEMY_AAA number
+--- @field PS_EXTRA_ENEMY_FIGHTERS number
+--- @field PS_EXTRA_ENEMY_SAM number
+--- @field PS_EXTRA_ENEMY_TRANSPORTS number
+--- @field PS_EXTRA_ENEMY_TROOPS number
+--- @field PS_LAND number
+--- @field PS_PING number
+--- @field PS_PLANE number
+--- @field PS_SCORE number
+--- @field PS_SHIP number
+--- @field RESUME_MANUAL number
+--- @field RESUME_ON_LOAD number
+--- @field RESUME_WITH_CLIENTS number
 --- @field dostring_in fun(environment:string, code:string):string @Executes a Lua string in a specified Lua environment within the game. (config: main.cfg/autoexec.cfg state, mission: current mission, export: export.lua)
 --- @field force_player_slot fun(playerID:number, sideId:number, slotId:number):boolean @Forces a player into a specified slot.
 --- @field get_my_player_id fun():number @Returns the playerID of the local player; returns 1 for server.
 --- @field get_name fun(playerID:number):string @Returns the name of a given player.
 --- @field get_player_info fun(playerID:number, attribute:string|nil):table @Returns player attributes; specific attribute if provided.
 --- @field get_player_list fun():table @Returns a list of players currently connected to the server.
+--- @field get_server_host fun()
 --- @field get_server_id fun():number @Returns the playerID of the server; currently always 1.
 --- @field get_slot fun(playerID:number):number, number @Returns the sideId and slotId of a given player.
 --- @field get_stat fun(playerID:number, statID:number):number @Returns a specific statistic from a given player.
+--- @field is_loopback_address fun()
+--- @field is_private_address fun()
 --- @field json2lua fun(json:string):table @Converts a JSON string to a Lua value.
 --- @field kick fun(playerId:number, message:string):boolean @Kicks a player from the server with an optional message.
---- @field load_mission fun(fileName:string):boolean @Loads the specified mission.
---- @field load_next_mission fun():boolean @Load the next mission from the server mission list. Returns false if at the end of list.
 --- @field log fun(message:string) @Writes an "INFO" entry to the DCS log file.
 --- @field lua2json fun(lua:any):table @Converts a Lua value to a JSON string.
 --- @field recv_chat fun() @Functionality unknown.
@@ -553,7 +618,7 @@ VoiceChat.RoomType = {}
 --- @field send_chat_to fun(message:string, playerId:number, fromId:number|nil) @Sends a chat message to a specific player, optionally appearing from another player.
 --- @field set_slot fun() @Functionality unknown.
 --- @field trace fun() @Functionality unknown.
---- @type net
+--- @type mission.net
 net = {}
 
 ------------------------------------------------------------------------------

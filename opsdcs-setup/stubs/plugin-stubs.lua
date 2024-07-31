@@ -446,3 +446,21 @@ function Get_RFGU_GUISettings_Preset() return end
 --- @field worldEventHandlers table @World event handles handle world events and passes them into RadioCommandDialogsPanel.onEvent()
 --- @type data
 data = {}
+data.base = {
+    --- @type table
+    package = {},
+    --- @param module string
+    require = function (module) end,
+    --- @type Export
+    Export = {},
+    --- @type db
+    db = {},
+    --- @type lfs
+    lfs = {},
+    --- @type io
+    io = {},
+    --- @type os
+    os = {},
+    --- @type net
+    net = {},
+}
