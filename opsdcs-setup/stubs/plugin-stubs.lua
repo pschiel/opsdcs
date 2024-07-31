@@ -75,14 +75,14 @@ function declare_weapon(weapon_data) return end
 --- Makes a flyable object.
 --- @param obj_name string @The name of the object.
 --- @param cockpit_path string @The path to the cockpit scripts (optional).
---- @param fm table @optional flight model. optional_fm = { [1] = modname_of_fm_origin, [2] dll_with_fm, old = fmid }. if nil, then SFM is used. old: 3 (Su-27), 4 (Su-33), 6 (F-15 SFM), 54 (Su-25T)
+--- @param fm FM @optional flight model. if nil, then SFM is used.
 --- @param comm_path string @The path to the comm.lua script (radio menu).
 function make_flyable(obj_name, cockpit_path, fm, comm_path) return end
 
 --- MACs a flyable object :D
 --- @param obj_name string @The name of the object.
 --- @param cockpit_path string @The path to the cockpit scripts (optional).
---- @param fm table @optional flight model. optional_fm = { [1] = modname_of_fm_origin, [2] dll_with_fm, old = fmid }. if nil, then SFM is used. old: 3 (Su-27), 4 (Su-33), 6 (F-15 SFM), 54 (Su-25T)
+--- @param fm FM @optional flight model. if nil, then SFM is used.
 --- @param comm_path string @The path to the comm.lua script (radio menu).
 function MAC_flyable(obj_name, cockpit_path, fm, comm_path) return end
 
@@ -100,6 +100,14 @@ function make_view_settings(obj_name, viewSettings, snapViews) return end
 ---------------------------------------------------------------------------
 --- Engine, FM parameters
 ---------------------------------------------------------------------------
+
+--- @class FM
+--- @description [1] = modname_of_fm_origin, [2] = dll_with_fm (unsure if this works or not since 2.9.6)
+--- @field center_of_mass table @{ x, y, z }
+--- @field moment_of_inertia table @{ Ix, Iy, Iz, Ixy }
+--- @field suspension table
+--- @field config_path string @path to FM config file
+--- @field old any @true (F-15C), 3 (Su-27), 4 (Su-33), 6 (F-15 SFM), 54 (Su-25T)
 
 --- Returns predefined engine parameters.
 --- @param name string @The name of the engine.
