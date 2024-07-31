@@ -134,21 +134,21 @@ function c_stop_wait_for_user() end
 ------------------------------------------------------------------------------
 
 --- @class Device
---- @field SetCommand fun(command, value)
---- @field get_argument_value fun(argument)
---- @field get_light_reference fun()
---- @field listen_command fun(command)
---- @field performClickableAction fun(command, value)
---- @field set_argument_value fun(argument, value)
---- @field update_arguments fun()
+--- @field SetCommand fun(self:Device, command, value)
+--- @field get_argument_value fun(self:Device, argument)
+--- @field get_light_reference fun(self:Device)
+--- @field listen_command fun(self:Device, command)
+--- @field performClickableAction fun(self:Device, command, value)
+--- @field set_argument_value fun(self:Device, argument, value)
+--- @field update_arguments fun(self:Device)
 
 ------------------------------------------------------------------------------
 --- Param handle
 ------------------------------------------------------------------------------
 
 --- @class ParamHandle
---- @field get fun():number
---- @field set fun(value:number)
+--- @field get fun(self:ParamHandle):number
+--- @field set fun(self:ParamHandle, value:number)
 
 ------------------------------------------------------------------------------
 --- Base data
