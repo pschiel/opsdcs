@@ -545,6 +545,8 @@ data.base = {
     package = {},
     --- @param module string
     require = function (module) end,
+    --- @type DCS
+    DCS = {},
     --- @type Export
     Export = {},
     --- @type db
