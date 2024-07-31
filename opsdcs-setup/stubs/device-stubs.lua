@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --- DEVICE ENV
---- used by device_init.lua, devices, clickabledata.lua
+--- used by device_init, mainpanel_init, sounds_init, clickabledata, devices
 ---------------------------------------------------------------------------
 
 --- @type table
