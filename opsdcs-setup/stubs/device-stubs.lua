@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --- DEVICE ENV
---- used by device_init, mainpanel_init, sounds_init, clickabledata, devices
+--- used by device_init/sounds_init/clickabledata, mainpanel_init, devices
 ---------------------------------------------------------------------------
 
 --- @type table
