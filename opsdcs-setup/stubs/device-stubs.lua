@@ -53,13 +53,13 @@ function GetSelf() end
 --- Makes a font
 --- @param font_data table @{used_DXUnicodeFontData = "font_dejavu_lgc_sans_22"}
 --- @param rgba table @{0, 255, 0, 255}
---- @return table
+--- @return table @TODO
 function MakeFont(font_data, rgba) end
 
 --- Makes a material
 --- @param texture_path string @material name, path to texture (dds, tga)
 --- @param rgba table @{0, 255, 0, 255}
---- @return table
+--- @return table @TODO
 function MakeMaterial(texture_path, rgba) end
 
 --- ??
@@ -73,7 +73,7 @@ function UTF8_substring() end
 
 --- Creates a sound
 --- @param sdef string @refers to sdef file, and sdef file content refers to sound file, see DCSWorld/Sounds/sdef/_example.sdef
---- @return table
+--- @return table @TODO
 function create_sound(sdef) end
 
 --- Creates a sound host
@@ -82,7 +82,7 @@ function create_sound(sdef) end
 --- @param x number
 --- @param y number
 --- @param z number
---- @return table
+--- @return table @TODO
 function create_sound_host(name, type, x, y, z) end
 
 --- Triggers command with value. Similar to Device:performClickableAction() but doesn't move the switch
@@ -96,7 +96,7 @@ function do_mission_file() end
 
 --- Finds viewport by name
 --- @param name string
---- @return table
+--- @return table @TODO
 function find_viewport(name) end
 
 --- Converts lat/lon to local coordinates
@@ -110,7 +110,7 @@ function geo_to_lo_coords(lat, lon) end
 function get_UIMainView() end
 
 --- Returns all viewports
---- @return table
+--- @return table @TODO
 function get_Viewports() end
 
 --- Returns time of day in seconds (including fractional seconds)
@@ -124,7 +124,7 @@ function get_aircraft_draw_argument_value(arg) end
 
 --- Returns aircraft mission data
 --- @param key string @e.g. "Radio"
---- @return table
+--- @return table @TODO
 function get_aircraft_mission_data(key) end
 
 --- Returns aircraft property
@@ -147,7 +147,7 @@ function get_base_data() return end
 
 --- Returns clickable element reference
 --- @param point_name string @see point name in clickabledata.lua, index of elements
---- @return table @functions: set_hint, update, hide
+--- @return table @functions: set_hint, update, hide @TODO
 function get_clickable_element_reference(point_name) end
 
 --- Returns cockpit draw argument value
@@ -164,7 +164,7 @@ function get_dcs_plugin_path(name) end
 function get_input_devices() end
 
 --- Returns mission route
---- @return table @route (table of wps)
+--- @return table @route (table of wps) @TODO
 function get_mission_route() end
 
 --- Returns time in seconds since mission launched

@@ -23,10 +23,10 @@ function plugin_done() return end
 --- @param data AircraftData @The aircraft data.
 function add_aircraft(data) return end
 
---- Adds a launcher
+--- Adds a launcher @TODO ws_data
 --- @param ws_data table
 --- @param data table
---- @return table @launcher
+--- @return table
 function add_launcher(ws_data, data) return end
 
 --- ??
@@ -35,8 +35,8 @@ function add_navpoint() return end
 --- ??
 function add_plugin_systems() return end
 
---- Adds a surface unit
---- @param gt_data table @The surface unit data.
+--- Adds a surface unit @TODO gt_data
+--- @param gt_data table
 function add_surface_unit(gt_data) return end
 
 --- ??
@@ -45,18 +45,18 @@ function add_unit_to_country() return end
 --- ??
 function declare_callbackME() return end
 
---- Declares a gun mount.
---- @param name string @The name of the gun mount.
---- @param data table @The gun mount data.
-function declare_gun_mount(name, data) return end
+--- Declares a gun mount. @TODO gun_data
+--- @param name string
+--- @param gun_data table
+function declare_gun_mount(name, gun_data) return end
 
---- Declares a loadout.
---- @param data table @The loadout data.
-function declare_loadout(data) return end
+--- Declares a loadout. @TODO loadout_data
+--- @param data table
+function declare_loadout(loadout_data) return end
 
---- Declares a sensor.
---- @param data table @The sensor data.
-function declare_sensor(data) return end
+--- Declares a sensor. @TODO sensor_data
+--- @param sensor_data table
+function declare_sensor(sensor_data) return end
 
 --- Declares a service life for an object.
 --- @param obj_name string @The name of the object.
@@ -65,9 +65,9 @@ function declare_sensor(data) return end
 --- @param to_year number @The end year.
 function declare_service_life(obj_name, country_name, from_year, to_year) return end
 
---- Declares a weapon.
---- @param data table @The weapon data.
-function declare_weapon(data) return end
+--- Declares a weapon. @TODO weapon_data
+--- @param data table
+function declare_weapon(weapon_data) return end
 
 --- Makes a flyable object.
 --- @param obj_name string @The name of the object.
@@ -319,16 +319,20 @@ function verbose_to_failures_table(data) return end
 ---------------------------------------------------------------------------
 
 --- ??
-function Get_Combined_GUISettings_Preset() return end
+--- @param name string
+function Get_Combined_GUISettings_Preset(name) return end
 
 --- ??
-function Get_Fuze_GUISettings_Preset() return end
+--- @param name string
+function Get_Fuze_GUISettings_Preset(name) return end
 
 --- ??
-function Get_LGU_GUISettings_Preset() return end
+--- @param name string
+function Get_LGU_GUISettings_Preset(name) return end
 
 --- ??
-function Get_RFGU_GUISettings_Preset() return end
+--- @param name string
+function Get_RFGU_GUISettings_Preset(name) return end
 
 ---------------------------------------------------------------------------
 --- Plugin properties
@@ -388,19 +392,19 @@ function Get_RFGU_GUISettings_Preset() return end
 --- @field number Rate @rewardpoint in mp
 --- @field string Shape
 --- @field string WorldID
---- @field table ViewSettings
---- @field table Countries
+--- @field table ViewSettings @TODO
+--- @field table Countries @TODO
 --- @field boolean HumanCockpit
 --- @field string HumanCockpitPath
 
---- @field table net_animation
+--- @field table net_animation @TODO
 
---- @field table shape_table_data
+--- @field table shape_table_data @TODO
 --- @field table CanopyGeometry @from makeAirplaneCanopyGeometry()
 
 --- @field string mapclasskey
---- @field tables attribute
---- @field table Categories
+--- @field table attribute @TODO
+--- @field table Categories @TODO
 
 --- @field string sounderName
 
@@ -417,9 +421,9 @@ function Get_RFGU_GUISettings_Preset() return end
 --- @field number tanker_type
 --- @field boolean is_tanker
 --- @field number refueling_points_count
---- @field table refueling_points
---- @field table crew_members
---- @field table mechanimations
+--- @field table refueling_points @TODO
+--- @field table crew_members @TODO
+--- @field table mechanimations @TODO
 --- @field string EmptyWeight
 --- @field string MaxFuelWeight
 --- @field string MaxHeight
@@ -468,54 +472,54 @@ function Get_RFGU_GUISettings_Preset() return end
 --- @field number engines_count
 --- @field number IR_emission_coeff
 --- @field number IR_emission_coeff_ab
---- @field table engines_nozzles
+--- @field table engines_nozzles @TODO
 
 -- sensor characteristics
 --- @field boolean radar_can_see_ground
 --- @field number detection_range_max
---- @field table Sensors
+--- @field table Sensors @TODO
 
 -- radio characteristics
 --- @field boolean TACAN
---- @field table HumanRadio
---- @field table panelRadio
+--- @field table HumanRadio @TODO
+--- @field table panelRadio @TODO
 
 -- ECM characteristics
---- @field table passivCounterm
---- @field table Countermeasures
---- @field table passivCounterm
---- @field table chaff_flare_dispenser
+--- @field table passivCounterm @TODO
+--- @field table Countermeasures @TODO
+--- @field table passivCounterm @TODO
+--- @field table chaff_flare_dispenser @TODO
 
 -- armament characteristics
---- @field table Pylons
---- @field table Tasks
+--- @field table Pylons @TODO
+--- @field table Tasks @TODO
 --- @field table DefaultTask @from aircraft_task()
 
 -- damage
---- @field table fires_pos
+--- @field table fires_pos @TODO
 --- @field table Damage @from verbose_to_dmg_properties()
---- @field table DamageParts
+--- @field table DamageParts @TODO
 
 -- flight model characteristics
---- @field table SFM_Data
+--- @field table SFM_Data @TODO
 
 -- extnernal lights
---- @field table lights_data
+--- @field table lights_data @TODO
 
 -- land & takeoff
---- @field table LandRWCategories
---- @field table TakeOffRWCategories
+--- @field table LandRWCategories @TODO
+--- @field table TakeOffRWCategories @TODO
 
 -- failures
---- @field table Failures
+--- @field table Failures @TODO
 
 -- additional properties
---- @field table AddPropAircraft
+--- @field table AddPropAircraft @TODO
 
 -- guns
---- @field table Guns
+--- @field table Guns @TODO
 --- @field number ammo_type_default
---- @field table ammo_type
+--- @field table ammo_type @TODO
 
 ---------------------------------------------------------------------------
 --- Radio commands data (comm.lua)
@@ -524,22 +528,22 @@ function Get_RFGU_GUISettings_Preset() return end
 --- @class data
 --- @field VoIP boolean
 --- @field base table
---- @field communicators table
+--- @field communicators table @TODO
 --- @field curCommunicatorId number
 --- @field customUnitProperties table @'AddPropAircraft' in the module entry description (lua) -> wsInitData.AddPropList (cpp) -> RadioCommandDialogsPanel.data.customUnitProperties (lua). table["PropertyName"] = {value = 0, str_value = ""}
 --- @field highlighting boolean
 --- @field initialized boolean
---- @field menuEmbarkToTransport table @Misson command menu
---- @field menuOther table @Misson command menu
---- @field menus table @menu
---- @field msgHandlers table @Message handlers converts messages into internal events and passes them into RadioCommandDialogsPanel.onEvent()
---- @field pComm table
---- @field pUnit table @Player unit
+--- @field menuEmbarkToTransport table @Misson command menu @TODO
+--- @field menuOther table @Misson command menu @TODO
+--- @field menus table @menu @TODO
+--- @field msgHandlers table @Message handlers converts messages into internal events and passes them into RadioCommandDialogsPanel.onEvent() @TODO
+--- @field pComm table @TODO
+--- @field pUnit table @Player unit @TODO
 --- @field radioAutoTune boolean
 --- @field recepientInfo boolean
 --- @field rootItem table
 --- @field showingOnlyPresentRecepients boolean
---- @field worldEventHandlers table @World event handles handle world events and passes them into RadioCommandDialogsPanel.onEvent()
+--- @field worldEventHandlers table @World event handles handle world events and passes them into RadioCommandDialogsPanel.onEvent() @TODO
 --- @type data
 data = {}
 data.base = {
