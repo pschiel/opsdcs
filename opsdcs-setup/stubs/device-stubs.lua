@@ -410,6 +410,12 @@ function SetDamage(command, value) end
 --- function called by DCS when a failure is triggered (not working)
 function SetFailure(command, value) end
 
+--- function called by DCS post initialize
+function post_initialize() end
+
+--- update function (used with make_default_activity)
+function update() end
+
 ------------------------------------------------------------------------------
 --- Graphic elements
 ------------------------------------------------------------------------------
