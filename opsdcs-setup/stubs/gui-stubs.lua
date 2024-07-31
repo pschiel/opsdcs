@@ -1,17 +1,19 @@
 ------------------------------------------------------------------------------
---- STATE "gui"
----
---- available in _G:
----  - package, require, coroutine, os, io, lfs
----  - DCS, net, Export
----  - GUI functions
----  - Input
----  - ME functions
----  - ...
+--- GUI ENV
+--- used by scripts in Scripts/Hooks
 ------------------------------------------------------------------------------
 
+--- @type table
+package = {}
+
+--- @param module string
+function require(module) end
+
+--- @type Export
+Export = {}
+
 ------------------------------------------------------------------------------
---- DCS CONTROL API
+--- DCS Control API
 ------------------------------------------------------------------------------
 
 --- @class DCS
@@ -140,11 +142,11 @@
 DCS = {}
 
 ------------------------------------------------------------------------------
---- HOOK FUNCTIONS
+--- Hook callbacks
 ------------------------------------------------------------------------------
 
 --- @class Hook
---- @description helper class for hook function tables
+--- @description helper class for hook callbacks
 --- @field onMissionLoadBegin fun() Occurs when a server begins loading a mission. 
 --- @field onMissionLoadProgress fun(progress:string, message:string) While a mission is loading this callback will contain information about the loading progress. 
 --- @field onMissionLoadEnd fun() Occurs when a server finishes loading a mission. 

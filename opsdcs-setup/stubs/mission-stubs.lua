@@ -1,9 +1,19 @@
 ---------------------------------------------------------------------------
---- STATE "mission"
----
---- available in _G:
----  - mission, warehouses, db
----  - all functions below
+--- MISSION ENV
+--- used by internal mission engine
+---------------------------------------------------------------------------
+
+--- @type env.mission
+mission = {}
+
+--- @type env.warehouses
+warehouses = {}
+
+--- @type db
+db = {}
+
+---------------------------------------------------------------------------
+--- Actions
 ---------------------------------------------------------------------------
 
 function a_activate_group(group) end
@@ -117,6 +127,11 @@ function add_dynamic_group() end
 function add_group() end
 function add_player() end
 function append_commanders() end
+
+---------------------------------------------------------------------------
+--- Conditions
+---------------------------------------------------------------------------
+
 function c_all_of_coalition_in_zone(coalition, zone, type) end
 function c_all_of_coalition_out_zone(coalition, zone, type) end
 function c_all_of_group_in_zone(group, zone) end
@@ -185,6 +200,11 @@ function c_unit_pitch(unit, min, max) end
 function c_unit_speed_higher(unit, speed) end
 function c_unit_speed_lower(unit, speed) end
 function c_unit_vertical_speed(unit, min, max) end
+
+---------------------------------------------------------------------------
+--- Stuff
+---------------------------------------------------------------------------
+
 function del_player() end
 function doZipFile() end
 function getAlliesString() end
@@ -208,6 +228,10 @@ function set_player_name() end
 function set_welcome_info() end
 function unset_human() end
 function update_briefing() end
+
+---------------------------------------------------------------------------
+--- Notes
+---------------------------------------------------------------------------
 
 -- mission events
 -- a_start_listen_event("setup_HMS", 1)              -- HMS installed

@@ -82,6 +82,12 @@ if useExternalFM then
 end
 
 -- make flyable
+-- cockpit_path scripts load order
+--  1) device_init.lua
+--  2) mainpanel_init.lua
+--- 3) all devices
+--- 4) sounds_init.lua (in device_init env)
+--- 5) clickabledata.lua (in device_init env env)
 make_flyable(self_ID, current_mod_path .. '/Cockpit/Scripts/', FM, current_mod_path .. "/comm.lua")
 
 plugin_done()

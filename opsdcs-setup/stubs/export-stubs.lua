@@ -1,13 +1,16 @@
 ------------------------------------------------------------------------------
 --- EXPORT ENV
----
---- available in _G:
----  - package, require, coroutine, os, io, lfs
----  - all functions in Export
+--- used by Export.lua
 ------------------------------------------------------------------------------
 
+--- @type table
+package = {}
+
+--- @param module string
+function require(module) end
+
 ------------------------------------------------------------------------------
---- EXPORT FUNCTIONS
+--- Export functions
 ------------------------------------------------------------------------------
 
 --- @class Export
@@ -87,5 +90,3 @@
 --- @field LuaExportBeforeNextFrame fun() @Works just before every simulation frame.
 --- @field LuaExportStart fun() @Works once just before mission start.
 --- @field LuaExportStop fun() @Works once just after mission stop.
---- @type Export
-Export = {}

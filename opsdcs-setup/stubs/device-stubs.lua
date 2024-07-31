@@ -1,9 +1,17 @@
 ---------------------------------------------------------------------------
---- avLuaDevice state
+--- DEVICE ENV
+--- used by device_init.lua, devices, clickabledata.lua
 ---------------------------------------------------------------------------
 
---- @class avLuaDevice
---- @TODO ...
+--- @type table
+package = {}
+
+--- @param module string
+function require(module) end
+
+------------------------------------------------------------------------------
+--- Device functions
+------------------------------------------------------------------------------
 
 --- Returns base data
 --- @return BaseData

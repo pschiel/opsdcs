@@ -1,5 +1,6 @@
 ---------------------------------------------------------------------------
---- PLUGIN state
+--- PLUGIN ENV
+--- used by entry.lua in plugins
 ---------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------
@@ -443,3 +444,5 @@ function Get_RFGU_GUISettings_Preset() return end
 --- @field rootItem table
 --- @field showingOnlyPresentRecepients boolean
 --- @field worldEventHandlers table @World event handles handle world events and passes them into RadioCommandDialogsPanel.onEvent()
+--- @type data
+data = {}
