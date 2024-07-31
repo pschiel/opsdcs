@@ -23,7 +23,7 @@ function plugin_done() return end
 --- @param data AircraftData @The aircraft data.
 function add_aircraft(data) return end
 
---- Adds a launcher @TODO ws_data
+--- Adds a launcher
 --- @param ws_data table
 --- @param data table
 --- @return table
@@ -35,7 +35,7 @@ function add_navpoint() return end
 --- ??
 function add_plugin_systems() return end
 
---- Adds a surface unit @TODO gt_data
+--- Adds a surface unit
 --- @param gt_data table
 function add_surface_unit(gt_data) return end
 
@@ -45,16 +45,16 @@ function add_unit_to_country() return end
 --- ??
 function declare_callbackME() return end
 
---- Declares a gun mount. @TODO gun_data
+--- Declares a gun mount.
 --- @param name string
 --- @param gun_data table
 function declare_gun_mount(name, gun_data) return end
 
---- Declares a loadout. @TODO loadout_data
+--- Declares a loadout.
 --- @param data table
 function declare_loadout(loadout_data) return end
 
---- Declares a sensor. @TODO sensor_data
+--- Declares a sensor.
 --- @param sensor_data table
 function declare_sensor(sensor_data) return end
 
@@ -65,7 +65,7 @@ function declare_sensor(sensor_data) return end
 --- @param to_year number @The end year.
 function declare_service_life(obj_name, country_name, from_year, to_year) return end
 
---- Declares a weapon. @TODO weapon_data
+--- Declares a weapon.
 --- @param data table
 function declare_weapon(weapon_data) return end
 
@@ -392,16 +392,16 @@ function Get_RFGU_GUISettings_Preset(name) return end
 ---@field Rate number @rewardpoint in mp
 ---@field Shape string
 ---@field WorldID string
----@field ViewSettings table @TODO
----@field Countries table @TODO
+---@field ViewSettings table
+---@field Countries table
 ---@field HumanCockpit boolean
 ---@field HumanCockpitPath string
----@field net_animation table @TODO
----@field shape_table_data table @TODO
+---@field net_animation table
+---@field shape_table_data table
 ---@field CanopyGeometry table @from makeAirplaneCanopyGeometry()
 ---@field mapclasskey string
----@field attribute table @TODO
----@field Categories table @TODO
+---@field attribute table
+---@field Categories table
 ---@field sounderName string
 
 -- general characteristics
@@ -417,9 +417,9 @@ function Get_RFGU_GUISettings_Preset(name) return end
 ---@field tanker_type number
 ---@field is_tanker boolean
 ---@field refueling_points_count number
----@field refueling_points table @TODO
----@field crew_members table @TODO
----@field mechanimations table @TODO
+---@field refueling_points table
+---@field crew_members table
+---@field mechanimations table
 ---@field EmptyWeight string
 ---@field MaxFuelWeight string
 ---@field MaxHeight string
@@ -467,53 +467,53 @@ function Get_RFGU_GUISettings_Preset(name) return end
 ---@field engines_count number
 ---@field IR_emission_coeff number
 ---@field IR_emission_coeff_ab number
----@field engines_nozzles table @TODO
+---@field engines_nozzles table
 
 -- sensor characteristics
 ---@field radar_can_see_ground boolean
 ---@field detection_range_max number
----@field Sensors table @TODO
+---@field Sensors table
 
 -- radio characteristics
 ---@field TACAN boolean
----@field HumanRadio table @TODO
----@field panelRadio table @TODO
+---@field HumanRadio table
+---@field panelRadio table
 
 -- ECM characteristics
----@field passivCounterm table @TODO
----@field Countermeasures table @TODO
----@field chaff_flare_dispenser table @TODO
+---@field passivCounterm table
+---@field Countermeasures table
+---@field chaff_flare_dispenser table
 
 -- armament characteristics
----@field Pylons table @TODO
----@field Tasks table @TODO
+---@field Pylons table
+---@field Tasks table
 ---@field DefaultTask table @from aircraft_task()
 
 -- damage
----@field fires_pos table @TODO
+---@field fires_pos table
 ---@field Damage table @from verbose_to_dmg_properties()
----@field DamageParts table @TODO
+---@field DamageParts table
 
 -- flight model characteristics
----@field SFM_Data table @TODO
+---@field SFM_Data table
 
 -- external lights
----@field lights_data table @TODO
+---@field lights_data table
 
 -- land & takeoff
----@field LandRWCategories table @TODO
----@field TakeOffRWCategories table @TODO
+---@field LandRWCategories table
+---@field TakeOffRWCategories table
 
 -- failures
----@field Failures table @TODO
+---@field Failures table
 
 -- additional properties
----@field AddPropAircraft table @TODO
+---@field AddPropAircraft table
 
 -- guns
----@field Guns table @TODO
+---@field Guns table
 ---@field ammo_type_default number
----@field ammo_type table @TODO
+---@field ammo_type table
 
 ---------------------------------------------------------------------------
 --- Radio commands data (comm.lua)
@@ -522,22 +522,22 @@ function Get_RFGU_GUISettings_Preset(name) return end
 --- @class data
 --- @field VoIP boolean
 --- @field base table
---- @field communicators table @TODO
+--- @field communicators table
 --- @field curCommunicatorId number
 --- @field customUnitProperties table @'AddPropAircraft' in the module entry description (lua) -> wsInitData.AddPropList (cpp) -> RadioCommandDialogsPanel.data.customUnitProperties (lua). table["PropertyName"] = {value = 0, str_value = ""}
 --- @field highlighting boolean
 --- @field initialized boolean
---- @field menuEmbarkToTransport table @Misson command menu @TODO
---- @field menuOther table @Misson command menu @TODO
---- @field menus table @menu @TODO
---- @field msgHandlers table @Message handlers converts messages into internal events and passes them into RadioCommandDialogsPanel.onEvent() @TODO
---- @field pComm table @TODO
---- @field pUnit table @Player unit @TODO
+--- @field menuEmbarkToTransport table @Misson command menu
+--- @field menuOther table @Misson command menu
+--- @field menus table @menu
+--- @field msgHandlers table @Message handlers converts messages into internal events and passes them into RadioCommandDialogsPanel.onEvent()
+--- @field pComm table
+--- @field pUnit table @Player unit
 --- @field radioAutoTune boolean
 --- @field recepientInfo boolean
 --- @field rootItem table
 --- @field showingOnlyPresentRecepients boolean
---- @field worldEventHandlers table @World event handles handle world events and passes them into RadioCommandDialogsPanel.onEvent() @TODO
+--- @field worldEventHandlers table @World event handles handle world events and passes them into RadioCommandDialogsPanel.onEvent()
 --- @type data
 data = {}
 data.base = {
