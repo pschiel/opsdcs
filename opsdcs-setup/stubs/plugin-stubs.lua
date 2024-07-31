@@ -558,3 +558,26 @@ data.base = {
     --- @type net
     net = {},
 }
+
+---------------------------------------------------------------------------
+--- GT
+---------------------------------------------------------------------------
+
+--- @class GT_t
+--- @field BarrelsReloadTypes table
+--- @field CH_t table
+--- @field GEAR_TYPES table
+--- @field LN_t table
+--- @field OLS_TYPE table
+--- @field SN_visual table
+--- @field SS_t table
+--- @field START_ALARM_STATES table @RED, GREEN
+--- @field WS_t table
+--- @field generic_ship table
+--- @field generic_stationary table
+--- @field generic_tank table
+--- @field generic_track_IFV table
+--- @field generic_wheel table
+--- @field generic_wheel_vehicle table
+--- @field inc_ws fun() @Increment ws
+--- @field ws number
