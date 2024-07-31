@@ -18,25 +18,6 @@ io = {}
 --- @type os
 os = {}
 
--- need_to_be_closed = false -- close lua state after initialization
-
--- CreateElement @todo
--- "ceBoundingMeshBox"
--- "ceBoundingTexBox"
--- "ceCircle"
--- "ceHWLine"
--- "ceHWSector"
--- "ceHint"
--- "ceMeshPoly"
--- "ceSCircle"
--- "ceSMultiLine"
--- "ceSVarLenLine"
--- "ceSimple"
--- "ceSimpleLineObject"
--- "ceStringPoly"
--- "ceTMultiLine"
--- "ceTexPoly"
-
 ------------------------------------------------------------------------------
 --- functions
 ------------------------------------------------------------------------------
@@ -425,3 +406,26 @@ function SetDamage(command, value) end
 
 --- function called by DCS when a failure is triggered (not working)
 function SetFailure(command, value) end
+
+------------------------------------------------------------------------------
+--- ??
+------------------------------------------------------------------------------
+
+-- need_to_be_closed = false -- close lua state after initialization
+
+-- CreateElement @todo
+-- "ceBoundingMeshBox"
+-- "ceBoundingTexBox"
+-- "ceCircle"
+-- "ceHWLine"
+-- "ceHWSector"
+-- "ceHint"
+-- "ceMeshPoly"
+-- "ceSCircle"
+-- "ceSMultiLine"
+-- "ceSVarLenLine"
+-- "ceSimple"
+-- "ceSimpleLineObject"
+-- "ceStringPoly"
+-- "ceTMultiLine"
+-- "ceTexPoly"
