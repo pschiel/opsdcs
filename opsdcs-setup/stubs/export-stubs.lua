@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------------
---- STATE "export"
+--- EXPORT ENV
 ---
 --- available in _G:
 ---  - package, require, coroutine, os, io, lfs
@@ -11,6 +11,7 @@
 ------------------------------------------------------------------------------
 
 --- @class Export
+--- @description Export functions (available in Export.lua)
 --- @field CoroutineResume fun(index:number, tCurrent:number):boolean @This function will be called by Lock On model timer for every coroutine to resume it. Return true to resume, false to stop.
 --- @field GetClickableElemnts fun():table @Gets clickable elements (Misc)
 --- @field GetDevice fun(id:number):table @Gets device (Misc)
@@ -86,3 +87,5 @@
 --- @field LuaExportBeforeNextFrame fun() @Works just before every simulation frame.
 --- @field LuaExportStart fun() @Works once just before mission start.
 --- @field LuaExportStop fun() @Works once just after mission stop.
+--- @type Export
+Export = {}

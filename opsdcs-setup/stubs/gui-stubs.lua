@@ -136,6 +136,8 @@
 --- @field unlockMouseInput fun()
 --- @field unsetViewRearm fun()
 --- @field writeDebriefing fun()
+--- @type DCS
+DCS = {}
 
 ------------------------------------------------------------------------------
 --- HOOK FUNCTIONS
