@@ -70,6 +70,25 @@ io = {}
 --- @field set_output_rules fun()
 --- @field warning fun(message:string) @Logs a warning message.
 --- @field write fun()
+--- @field ALERT number
+--- @field ALL number
+--- @field ASYNC number
+--- @field DEBUG number
+--- @field ERROR number
+--- @field FULL number
+--- @field IMMEDIATE number
+--- @field INFO number
+--- @field LEVEL number
+--- @field MESSAGE number
+--- @field MODULE number
+--- @field RELIABLE number
+--- @field THREAD number
+--- @field TIME number
+--- @field TIME_LOCAL number
+--- @field TIME_RELATIVE number
+--- @field TIME_UTC number
+--- @field TRACE number
+--- @field WARNING number
 --- @type log
 log = {}
 
@@ -406,3 +425,36 @@ db = {}
 --- @field getTempratureRangeByDate fun()
 --- @field getTerrainShpare fun()
 --- @field isVisible fun()
+
+------------------------------------------------------------------------------
+--- LockOn_Options
+------------------------------------------------------------------------------
+
+--- @class LockOn_Options
+--- @field avionics_language string
+--- @field cockpit table
+--- @field cockpit_language string
+--- @field common_ground_script_path string @CA cockpit path
+--- @field common_script_path string @common cockpit path
+--- @field date table @day, month, year
+--- @field flight table @flight options
+--- @field init_conditions table @birth_place
+--- @field measurement_system string
+--- @field mission table
+--- @field screen table @aspect, height, width
+--- @field script_path string @cockpit path
+--- @field time table @hours, minutes, seconds
+
+------------------------------------------------------------------------------
+--- Emmy core
+------------------------------------------------------------------------------
+
+--- @class emmy_core
+--- @field breakHere fun()
+--- @field pipeConnect fun()
+--- @field pipeListen fun()
+--- @field stop fun()
+--- @field tcpConnect fun()
+--- @field tcpListen fun()
+--- @field tcpSharedListen fun()
+--- @field waitIDE fun()
