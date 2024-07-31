@@ -102,7 +102,7 @@ function make_view_settings(obj_name, viewSettings, snapViews) return end
 ---------------------------------------------------------------------------
 
 --- @class FM
---- @description [1] = modname_of_fm_origin, [2] = dll_with_fm (unsure if this works or not since 2.9.6)
+--- @description [1] = modname_of_fm_origin, [2] = dll_with_fm
 --- @field center_of_mass table @{ x, y, z }
 --- @field moment_of_inertia table @{ Ix, Iy, Iz, Ixy }
 --- @field suspension table
