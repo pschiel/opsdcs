@@ -384,142 +384,136 @@ function Get_RFGU_GUISettings_Preset(name) return end
 --- Aircraft data
 ---------------------------------------------------------------------------
 
---- @class AircraftData
---- @description Aircraft data table
---- @field string Name
---- @field string DisplayName
---- @field string Picture
---- @field number Rate @rewardpoint in mp
---- @field string Shape
---- @field string WorldID
---- @field table ViewSettings @TODO
---- @field table Countries @TODO
---- @field boolean HumanCockpit
---- @field string HumanCockpitPath
-
---- @field table net_animation @TODO
-
---- @field table shape_table_data @TODO
---- @field table CanopyGeometry @from makeAirplaneCanopyGeometry()
-
---- @field string mapclasskey
---- @field table attribute @TODO
---- @field table Categories @TODO
-
---- @field string sounderName
+---@class AircraftData
+---@description Aircraft data table
+---@field Name string
+---@field DisplayName string
+---@field Picture string
+---@field Rate number @rewardpoint in mp
+---@field Shape string
+---@field WorldID string
+---@field ViewSettings table @TODO
+---@field Countries table @TODO
+---@field HumanCockpit boolean
+---@field HumanCockpitPath string
+---@field net_animation table @TODO
+---@field shape_table_data table @TODO
+---@field CanopyGeometry table @from makeAirplaneCanopyGeometry()
+---@field mapclasskey string
+---@field attribute table @TODO
+---@field Categories table @TODO
+---@field sounderName string
 
 -- general characteristics
---- @field boolean singleInFlight
---- @field number length
---- @field number height
---- @field number wing_area
---- @field number wing_span
---- @field table wing_tip_pos
---- @field number RCS
---- @field boolean has_speedbrake
---- @field number stores_number
---- @field number tanker_type
---- @field boolean is_tanker
---- @field number refueling_points_count
---- @field table refueling_points @TODO
---- @field table crew_members @TODO
---- @field table mechanimations @TODO
---- @field string EmptyWeight
---- @field string MaxFuelWeight
---- @field string MaxHeight
---- @field string MaxSpeed
---- @field string MaxTakeOffWeight
---- @field string WingSpan
+---@field singleInFlight boolean
+---@field length number
+---@field height number
+---@field wing_area number
+---@field wing_span number
+---@field wing_tip_pos table
+---@field RCS number
+---@field has_speedbrake boolean
+---@field stores_number number
+---@field tanker_type number
+---@field is_tanker boolean
+---@field refueling_points_count number
+---@field refueling_points table @TODO
+---@field crew_members table @TODO
+---@field mechanimations table @TODO
+---@field EmptyWeight string
+---@field MaxFuelWeight string
+---@field MaxHeight string
+---@field MaxSpeed string
+---@field MaxTakeOffWeight string
+---@field WingSpan string
 
 -- weight & fuel characteristics
---- @field number M_empty
---- @field number M_nominal
---- @field number M_max
---- @field number M_fuel_max
---- @field number H_max
---- @field number CAS_min
---- @field number average_fuel_consumption
+---@field M_empty number
+---@field M_nominal number
+---@field M_max number
+---@field M_fuel_max number
+---@field H_max number
+---@field CAS_min number
+---@field average_fuel_consumption number
 
 -- AI flight parameters
---- @field number V_opt
---- @field number V_take_off
---- @field number V_land
---- @field number V_max_sea_level
---- @field number V_max_h
---- @field number Vy_max @maximal climb rate
---- @field number Mach_max
---- @field number Ny_min @minimal safe acceleration
---- @field number Ny_max @maximal safe acceleration
---- @field number Ny_max_e
---- @field number Ny_max_e
---- @field number AOA_take_off
---- @field number bank_angle_max
---- @field number flaps_maneuver
---- @field number range @operational range
+---@field V_opt number
+---@field V_take_off number
+---@field V_land number
+---@field V_max_sea_level number
+---@field V_max_h number
+---@field Vy_max number @maximal climb rate
+---@field Mach_max number
+---@field Ny_min number @minimal safe acceleration
+---@field Ny_max number @maximal safe acceleration
+---@field Ny_max_e number
+---@field AOA_take_off number
+---@field bank_angle_max number
+---@field flaps_maneuver number
+---@field range number @operational range
 
 -- suspension characteristics
---- @field boolean has_differential_stabilizer
---- @field number tand_gear_max
---- @field table nose_gear_pos
---- @field number nose_gear_wheel_diameter
---- @field table main_gear_pos
---- @field number main_gear_wheel_diameter
+---@field has_differential_stabilizer boolean
+---@field tand_gear_max number
+---@field nose_gear_pos table
+---@field nose_gear_wheel_diameter number
+---@field main_gear_pos table
+---@field main_gear_wheel_diameter number
 
 -- engine characteristics
---- @field boolean has_afteburner
---- @field number thrust_sum_max
---- @field number thrust_sum_ab
---- @field number engines_count
---- @field number IR_emission_coeff
---- @field number IR_emission_coeff_ab
---- @field table engines_nozzles @TODO
+---@field has_afteburner boolean
+---@field thrust_sum_max number
+---@field thrust_sum_ab number
+---@field engines_count number
+---@field IR_emission_coeff number
+---@field IR_emission_coeff_ab number
+---@field engines_nozzles table @TODO
 
 -- sensor characteristics
---- @field boolean radar_can_see_ground
---- @field number detection_range_max
---- @field table Sensors @TODO
+---@field radar_can_see_ground boolean
+---@field detection_range_max number
+---@field Sensors table @TODO
 
 -- radio characteristics
---- @field boolean TACAN
---- @field table HumanRadio @TODO
---- @field table panelRadio @TODO
+---@field TACAN boolean
+---@field HumanRadio table @TODO
+---@field panelRadio table @TODO
 
 -- ECM characteristics
---- @field table passivCounterm @TODO
---- @field table Countermeasures @TODO
---- @field table passivCounterm @TODO
---- @field table chaff_flare_dispenser @TODO
+---@field passivCounterm table @TODO
+---@field Countermeasures table @TODO
+---@field chaff_flare_dispenser table @TODO
 
 -- armament characteristics
---- @field table Pylons @TODO
---- @field table Tasks @TODO
---- @field table DefaultTask @from aircraft_task()
+---@field Pylons table @TODO
+---@field Tasks table @TODO
+---@field DefaultTask table @from aircraft_task()
 
 -- damage
---- @field table fires_pos @TODO
---- @field table Damage @from verbose_to_dmg_properties()
---- @field table DamageParts @TODO
+---@field fires_pos table @TODO
+---@field Damage table @from verbose_to_dmg_properties()
+---@field DamageParts table @TODO
 
 -- flight model characteristics
---- @field table SFM_Data @TODO
+---@field SFM_Data table @TODO
 
--- extnernal lights
---- @field table lights_data @TODO
+-- external lights
+---@field lights_data table @TODO
 
 -- land & takeoff
---- @field table LandRWCategories @TODO
---- @field table TakeOffRWCategories @TODO
+---@field LandRWCategories table @TODO
+---@field TakeOffRWCategories table @TODO
 
 -- failures
---- @field table Failures @TODO
+---@field Failures table @TODO
 
 -- additional properties
---- @field table AddPropAircraft @TODO
+---@field AddPropAircraft table @TODO
 
 -- guns
---- @field table Guns @TODO
---- @field number ammo_type_default
---- @field table ammo_type @TODO
+---@field Guns table @TODO
+---@field ammo_type_default number
+---@field ammo_type table @TODO
 
 ---------------------------------------------------------------------------
 --- Radio commands data (comm.lua)
