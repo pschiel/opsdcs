@@ -15,6 +15,9 @@ function declare_plugin(name, props) return end
 --- Sets a flag informing the engine of a finished plugin declaration.
 function plugin_done() return end
 
+--- Path to current mod
+current_mod_path = ""
+
 ---------------------------------------------------------------------------
 --- Add stuff
 ---------------------------------------------------------------------------
@@ -72,7 +75,7 @@ function declare_weapon(weapon_data) return end
 --- Makes a flyable object.
 --- @param obj_name string @The name of the object.
 --- @param cockpit_path string @The path to the cockpit scripts (optional).
---- @param fm table @optional flight model. optional_fm = { mod_of_fm_origin, dll_with_fm }. if nil, then SFM is used
+--- @param fm table @optional flight model. optional_fm = { [1] = modname_of_fm_origin, [2] dll_with_fm, old = fmid }. if nil, then SFM is used. old: 3 (Su-27), 4 (Su-33), 6 (F-15 SFM), 54 (Su-25T)
 --- @param comm_path string @The path to the comm.lua script (radio menu).
 function make_flyable(obj_name, cockpit_path, fm, comm_path) return end
 

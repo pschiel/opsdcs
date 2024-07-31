@@ -997,14 +997,14 @@ Group.Category = {}
 --- @field isTargetDetected fun(self:Controller, target:Object, detectionType1:enum, detectionType2:enum, detectionType3:enum,...):table @Returns details if the target is detected.
 --- @field knowTarget fun(self:Controller, object:Object, type:boolean, distance:boolean) @Forces the controller to become aware of a specified target.
 --- @field popTask fun(self:Controller) @Removes the top task from the tasking queue.
---- @field pushTask fun(self:Controller, task:table) @Pushes a task to the front of the tasking queue.
+--- @field pushTask fun(self:Controller, task:Task) @Pushes a task to the front of the tasking queue.
 --- @field resetTask fun(self:Controller) @Resets the current task assigned to the controller.
 --- @field setAltitude fun(self:Controller, altitude:number, keep:boolean, altType:string) @Sets the altitude for aircraft, with an option to maintain it at waypoints.
---- @field setCommand fun(self:Controller, command:table) @Sets a command, an instant action with no impact on active tasks.
+--- @field setCommand fun(self:Controller, command:Command) @Sets a command, an instant action with no impact on active tasks.
 --- @field setOnOff fun(self:Controller, value:boolean) @Enables or disables the AI controller, not applicable to aircraft or helicopters.
 --- @field setOption fun(self:Controller, optionId:number|enum, optionValue:number|enum) @Sets behavior options that affect all tasks performed by the controller.
 --- @field setSpeed fun(self:Controller, speed:number, keep:boolean) @Sets the speed for the controlled group, with an option to maintain it at waypoints.
---- @field setTask fun(self:Controller, task:table) @Sets a specified task to the units or groups associated with the controller.
+--- @field setTask fun(self:Controller, task:Task) @Sets a specified task to the units or groups associated with the controller.
 --- @type Controller
 Controller = {}
 
@@ -1027,6 +1027,71 @@ Controller.Detection = {}
 --- @description Represents a task that can be assigned to a unit or group.
 --- @field id string
 --- @field params table
+
+--- @class MissionTask:Task
+--- @description Task Wrapper - the mission task is a collection of waypoints that are assigned to a group. When you create a group in the mission editor and place a route, you are created its mission task. For ground vehicles and ships the mission task is how you can more directly control where ground/ship forces are going.
+--- @field params MissionTaskParams
+--- @class MissionTaskParams
+--- @field airborne boolean
+--- @field route Route
+
+--- @class ComboTask:Task
+--- @description Task Wrapper - a list of tasks indexed numerically for when the task will be executed in accordance with the AI task queue rules. This is the task that the DCS mission editor will default to using for groups placed in the editor.
+--- @field params Task[]
+
+--- @class ControlledTask:Task
+--- @description Task Wrapper - a controlled task is a task that has start and/or stop conditions that will be used as a condition to start or stop the task. Start conditions are executed only once when the task is reached in the task queue. If the conditions are not met the task will be skipped. Stop Conditions are executed at a high rate. Can be used with any task in DCS. Note that options and commands do *NOT* have stopConditions. These tasks are executed immediately and take "no time" to run.
+--- @field params ControlledTaskParams
+--- @class ControlledTaskParams
+--- @field task Task
+--- @field condition table
+--- @field stopCondition table
+
+--- @class WrappedAction:Task
+--- @description Task Wrapper - functions as a wrapper for setting commands and options as a task within a mission, comboTask, or controlledTask.
+--- @field params table
+
+-- Main Tasks: AttackGroup, AttackUnit, Bombing, Strafing, CarpetBombing, AttackMapObject, BombingRunway, orbit, refueling, land, follow, followBigFormation, escort, Embarking, fireAtPoint, hold, FAC_AttackGroup, EmbarkToTransport, DisembarkFromTransport, CargoTransportation, goToWaypoint, groundEscort, RecoveryTanker 
+
+-- Enroute Tasks: engageTargets, engageTargetsInZone, engageGroup, engageUnit, awacs, tanker, ewr, FAC_engageGroup, FAC 
+
+------------------------------------------------------------------------------
+--- Route
+------------------------------------------------------------------------------
+
+--- @class Route
+--- @field points Waypoint[]
+
+------------------------------------------------------------------------------
+--- Waypoint
+------------------------------------------------------------------------------
+
+--- @class Waypoint
+--- @description Each waypoint has a number of parameters that define how the group will handle the route.
+--- @field x vec2 @required - x coordinate waypoint will be placed at
+--- @field y vec2 @required - y coordinate waypoint will be placed at. If converted from Vec3 this is the z coordinate.
+--- @field type AI.Task.WaypointType @required - Waypoint type.
+--- @field speed number @required, speed in meters per second
+--- @field action AI.Task.TurnMethod @required - Waypoint action type.
+--- @field alt number @required - Altitude of waypoint. If converted from Vec3 this is the y coordinate. This item is required for Aircraft, but is optional for ground vehicles. As of 2.5.6 this value can be set to negative numbers. Specifically this will submerge submarines.
+--- @field speed_locked boolean @optional - boolean value that will determine if units will attempt to travel at the specified speed
+--- @field eta number @optional - Time-On-Target of the waypoint. Has effect only if ETA_locked is true. AI will adjust speed to reach TOT accordingly.
+--- @field eta_locked boolean @optional - boolean value that will determine if AI will attempt to reach the waypoint at a specified time.
+--- @field alt_type AI.Task.AltitudeType @optional - Altitude type; Radio or Barometric. Defaults to barometric. If specified the altitude of the waypoint can be defined as AGL or MSL. Only applies to aircraft.
+--- @field task Task[] @optional - All tasks, enroute tasks, commands, and options are defined here.
+--- @field helipadId number @optional - Used when the waypoint is associated with the a static object or a unit placed in the mission editor. Needs to be the unitId associated with the object.
+--- @field linkUnit number @optional - Used when the waypoint is associated with the a static object or a unit placed in the mission editor. Value is identical to helipadId, but it is required.
+--- @field airdromeId number @optional - Specifies the airbaseId the aircraft group will attempt to use. AI will only land if airbase is friendly. If not provided the AI will land at the nearest valid base to the coordinates.
+--- @field timeReFuAr number @optional - If the waypoint type is a landReFuAr this value determines how long in minutes the unit will be stationary for.
+
+------------------------------------------------------------------------------
+--- Command
+------------------------------------------------------------------------------
+
+--- @class Command
+--- @description Represents a command that can be assigned to a controller.
+
+-- details on each command: script, setCallsign, setFrequency, setFrequencyForUnit, switchWaypoint, stopRoute, switchAction, setInvisible, setImmortal, setUnlimitedFuel, activateBeacon, deactivateBeacon, activateICLS, deactivateICLS, eplrs, start, transmitMessage, stopTransmission, smoke_on_off, ActivateLink4, deactivateLink4, activateACLS, deactivateACLS, LoadingShip
 
 ------------------------------------------------------------------------------
 --- Spot
