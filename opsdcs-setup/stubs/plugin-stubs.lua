@@ -79,6 +79,13 @@ function declare_weapon(weapon_data) return end
 --- @param comm_path string @The path to the comm.lua script (radio menu).
 function make_flyable(obj_name, cockpit_path, fm, comm_path) return end
 
+--- MACs a flyable object :D
+--- @param obj_name string @The name of the object.
+--- @param cockpit_path string @The path to the cockpit scripts (optional).
+--- @param fm table @optional flight model. optional_fm = { [1] = modname_of_fm_origin, [2] dll_with_fm, old = fmid }. if nil, then SFM is used. old: 3 (Su-27), 4 (Su-33), 6 (F-15 SFM), 54 (Su-25T)
+--- @param comm_path string @The path to the comm.lua script (radio menu).
+function MAC_flyable(obj_name, cockpit_path, fm, comm_path) return end
+
 --- Makes a payload rules list.
 --- @param stations number[] @Stations requiring CLSIDs.
 --- @param clsids string[] @The required CLSIDs.
