@@ -57,7 +57,7 @@ function get_aircraft_property() end
 function get_aircraft_property_or_nil() end
 function get_aircraft_type() end
 
---- Returns base data
+--- Returns sensor base data
 --- @return BaseData
 function get_base_data() return end
 
@@ -70,7 +70,12 @@ function get_model_time() end
 function get_multimonitor_preset_name() end
 function get_non_sim_random_evenly() end
 function get_option_value() end
-function get_param_handle() end
+
+--- Returns param handle
+--- @param param string
+--- @return ParamHandle
+function get_param_handle(param) end
+
 function get_player_crew_index() end
 function get_plugin_option() end
 function get_plugin_option_value() end
@@ -125,7 +130,7 @@ function c_start_wait_for_user(flagCont, flagBack) end
 function c_stop_wait_for_user() end
 
 ------------------------------------------------------------------------------
---- Device functions
+--- Device class
 ------------------------------------------------------------------------------
 
 --- @class Device
@@ -136,6 +141,14 @@ function c_stop_wait_for_user() end
 --- @field performClickableAction fun(command, value)
 --- @field set_argument_value fun(argument, value)
 --- @field update_arguments fun()
+
+------------------------------------------------------------------------------
+--- Param handle
+------------------------------------------------------------------------------
+
+--- @class ParamHandle
+--- @field get fun():number
+--- @field set fun(value:number)
 
 ------------------------------------------------------------------------------
 --- Base data
