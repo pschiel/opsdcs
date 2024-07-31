@@ -36,7 +36,7 @@ function add_navpoint() return end
 function add_plugin_systems() return end
 
 --- Adds a surface unit
---- @param gt_data table
+--- @param gt_data GTData
 function add_surface_unit(gt_data) return end
 
 --- ??
@@ -586,7 +586,24 @@ data.base = {
 GT_t = {}
 
 ---------------------------------------------------------------------------
---- GT
+--- GTData
 ---------------------------------------------------------------------------
 
---- @class GT
+--- @class GTData
+--- @field AddPropVehicle table
+--- @field DetectionRange number
+--- @field DisplayName string
+--- @field DisplayNameShort string
+--- @field IR_emission_coeff number
+--- @field Name string
+--- @field Rate number
+--- @field ThreatRange number
+--- @field attribute table
+--- @field category string
+--- @field chassis table
+--- @field driverCockpit string
+--- @field driverViewConnectorName string
+--- @field mapclasskey string
+--- @field sensor table
+--- @field tags table
+--- @field visual table
