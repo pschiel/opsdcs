@@ -3,8 +3,9 @@
 /opsdcs-camcontrol
 /opsdcs-crew/doc
 /opsdcs-crew/sounds
-/opsdcs-samsites
 /opsdcs-pmca
+/opsdcs-samsites
+/opsdcs-tacview
 /scratch
 /opsdcs-setup/stubs/fm-stubs.cpp
 *.png
