@@ -73,7 +73,7 @@ function OpsdcsApi:onSimulationFrame()
         client:settimeout(60)
         local request, err = client:receive()
         if not err then
-            local method, path, slug, queryString = request:match("^(%w+)%s(/[^%?]+)([^%?]*)%??(.*)%sHTTP/%d%.%d$")
+            local method, path, slug, queryString = request:match("^(%w+)%s(/[^/%?]+)/?([^%?]*)%??(.*)%sHTTP/%d%.%d$")
             local headers = self:getHeaders(client)
             local data = self:getBodyData(client, headers)
             if slug == "" then slug = nil end
