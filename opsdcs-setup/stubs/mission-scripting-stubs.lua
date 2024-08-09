@@ -1289,7 +1289,7 @@ AI.Task.OrbitPattern = {}
 AI.Task.Designation = {}
 
 --- @class AI.Task.TurnMethod
---- @description Enumerator for turn methods.
+--- @description Enumerator for turn methods. @todo parking
 --- @field FLY_OVER_POINT string @Fly Over Point ("Fly Over Point")
 --- @field FIN_POINT string @Fin Point ("Fin Point")
 --- @type AI.Task.TurnMethod
