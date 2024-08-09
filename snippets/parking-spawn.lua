@@ -8,20 +8,9 @@ local function spawn(id, parking, abId)
                     ["alt"] = 18,
                     ["action"] = "From Parking Area",
                     ["alt_type"] = "BARO",
-                    ["speed"] = 0,
-                    ["task"] = {
-                        ["id"] = "ComboTask",
-                        ["params"] = {
-                            ["tasks"] = {},
-                        },
-                    },
                     ["type"] = AI.Task.WaypointType.TAKEOFF_PARKING,
-                    ["ETA"] = 0,
-                    ["ETA_locked"] = true,
                     ["y"] = parking.vTerminalPos.z,
                     ["x"] = parking.vTerminalPos.x,
-                    ["speed_locked"] = true,
-                    ["formation_template"] = "",
                     ["airdromeId"] = abId,
                 },
             }
@@ -32,8 +21,6 @@ local function spawn(id, parking, abId)
             [1] = {
                 ["type"] = "Yak-40",
                 ["unitId"] = 1,
-                ["onboard_num"] = "001",
-                ["callsign"] = "101",
                 ["skill"] = "High",
                 ["y"] = parking.vTerminalPos.z,
                 ["x"] = parking.vTerminalPos.x,
