@@ -25,7 +25,7 @@ OpsdcsCrew = {
     zones = {}, -- opsdcs-crew zones
     isRunning = false, -- when procedure is running
     basedir = OpsdcsCrewBasedir or "",
-    supportedTypes = { "CH-47F", "F-16C_50", "OH58D", "SA342L", "UH-1H" }, -- supported types (@todo: autocheck, variants)
+    supportedTypes = { "CH-47Fbl1", "F-16C_50", "OH58D", "SA342L", "UH-1H" }, -- supported types (@todo: autocheck, variants)
     argsDebugMaxId = 4000,
 }
 
@@ -107,7 +107,8 @@ end
 
 --- returns cockpit args @todo refactor usage
 --- @param number maxId @maximum argument id (if nil, get named arguments from aircraft definition)
-function OpsdcsCrew:getCockpitArgs(maxId)
+--- @param table idList @optional list of argument ids to get
+function OpsdcsCrew:getCockpitArgs(maxId, idList)
     if self[self.typeName].argsById == nil then
         self[self.typeName].argsById = {}
         for k, v in pairs(self[self.typeName].args) do
@@ -116,23 +117,28 @@ function OpsdcsCrew:getCockpitArgs(maxId)
     end
     local code
     local keys = {}
-    if maxId == nil then
+    if maxId == nil and idList == nil then
         code = 'local d=GetDevice(0);return ""'
         for k, v in pairs(self[self.typeName].args) do
             code = code .. '..tostring(d:get_argument_value(' .. v .. '))..";"'
             table.insert(keys, k)
         end
-    else
+    elseif maxId then
         code = 'local d,r=GetDevice(0),"";for i=1,' .. maxId .. ' do r=r..d:get_argument_value(i)..";" end;return r'
+    elseif idList then
+        local xx = table.concat(idList, ",")
+        code = 'local d,r=GetDevice(0),"";for _,i in ipairs({' .. table.concat(idList, ",") .. '}) do r=r..d:get_argument_value(i)..";" end;return r'
     end
     local csv = net.dostring_in('export', code)
     local args = {}
     local i = 1
     for value in csv:gmatch("([^;]+)") do
-        if maxId == nil then
+        if maxId == nil and idList == nil then
             args[keys[i]] = tonumber(value)
-        else
+        elseif maxId then
             args[i] = tonumber(value)
+        elseif idList then
+            args[idList[i]] = tonumber(value)
         end
         i = i + 1
     end
@@ -142,24 +148,26 @@ end
 --- returns indications from specified devices @todo refactor usage
 --- @param number maxId @maximum device id (if nil, get only devices from aircraft definition)
 function OpsdcsCrew:getIndications(maxId)
-    local code
+    local code = 'return ""'
     if maxId == nil then
-        code = 'return ""'
         for device_id, _ in pairs(self[self.typeName].indications) do
-            code = code .. '..list_indication(' .. device_id .. ')'
+            code = code .. '.."##' .. device_id .. '##\\n"..list_indication(' .. device_id .. ')'
         end
     else
-        for device_id = 1, maxId do
-            code = code .. '..list_indication(' .. device_id .. ')'
+        for device_id = maxId, maxId do
+            code = code .. '.."##' .. device_id .. '##\\n"..list_indication(' .. device_id .. ')'
         end
     end
     local lfsv = net.dostring_in('export', code)
     local indications = {}
-    local key, content = nil, ""
+    local device_id, key, content = nil, nil, ""
     for line in lfsv:gmatch("[^\n]+") do
-        if line == "-----------------------------------------" then
+        if line:match("^##(%d+)##$") then
+            device_id = tonumber(line:match("^##(%d+)##$"))
+            indications[device_id] = {}
+        elseif line == "-----------------------------------------" then
             if key then
-                indications[key] = content:sub(1, -2)
+                indications[device_id][key] = content:sub(1, -2)
             end
             key, content = nil, ""
         elseif not key then
@@ -171,43 +179,99 @@ function OpsdcsCrew:getIndications(maxId)
         end
     end
     if key then
-        indications[key] = content:sub(1, -2)
+        indications[device_id][key] = content:sub(1, -2)
     end
     return indications
+end
+
+--- converts ranges string to list
+--- @param string str @ranges string (e.g. "1-3 5 7-12 18 33")
+function OpsdcsCrew:rangesToList(str)
+    local ids = {}
+    for range in str:gmatch("%S+") do
+        local from, to = range:match("(%d+)-(%d+)")
+        if not (from and to) then
+            table.insert(ids, tonumber(range))
+        else
+            for j = tonumber(from), tonumber(to) do
+                table.insert(ids, j)
+            end
+        end
+    end
+    return ids
 end
 
 --- diy condition construct
 --- @param table cond
 function OpsdcsCrew:evaluateCond(cond)
+    local delta = 0.001
     local i, result, highlights = 1, true, {}
     local check = {
-        arg_eq = function(a, b) return self.args[a] == b end,
-        arg_neq = function(a, b) return self.args[a] ~= b end,
-        arg_gt = function(a, b) return self.args[a] > b end,
-        arg_lt = function(a, b) return self.args[a] < b end,
-        arg_between = function(a, b, c) return self.args[a] >= b and self.args[a] <= c end,
-        param_eq = function(a, b) return self.params[a] == b end,
-        param_neq = function(a, b) return self.params[a] ~= b end,
-        param_gt = function(a, b) return self.params[a] > b end,
-        param_lt = function(a, b) return self.params[a] < b end,
-        param_between = function(a, b, c) return self.params[a] >= b and self.params[a] <= c end,
-        ind_eq = function(a, b) return self.indications[a] == b end,
-        ind_neq = function(a, b) return self.indications[a] ~= b end,
-        ind_gt = function(a, b) return tonumber(self.indications[a]) > b end,
-        ind_lt = function(a, b) return tonumber(self.indications[a]) < b end,
-        ind_between = function(a, b, c) return tonumber(self.indications[a]) >= b and tonumber(self.indications[a]) <= c end,
+        skip = { 0, function() return true end },
+        arg_eq = { 2, function(a, b) return math.abs(self.args[a] - b) < delta end },
+        arg_neq = { 2, function(a, b) return math.abs(self.args[a] - b) >= delta end },
+        arg_gt = { 2, function(a, b) return self.args[a] > b end },
+        arg_lt = { 2, function(a, b) return self.args[a] < b end },
+        arg_between = { 3, function(a, b, c) return self.args[a] >= b and self.args[a] <= c end },
+        param_eq = { 2, function(a, b) return self.params[a] == b end },
+        param_neq = { 2, function(a, b) return self.params[a] ~= b end },
+        param_gt = { 2, function(a, b) return self.params[a] > b end },
+        param_lt = { 2, function(a, b) return self.params[a] < b end },
+        param_between = { 3, function(a, b, c) return self.params[a] >= b and self.params[a] <= c end },
+        ind_eq = { 3, function(a, b, c) return self.indications[a][b] == c end },
+        ind_neq = { 3, function(a, b, c) return self.indications[a][b] ~= c end },
+        ind_gt = { 3, function(a, b, c)
+            local x = tonumber(self.indications[a][b])
+            if x == nil then return false end
+            return x > c
+        end },
+        ind_lt = { 3, function(a, b, c)
+            local x = tonumber(self.indications[a][b])
+            if x == nil then return false end
+            return x < c
+        end },
+        ind_between = { 4, function(a, b, c, d)
+            local x = tonumber(self.indications[a][b])
+            if x == nil then return false end
+            return x >= c and x <= d
+        end },
+        any_ind_eq = { 2, function(a, b)
+            for _, v in pairs(self.indications[a]) do
+                if v == b then return true end
+            end
+            return false
+        end },
+        no_ind_eq = { 2, function(a, b)
+            for _, v in pairs(self.indications[a]) do
+                if v == b then return false end
+            end
+            return true
+        end },
+        arg_range_between = { 3, function(a, b, c)
+            local ids = self:rangesToList(a)
+            local args = self:getCockpitArgs(nil, ids)
+            for _, v in pairs(args) do
+                if v < b or v > c then return false end
+            end
+            return true
+        end }
     }
     while i <= #cond do
         local op = cond[i]
-        if op:sub(1, 4) == "arg_" then table.insert(highlights, cond[i + 1]) end
+        if op == "arg_eq" or op == "arg_neq" or op == "arg_gt" or op == "arg_lt" or op == "arg_between" then table.insert(highlights, cond[i + 1]) end
         if check[op] then
-            if op:find("between") then
-                result = result and check[op](cond[i + 1], cond[i + 2], cond[i + 3])
-                i = i + 4
+            if check[op][1] == 0 then
+                result = result and check[op][2]()
+            elseif check[op][1] == 1 then
+                result = result and check[op][2](cond[i + 1])
+            elseif check[op][1] == 2 then
+                result = result and check[op][2](cond[i + 1], cond[i + 2])
+            elseif check[op][1] == 3 then
+                result = result and check[op][2](cond[i + 1], cond[i + 2], cond[i + 3])
             else
-                result = result and check[op](cond[i + 1], cond[i + 2])
-                i = i + 3
+                result = result and check[op][2](cond[i + 1], cond[i + 2], cond[i + 3], cond[i + 4])
             end
+            i = i + check[op][1] + 1
         else
             self:log("Unknown condition: " .. op)
             i = i + 1
@@ -237,8 +301,8 @@ function OpsdcsCrew:update()
         -- needPrevious=true - previous check must be true first
         if condition.needPrevious then condIsTrue = condIsTrue and previousWasTrue end
 
-        -- needAllPrevious=true - all previous checks must be true first
-        if condition.needAllPrevious then condIsTrue = condIsTrue and allCondsAreTrue end
+        -- needAllPrevious=true - all previous checks must be true first @todo
+        if state.needAllPrevious or condition.needAllPrevious then condIsTrue = condIsTrue and allCondsAreTrue end
 
         -- duration=3 - check if condition was true for 3 seconds
         condition.trueSince = condIsTrue and (condition.trueSince or timer.getTime()) or nil
@@ -359,8 +423,8 @@ end
 --- shows f10 menu entries (one per procedure)
 function OpsdcsCrew:showMainMenu()
     self:clearMenu()
-    for name, procedure in pairs(self[self.typeName].procedures) do
-        self.menu[name] = missionCommands.addCommandForGroup(self.groupId, procedure.text, nil, OpsdcsCrew.onProcedure, self, name, procedure)
+    for _, procedure in ipairs(self[self.typeName].procedures) do
+        self.menu[procedure.name] = missionCommands.addCommandForGroup(self.groupId, procedure.name, nil, OpsdcsCrew.onProcedure, self, procedure)
     end
     self.menu["whats_this"] = missionCommands.addCommandForGroup(self.groupId, "Cockpit Tutor", nil, OpsdcsCrew.onWhatsThis, self)
     if self.debug then
@@ -387,7 +451,7 @@ function OpsdcsCrew:argsDebugLoop()
     for i = 1, self.argsDebugMaxId do
         local last, current = self.argsDebugLastArgs[i], currentArgs[i]
         self.argsDebugLastArgs[i] = current
-        if math.abs(tonumber(last) - tonumber(current)) > maxDelta then
+        if math.abs(tonumber(last) - tonumber(current)) > maxDelta and self[self.typeName].excludeDebugArgs[i] == nil then
             local argName = i
             if self[self.typeName].argsById[i] then
                 argName = self[self.typeName].argsById[i]
@@ -440,12 +504,12 @@ end
 --- f10 menu procedure
 --- @param string name
 --- @param table procedure
-function OpsdcsCrew:onProcedure(name, procedure)
+function OpsdcsCrew:onProcedure(procedure)
     self:clearHighlights()
     self:clearMenu()
     self:clearStateVars()
-    self.menu["abort-" .. name] = missionCommands.addCommandForGroup(self.groupId, "Abort " .. procedure.text, nil, OpsdcsCrew.onAbort, self)
-    self.state = self[self.typeName].procedures[name].start_state
+    self.menu["abort-" .. procedure.name] = missionCommands.addCommandForGroup(self.groupId, "Abort " .. procedure.name, nil, OpsdcsCrew.onAbort, self)
+    self.state = procedure.start_state
     self.isRunning = true
     self:update()
 end
