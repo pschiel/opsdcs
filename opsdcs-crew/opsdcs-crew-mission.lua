@@ -27,6 +27,7 @@ OpsdcsCrew = {
     basedir = OpsdcsCrewBasedir or "",
     supportedTypes = { "CH-47Fbl1", "F-16C_50", "OH58D", "SA342L", "UH-1H" }, -- supported types (@todo: autocheck, variants)
     argsDebugMaxId = 4000,
+    sndPlayUntil = nil,
 }
 
 --- tries to load the plugin for the player unit type
@@ -42,6 +43,14 @@ function OpsdcsCrew:start()
     end
     if not isSupported then return end
 
+    self:loadPluginData()
+    self:log("opsdcs-crew start: " .. self.typeName .. " (" .. (self.basedir == "" and "mission" or "hook") .. ")")
+    self:setupWaitForUserFlags()
+    self:showMainMenu()
+end
+
+-- loads/resets plugin data and states
+function OpsdcsCrew:loadPluginData()
     -- inject script (relative to mission or full path via hook and/or basedir)
     local filename = self.basedir .. "aircraft/opsdcs-crew-" .. self.typeName .. ".lua"
     if self.basedir == "" then
@@ -49,9 +58,6 @@ function OpsdcsCrew:start()
     else
         net.dostring_in('mission', 'a_do_script("dofile([[' .. filename .. ']])")')
     end
-    self:log("opsdcs-crew start: " .. self.typeName .. " (" .. (self.basedir == "" and "mission" or "hook") .. ")")
-    self:setupWaitForUserFlags()
-    self:showMainMenu()
 end
 
 --- stops script
@@ -72,13 +78,24 @@ end
 
 --- plays sound (from inside miz, or absolute path when using basedir)
 --- @param string filename
-function OpsdcsCrew:playSound(filename)
+--- @param number duration
+function OpsdcsCrew:playSound(filename, duration)
     if self.basedir == "" then
         trigger.action.outSound(filename)
     else
         local code = 'require("sound").playSound("' .. self.basedir .. filename .. '")'
         net.dostring_in("gui", code)
     end
+    self.sndPlayUntil = timer.getTime() + (duration or 1)
+    self.sndLastPlayed = timer.getTime()
+end
+
+-- plays sound from text/seat/soundpack (sounds/typename/seat/soundpack/state/text.ogg)
+function OpsdcsCrew:playSoundFromText(text, duration, seat)
+    seat = seat or "cp"
+    local filename = "sounds/" .. self.typeName .. "/" .. seat .. "/" .. self[self.typeName].soundpack[seat] .. "/" .. self.state .. "/"
+    filename = filename .. text:gsub("[/>:]", "-") .. ".ogg"
+    self:playSound(filename, duration)
 end
 
 --- sets up user input (space and backspace)
@@ -203,6 +220,8 @@ end
 
 --- diy condition construct
 --- @param table cond
+--- @return boolean @condition true/false
+--- @return table @args for highlights
 function OpsdcsCrew:evaluateCond(cond)
     local delta = 0.001
     local i, result, highlights = 1, true, {}
@@ -284,15 +303,25 @@ end
 function OpsdcsCrew:update()
     if not self.isRunning then return end
 
+    local timeDelta = self.options.timeDelta
+    if self.sndPlayUntil and timer.getTime() > self.sndPlayUntil then
+        self.sndPlayUntil = nil
+    end
+
     self.params = self:getCockpitParams()
     self.args = self:getCockpitArgs()
     self.indications = self:getIndications()
     local state = self[self.typeName].states[self.state]
-    local timeDelta = self.options.timeDelta
     local lines = { state.text }
     local allCondsAreTrue = true
     local previousWasTrue = true
     local foundUnchecked = nil
+
+    -- play state sound
+    if state.sndPlayed == nil and state.snd ~= nil then
+        self:playSoundFromText(state.text, state.snd, state.seat)
+        state.sndPlayed = true
+    end
 
     -- check conditions
     for i, condition in ipairs(state.conditions or {}) do
@@ -310,24 +339,57 @@ function OpsdcsCrew:update()
             condIsTrue = condition.trueSince ~= nil and timer.getTime() - condition.trueSince >= condition.duration
         end
 
-        -- onlyOnce=true - condition must be true only once
+        -- onlyOnce=true - condition must be true only once (no uncheck once checked)
         if condition.onlyOnce then
             condition.wasTrueOnce = condition.wasTrueOnce or condIsTrue
             condIsTrue = condition.wasTrueOnce
         end
 
+        -- condition sound finished playing
+        if condition.sndPlayUntil and timer.getTime() > condition.sndPlayUntil then
+            condition.sndPlayed = true
+        end
+
+        -- condition sound not played yet - mark false
+        if condition.snd and condition.sndPlayed == nil then
+            condIsTrue = false
+            -- play when nothing else playing and all other checked so far
+            if condition.sndPlayUntil == nil and self.sndPlayUntil == nil and allCondsAreTrue then
+                self:playSoundFromText(condition.text, condition.snd, condition.seat)
+                condition.sndPlayUntil = timer.getTime() + condition.snd
+            end
+        end
+
+        -- play check if not played yet and everything checked until here
+        if condIsTrue and condition.check and allCondsAreTrue and condition.checkPlayed == nil and self.sndPlayUntil == nil then
+            local n = math.random(1, 8)
+            self:playSound("sounds/" .. self.typeName .. "/plt/" .. self[self.typeName].soundpack.plt .. "/check" .. n .. ".ogg", 1)
+            condition.checkPlayed = true
+        end
+
+        -- long pause, repeat
+        if not condIsTrue and condition.snd and self.sndLastPlayed and timer.getTime() - self.sndLastPlayed > 30 then
+            condition.sndPlayed, condition.sndPlayUntil = nil, nil
+            local n = math.random(1, 5)
+            self:playSound("sounds/" .. self.typeName .. "/cp/" .. self[self.typeName].soundpack.cp .. "/wait" .. n .. ".ogg", 2)
+        end
+    
         -- condition true: create checked item, clear highlights
         if condIsTrue then
-            table.insert(lines, "[X]  " .. condition.text)
+            if not condition.hide then
+                table.insert(lines, "[X]  " .. condition.text)
+            end
             if self.firstUnchecked == i then
                 self.firstUnchecked = nil
                 self:clearHighlights()
             end
         end
 
-        -- condition false: create unchecked item, show highlights
+        -- condition false: create unchecked item, show highlights when first unchecked changed
         if not condIsTrue then
-            table.insert(lines, "[  ]  " .. condition.text)
+            if not condition.hide then
+                table.insert(lines, "[  ]  " .. condition.text)
+            end
             if not foundUnchecked then
                 foundUnchecked = i
                 if foundUnchecked ~= self.firstUnchecked then
@@ -369,9 +431,14 @@ function OpsdcsCrew:update()
     if self.options.showChecklist then
         local text = lines[1] .. (#lines > 1 and "\n\n" or "")
         text = text .. table.concat(lines, "\n", 2)
+        -- if self.sndPlayUntil then
+        --     text = text .. "\nself sndPlayUntil: " .. (self.sndPlayUntil - timer.getTime())
+        -- else
+        --     text = text .. "\nself sndPlayUntil: nil"
+        -- end
         trigger.action.outText(text, 3, true)
     end
-        
+
     timer.scheduleFunction(self.update, self, timer.getTime() + timeDelta)
 end
 
@@ -407,18 +474,6 @@ function OpsdcsCrew:clearHighlights()
     net.dostring_in("mission", code)
 end
 
---- clears temporary state vars
-function OpsdcsCrew:clearStateVars()
-    for _, state in pairs(self[self.typeName].states) do
-        state.allCondsAreTrueSince = nil
-        if state.conditions ~= nil then
-            for _, condition in pairs(state.conditions) do
-                condition.trueSince = nil
-                condition.wasTrueOnce = nil
-            end
-        end
-    end
-end
 
 --- shows f10 menu entries (one per procedure)
 function OpsdcsCrew:showMainMenu()
@@ -507,10 +562,11 @@ end
 function OpsdcsCrew:onProcedure(procedure)
     self:clearHighlights()
     self:clearMenu()
-    self:clearStateVars()
+    self:loadPluginData()
     self.menu["abort-" .. procedure.name] = missionCommands.addCommandForGroup(self.groupId, "Abort " .. procedure.name, nil, OpsdcsCrew.onAbort, self)
     self.state = procedure.start_state
     self.isRunning = true
+    self.sndLastPlayed = nil
     self:update()
 end
 
