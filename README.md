@@ -8,6 +8,8 @@
 
 [opsdcs-api](opsdcs-api) - JSON API hook for DCS (DWE compatible, no desanitizing required)
 
+[opsdcs-cargo](opsdcs-cargo) - Cargo statics for slingloading and spawn into units
+
 [opsdcs-crew](opsdcs-crew) - Virtual Crew, Trainer and Interactive Checklists (WIP)
 
 [opsdcs-daumenkino](opsdcs-daumenkino) - Daumenkino Video Player
