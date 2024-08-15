@@ -19,6 +19,7 @@ declare_plugin(self_ID, {
     developerName = 'ops',
 	info = _('example aircraftmod lorem ipsum'),
     encyclopedia_path = current_mod_path .. '/Encyclopedia',
+    load_immediately = true,
     binaries = binaries,
     Skins = {
         {
