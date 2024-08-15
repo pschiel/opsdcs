@@ -1,20 +1,24 @@
 -- OpsdcsCrew - Virtual Crew (hook)
+--
+-- Auto-injects mission script into running missions.
 
-OpsdcsCrewBasedir = OpsdcsCrewBasedir or lfs.writedir() .. "Scripts/opsdcs-crew/"
+OpsdcsCrewBasedir = OpsdcsCrewBasedir or (lfs.writedir() .. "Scripts/opsdcs-crew/")
 
 OpsdcsCrewHook = {
     logging = true,
     autoInjectMissionPatterns = {
+        -- see http://lua-users.org/wiki/PatternsTutorial
         ".*",
     }
 }
 
--- log helper
+--- log helper, writes to dcs.log
+--- @param message string
 function OpsdcsCrewHook:log(message)
     if self.logging then log.info("[opsdcs-crew] " .. message) end
 end
 
--- mission loaded
+--- mission load end callback, injects script into mission
 function OpsdcsCrewHook:onMissionLoadEnd()
     local missionName = DCS.getMissionName()
     self:log("onMissionLoadEnd: " .. missionName)
@@ -25,10 +29,9 @@ function OpsdcsCrewHook:onMissionLoadEnd()
             break
         end
     end
-    
 end
 
--- inject mission script
+--- inject mission script into MSE
 function OpsdcsCrewHook:injectScript()
     local code = 'a_do_script("'
         .. 'OpsdcsCrewBasedir=[[' .. OpsdcsCrewBasedir .. ']];OpsdcsCrewInject=true;'
