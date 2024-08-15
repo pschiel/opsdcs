@@ -9,15 +9,15 @@ local binaries = {}
 local useSFM = true
 
 declare_plugin(self_ID, {
-	installed = true,
-	dirName = current_mod_path,
-	displayName = _(self_ID),
-	shortName = _(self_ID),
+    installed = true,
+    dirName = current_mod_path,
+    displayName = _(self_ID),
+    shortName = _(self_ID),
     fileMenuName = _(self_ID),
-	version = '1.0.0',
-	state = 'installed',
+    version = '1.0.0',
+    state = 'installed',
     developerName = 'ops',
-	info = _('example aircraftmod lorem ipsum'),
+    info = _('example aircraftmod lorem ipsum'),
     encyclopedia_path = current_mod_path .. '/Encyclopedia',
     load_immediately = true,
     binaries = binaries,
