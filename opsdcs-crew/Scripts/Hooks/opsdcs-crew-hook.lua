@@ -2,7 +2,7 @@
 --
 -- Auto-injects mission script into running missions.
 
-OpsdcsCrewBasedir = OpsdcsCrewBasedir or (lfs.writedir() .. "Scripts/opsdcs-crew/")
+OpsdcsCrewBasedir = OpsdcsCrewBasedir or (lfs.writedir():gsub("\\", "/") .. "Scripts/opsdcs-crew/")
 
 OpsdcsCrewHook = {
     logging = true,
