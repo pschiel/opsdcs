@@ -17,6 +17,7 @@ local function add_cargo(params)
             file = params.ShapeNameDestr,    
         }
     end
+    
     -- icon on the map
     params.mapclasskey = params.mapclasskey or "P0091000352";
 
