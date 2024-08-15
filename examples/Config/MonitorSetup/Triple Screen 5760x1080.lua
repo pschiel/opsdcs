@@ -8,8 +8,8 @@ Viewports = {
           width = 1920,
           height = 1080,
           aspect = 1920/1080,
-		useAbsoluteFOV = false,
-		useAbsoluteAnglesShift = true,
+          useAbsoluteFOV = false,
+          useAbsoluteAnglesShift = true,
           viewDx = 0,
           viewDy = 0,
      },
@@ -19,8 +19,8 @@ Viewports = {
           width = 1920,
           height = 1080,
           aspect = 1920/1080,
-		useAbsoluteFOV = false,
-		useAbsoluteAnglesShift = true,
+          useAbsoluteFOV = false,
+          useAbsoluteAnglesShift = true,
           viewDx = 1.12,
           viewDy = 0,
      },
@@ -30,18 +30,18 @@ Viewports = {
           width = 1920,
           height = 1080,
           aspect = 1920/1080,
-		useAbsoluteFOV = false,
-		useAbsoluteAnglesShift = true,
+          useAbsoluteFOV = false,
+          useAbsoluteAnglesShift = true,
           viewDx = -1.12,
           viewDy = 0,
      }
 }
 
 GUI = {
-	x = 1920,
-	y = 0,
-	width = 1920,
-	height = 1080,
+    x = 1920,
+    y = 0,
+    width = 1920,
+    height = 1080,
 }
 
 UIMainView = GUI

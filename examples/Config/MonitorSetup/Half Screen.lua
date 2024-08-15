@@ -14,10 +14,10 @@ Viewports = {
 }
 
 GUI = {
-	x = 0,
-	y = 0,
-	width = screen.width/2,
-	height = screen.height,
+    x = 0,
+    y = 0,
+    width = screen.width/2,
+    height = screen.height,
 }
 
 UIMainView = GUI

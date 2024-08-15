@@ -1,56 +1,61 @@
-local me = nil
+---------------------------------------------------------------------------
+--- Example tech mod
+---
+--- see plugins-stubs.lua for available functions
+---------------------------------------------------------------------------
 
-declare_plugin('examplePlugin',
-{
-	installed = true,
-	dirName = current_mod_path,
-    -- binaries = {'examplePlugin.dll'}
+local self_ID = 'example-techmod'
+local binaries = {}
 
-	displayName = 'examplePlugin',
-	shortName = 'examplePlugin',
-    fileMenuName = 'examplePlugin',
-
-	version = '1.0.0',
-	state = 'installed',
-	developerName = 'ops',
-	info = 'examplePlugin',
-
+declare_plugin(self_ID, {
+    installed = true,
+    dirName = current_mod_path,
+    displayName = _(self_ID),
+    shortName = _(self_ID),
+    fileMenuName = _(self_ID),
+    version = '1.0.0',
+    state = 'installed',
+    developerName = 'ops',
+    info = _('example techmod lorem ipsum'),
+    encyclopedia_path = current_mod_path .. '/Encyclopedia',
+    load_immediately = true,
+    binaries = binaries,
     Skins = {
         {
-            name = 'examplePlugin',
-            dir = 'Theme',
+            name = _(self_ID),
+            dir = 'Skins/1'
         }
     },
-
+    Missions = {
+        {
+            name = _(self_ID),
+            dir = 'Missions'
+        }
+    },
+    LogBook = {
+        {
+            name = _(self_ID),
+            type = self_ID
+        }
+    },
+    InputProfiles = {
+        [self_ID] = current_mod_path .. '/Input'
+    },
     Options = {
         {
-            name = 'examplePlugin',
-            nameId = 'examplePlugin',
+            name = _(self_ID),
+            nameId = self_ID,
             dir = 'Options',
-            CLSID = '{examplePlugin}'
+            CLSID = '{' .. self_ID .. '-options}'
         }
-    },
-
-	callbacksME = {
-		addMenu = {
-			[1] = {
-				mainMenu = 'generator',
-				newMenu = 'henlo',
-				pos = 8,
-				callback = 'hellofunc',
-			}
-		},
-		init = function(meAPI, dirName)
-			me = meAPI -- available functions see me_managerModulesME.lua
-		end,
-		hellofunc = function() end
-	},
-	mainMenuME = true,
+    }
 })
 
-mount_vfs_model_path(current_mod_path .. ' /Shapes')
-mount_vfs_texture_path(current_mod_path .. '/Textures')
-mount_vfs_liveries_path(current_mod_path .. '/Liveries')
--- Sounds directory gets automatically mounted
+-- resource paths
+mount_vfs_model_path(current_mod_path .. "/Shapes")
+mount_vfs_texture_path(current_mod_path .. "/Textures")
+mount_vfs_liveries_path(current_mod_path .. "/Liveries")
+
+-- ...
 
 plugin_done()

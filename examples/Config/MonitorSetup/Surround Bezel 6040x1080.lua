@@ -14,10 +14,10 @@ Viewports = {
 }
 
 GUI = {
-	x = 1920+140,
-	y = 0,
-	width = 1920,
-	height = 1080,
+    x = 1920+140,
+    y = 0,
+    width = 1920,
+    height = 1080,
 }
 
 UIMainView = GUI
