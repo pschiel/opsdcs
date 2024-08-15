@@ -12,7 +12,7 @@ local function add_cargo(params)
     }
     -- destruction shape
     if params.ShapeNameDestr then
-        params.shape_table_data[#params.shape_table_data + 1] = {
+        params.shape_table_data[2] = {
             name = params.ShapeName,
             file = params.ShapeNameDestr,    
         }
