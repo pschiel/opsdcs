@@ -1,10 +1,12 @@
 ARMORED < 11t
 Name                             Weight   Cargo
 --------------------------------------------------
-[CH] Wiesel 1A4 AWC               2800    [x]
-[CH] Oshkosh L-ATV (M2)           6400    [x]
-[CH] Oshkosh L-ATV (Mk19)         6400    [ ]
 [CH] Eagle IV MRAP                8000    [x]
+[CH] Oshkosh L-ATV (M2)           6400    [x]
+[CH] Oshkosh L-ATV (Mk19)         6400    [x]
+[CH] Oshkosh M-ATV MRAP (M2)     11000    [x]
+[CH] Oshkosh M-ATV MRAP (Mk19)   11000    [x]
+[CH] Wiesel 1A4 AWC               2800    [x]
 APC M2A1 Halftrack                9300    [ ]
 APC Sd.Kfz.251 Halftrack          7800    [ ]
 ATG HMMWV                         5000    [ ]
@@ -20,20 +22,18 @@ Scout HL with KORD 12.7mm         7500    [ ]
 Scout Puma AC                     8500    [ ]
 Tk Tetrach                        7600    [ ]
 Tractor M4 High Speed             8500    [ ]
-[CH] Oshkosh M-ATV MRAP (M2)     11000    [ ]
-[CH] Oshkosh M-ATV MRAP (Mk19)   11000    [ ]
 
 
 ARTILLERY < 11t
 Name                            Time   Min   Max   Weight   Cargo   Turns   Notes
 -------------------------------------------------------------------------------------
+L118 Light Artillery               ?   500   17k    2100    [x]     [-]     broken
+[CH] M777 LTH M795                6s     -   23k    4100    [x]     [-]
+[CH] M777 LTH M982 Exc           28s   20k   40k    4200    [x]     [-]
 Mortar 2B11 120mm                 6s    30    7k     200    [ ]     [x]
 FH Pak 40 75mm                    5s          3k    1500    [ ]     [x]
 FH LeFH/18 105mm                  9s     -   10k    1900    [ ]     [x]
 FH M2A1 105mm                     6s     -   11k    2200    [ ]     [x]
-L118 Light Artillery               ?   500   17k    2100    [x]     [-]     broken
-[CH] M777 LTH M795                6s     -   23k    4100    [x]     [-]
-[CH] M777 LTH M982 Exc           28s   20k   40k    4200    [ ]     [-]
 SPM 2S9 Nona 120mm M              9s    30    7k    9000    [ ]     [x]
 SPH Sd.Kfz.124 Wespe 105mm       22s     -   10k   11000    [ ]     [x]
 MLRS HL with B8M1 80mm           32s     -    5k   11000    [ ]     [x]
