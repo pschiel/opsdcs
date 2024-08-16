@@ -1,4 +1,4 @@
-ARMORED < 12t
+ARMORED < 11t
 Name                             Weight   Static
 --------------------------------------------------
 [CH] Wiesel 1A4 AWC               2800    [x]
