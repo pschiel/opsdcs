@@ -17,49 +17,49 @@ declare_plugin(self_ID, {
     state = 'installed',
     developerName = 'ops',
     info = _('example aircraftmod lorem ipsum'),
-    encyclopedia_path = current_mod_path .. '/Encyclopedia',
+    --encyclopedia_path = current_mod_path .. '/Encyclopedia',
     load_immediately = true,
     binaries = binaries,
-    Skins = {
-        {
-            name = _(self_ID),
-            dir = 'Skins/1'
-        }
-    },
-    Missions = {
-        {
-            name = _(self_ID),
-            dir = 'Missions'
-        }
-    },
-    LogBook = {
-        {
-            name = _(self_ID),
-            type = self_ID
-        }
-    },
-    InputProfiles = {
-        [self_ID] = current_mod_path .. '/Input'
-    },
-    Options = {
-        {
-            name = _(self_ID),
-            nameId = self_ID,
-            dir = 'Options',
-            CLSID = '{' .. self_ID .. '-options}'
-        }
-    }
+    -- Skins = {
+    --     {
+    --         name = _(self_ID),
+    --         dir = 'Skins/1'
+    --     }
+    -- },
+    -- Missions = {
+    --     {
+    --         name = _(self_ID),
+    --         dir = 'Missions'
+    --     }
+    -- },
+    -- LogBook = {
+    --     {
+    --         name = _(self_ID),
+    --         type = self_ID
+    --     }
+    -- },
+    -- InputProfiles = {
+    --     [self_ID] = current_mod_path .. '/Input'
+    -- },
+    -- Options = {
+    --     {
+    --         name = _(self_ID),
+    --         nameId = self_ID,
+    --         dir = 'Options',
+    --         CLSID = '{' .. self_ID .. '-options}'
+    --     }
+    -- }
 })
 
 -- resource paths
-mount_vfs_model_path(current_mod_path .. "/Shapes")
-mount_vfs_model_path(current_mod_path .. "/Cockpit/Shapes")
-mount_vfs_texture_path(current_mod_path .. "/Textures")
-mount_vfs_texture_path(current_mod_path .. "/Cockpit/Textures")
-mount_vfs_texture_path(current_mod_path .. "/Skins/1/ME")
-mount_vfs_liveries_path(current_mod_path .. "/Liveries")
-mount_vfs_sound_path(current_mod_path .. "/Sounds")
-mount_vfs_animations_path(current_mod_path .. "/Animations")
+-- mount_vfs_model_path(current_mod_path .. "/Shapes")
+-- mount_vfs_model_path(current_mod_path .. "/Cockpit/Shapes")
+-- mount_vfs_texture_path(current_mod_path .. "/Textures")
+-- mount_vfs_texture_path(current_mod_path .. "/Cockpit/Textures")
+-- mount_vfs_texture_path(current_mod_path .. "/Skins/1/ME")
+-- mount_vfs_liveries_path(current_mod_path .. "/Liveries")
+-- mount_vfs_sound_path(current_mod_path .. "/Sounds")
+-- mount_vfs_animations_path(current_mod_path .. "/Animations")
 
 -- aircraft data
 dofile(current_mod_path .. "/" .. self_ID .. ".lua")
