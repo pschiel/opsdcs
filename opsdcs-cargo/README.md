@@ -81,5 +81,8 @@ Copy folder into `Saved Games/DCS`
     INFANTRY
     Name
     ---------------------
+    M2 Personnel Salute
+    M2 Personnel Directives
+    M2 Personnel Crouch Worker
     Paratrooper RPG-16
     Paratrooper AKS-74
