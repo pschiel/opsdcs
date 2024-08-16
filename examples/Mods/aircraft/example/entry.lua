@@ -77,8 +77,8 @@ local FM = {
     user_options = self_ID,
 
     -- center of mass and inertia
-    center_of_mass = { 0, 0, 0 },
-    moment_of_inertia = { 100, 1000, 1234, 100 },
+    center_of_mass = { -0.172, -0.6, 0 },
+	moment_of_inertia = { 38912, 254758, 223845, -705 }, -- Ix,Iy,Iz,Ixy
 
     -- suspension (gears)
     suspension = suspension,
