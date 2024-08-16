@@ -11,8 +11,8 @@ OpsdcsCrew = {
         commandAdvance = 0, -- advance on user command @todo
         autoStartProcedures = true, -- autostart procedures when condition is met @todo
         showHighlights = true, -- shows highlights for next check
+        debug = true, -- debug setting
     },
-    debug = true, -- debug setting
     typeName = nil, -- player unit type
     groupId = nil, -- player group id
     menu = {}, -- stores f10 menu items
@@ -71,7 +71,7 @@ end
 --- ingame debug log helper
 --- @param string msg
 function OpsdcsCrew:log(msg)
-    if self.debug then
+    if self.options.debug then
         trigger.action.outText(msg, 5)
     end
 end
@@ -482,7 +482,7 @@ function OpsdcsCrew:showMainMenu()
         self.menu[procedure.name] = missionCommands.addCommandForGroup(self.groupId, procedure.name, nil, OpsdcsCrew.onProcedure, self, procedure)
     end
     self.menu["whats_this"] = missionCommands.addCommandForGroup(self.groupId, "Cockpit Tutor", nil, OpsdcsCrew.onWhatsThis, self)
-    if self.debug then
+    if self.options.debug then
         self.menu["args_debug"] = missionCommands.addCommandForGroup(self.groupId, "Toggle Arguments Debug", nil, OpsdcsCrew.onArgsDebug, self)
     end
 end

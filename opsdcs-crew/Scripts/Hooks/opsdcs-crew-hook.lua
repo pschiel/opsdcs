@@ -1,4 +1,4 @@
--- OpsdcsCrew - Virtual Crew (hook)
+-- opsdcs-crew - Virtual Crew (hook)
 --
 -- Auto-injects mission script into running missions.
 

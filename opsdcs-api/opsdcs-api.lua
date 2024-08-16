@@ -1,7 +1,4 @@
--- OpsdcsApi - simple and lightweight JSON API for DCS
-
--- debug
---pcall(function() package.cpath = package.cpath .. ";C:/Users/ops/.vscode/extensions/tangzx.emmylua-0.6.18/debugger/emmy/windows/x64/?.dll"; local dbg = require("emmy_core"); dbg.tcpConnect("localhost", 9966) end)
+-- opsdcs-api - simple and lightweight JSON API for DCS
 
 OpsdcsApi = { host = "0.0.0.0", port = DCS ~= nil and 31481 or 31482, logging = true }
 
