@@ -1,6 +1,6 @@
 --- Adds a slingable cargo object
 --- @param params table @unit parameters
-local function add_cargo(params)
+function add_cargo(params)
     -- shape table data
     params.shape_table_data = {
         {
@@ -23,7 +23,7 @@ local function add_cargo(params)
 
     -- attribute and category for cargo
     params.attribute = params.attribute or { "Cargos" }
-    params.category = pararms.category or "Cargo"
+    params.category = params.category or "Cargo"
     params.couldCargo = params.couldCargo or true
 
     -- misc params
