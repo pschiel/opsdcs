@@ -1,3 +1,30 @@
+ARMORED
+
+Name                            Weight   Static
+-------------------------------------------------
+[CH] Wiesel 1A4 AWC              2800    [x]
+[CH] Oshkosh L-ATV (M2)          6400    [x]
+[CH] Oshkosh L-ATV (Mk19)        6400    [ ]
+[CH] Eagle IV MRAP               8000    [x]
+APC M2A1 Halftrack               9300    [ ]
+APC Sd.Kfz.251 Halftrack         7800    [ ]
+ATG HMMWV                        5000    [ ]
+Car Daimler Armored              7600    [ ]
+Scout M8 Greyhound AC            7800    [ ]
+Scout BDRM-2                     7000    [ ]
+Scout Cobra                      4800    [ ]
+Scout HMMWV                      4600    [ ]
+Scout LC with DSHK 12.7mm        7500    [ ]
+Scout LC with KORD 12.7mm        7500    [ ]
+Scout HL with DSHK 12.7mm        7500    [ ]
+Scout HL with KORD 12.7mm        7500    [ ]
+Scout Puma AC                    8500    [ ]
+Tk Tetrach                       7600    [ ]
+Tractor M4 High Speed            8500    [ ]
+[CH] Oshkosh M-ATV MRAP (M2)    11000    [ ]
+[CH] Oshkosh M-ATV MRAP (Mk19)  11000    [ ]
+
+
 ARTILLERY
 
 Name                            Time   Min   Max   Weight   Static
@@ -27,29 +54,3 @@ MLRS BM-21 Grad 122mm           170s    5k   19k   13000
 MLRS M270 227mm                 170s   10k   32k   25000
 [CH] PzH 2000 SPG M1711           9s    50   40k   57000
 [CH] PzH 2000 SPG M982 Exc       14s   20k   50k   57000
-
-ARMORED
-
-Name                            Weight   Static
--------------------------------------------------
-[CH] Wiesel 1A4 AWC              2800    [x]
-[CH] Oshkosh L-ATV (M2)          6400    [x]
-[CH] Oshkosh L-ATV (Mk19)        6400    [ ]
-[CH] Eagle IV MRAP               8000    [x]
-APC M2A1 Halftrack               9300    [ ]
-APC Sd.Kfz.251 Halftrack         7800    [ ]
-ATG HMMWV                        5000    [ ]
-Car Daimler Armored              7600    [ ]
-Scout M8 Greyhound AC            7800    [ ]
-Scout BDRM-2                     7000    [ ]
-Scout Cobra                      4800    [ ]
-Scout HMMWV                      4600    [ ]
-Scout LC with DSHK 12.7mm        7500    [ ]
-Scout LC with KORD 12.7mm        7500    [ ]
-Scout HL with DSHK 12.7mm        7500    [ ]
-Scout HL with KORD 12.7mm        7500    [ ]
-Scout Puma AC                    8500    [ ]
-Tk Tetrach                       7600    [ ]
-Tractor M4 High Speed            8500    [ ]
-[CH] Oshkosh M-ATV MRAP (M2)    11000    [ ]
-[CH] Oshkosh M-ATV MRAP (Mk19)  11000    [ ]
