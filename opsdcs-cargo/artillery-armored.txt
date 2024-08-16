@@ -1,59 +1,62 @@
 ARMORED < 12t
-Name                            Weight   Static
--------------------------------------------------
-[CH] Wiesel 1A4 AWC              2800    [x]
-[CH] Oshkosh L-ATV (M2)          6400    [x]
-[CH] Oshkosh L-ATV (Mk19)        6400    [ ]
-[CH] Eagle IV MRAP               8000    [x]
-APC M2A1 Halftrack               9300    [ ]
-APC Sd.Kfz.251 Halftrack         7800    [ ]
-ATG HMMWV                        5000    [ ]
-Car Daimler Armored              7600    [ ]
-Scout M8 Greyhound AC            7800    [ ]
-Scout BDRM-2                     7000    [ ]
-Scout Cobra                      4800    [ ]
-Scout HMMWV                      4600    [ ]
-Scout LC with DSHK 12.7mm        7500    [ ]
-Scout LC with KORD 12.7mm        7500    [ ]
-Scout HL with DSHK 12.7mm        7500    [ ]
-Scout HL with KORD 12.7mm        7500    [ ]
-Scout Puma AC                    8500    [ ]
-Tk Tetrach                       7600    [ ]
-Tractor M4 High Speed            8500    [ ]
-[CH] Oshkosh M-ATV MRAP (M2)    11000    [ ]
-[CH] Oshkosh M-ATV MRAP (Mk19)  11000    [ ]
+Name                             Weight   Static
+--------------------------------------------------
+[CH] Wiesel 1A4 AWC               2800    [x]
+[CH] Oshkosh L-ATV (M2)           6400    [x]
+[CH] Oshkosh L-ATV (Mk19)         6400    [ ]
+[CH] Eagle IV MRAP                8000    [x]
+APC M2A1 Halftrack                9300    [ ]
+APC Sd.Kfz.251 Halftrack          7800    [ ]
+ATG HMMWV                         5000    [ ]
+Car Daimler Armored               7600    [ ]
+Scout M8 Greyhound AC             7800    [ ]
+Scout BDRM-2                      7000    [ ]
+Scout Cobra                       4800    [ ]
+Scout HMMWV                       4600    [ ]
+Scout LC with DSHK 12.7mm         7500    [ ]
+Scout LC with KORD 12.7mm         7500    [ ]
+Scout HL with DSHK 12.7mm         7500    [ ]
+Scout HL with KORD 12.7mm         7500    [ ]
+Scout Puma AC                     8500    [ ]
+Tk Tetrach                        7600    [ ]
+Tractor M4 High Speed             8500    [ ]
+[CH] Oshkosh M-ATV MRAP (M2)     11000    [ ]
+[CH] Oshkosh M-ATV MRAP (Mk19)   11000    [ ]
 
 
 ARTILLERY < 11t
-Name                            Time   Min   Max   Weight   Static
---------------------------------------------------------------------
-Mortar 2B11 120mm                 6s    30    7k     200    [ ]
-FH Pak 40 75mm                    5s          3k    1500    [ ]
-FH LeFH/18 105mm                  9s     -   10k    1900    [ ]
-FH M2A1 105mm                     6s     -   11k    2200    [ ]
-L118 Light Artillery              ??   500   17k    2100    [x]    (is broken)
-[CH] M777 LTH M795                6s     -   23k    4100    [x]
-SPM 2S9 Nona 120mm M              9s    30    7k    9000    [ ]
-SPH Sd.Kfz.124 Wespe 105mm       22s     -   10k   11000    [ ]
-MLRS HL with B8M1 80mm           32s     -    5k   11000    [ ]
-MLRS LC with B8M1 80mm           32s     -    5k   11000    [ ]
+Name                            Time   Min   Max   Weight   Static   Turns   Notes
+-------------------------------------------------------------------------------------
+Mortar 2B11 120mm                 6s    30    7k     200    [ ]      [x]
+FH Pak 40 75mm                    5s          3k    1500    [ ]      [x]
+FH LeFH/18 105mm                  9s     -   10k    1900    [ ]      [x]
+FH M2A1 105mm                     6s     -   11k    2200    [ ]      [x]
+L118 Light Artillery               ?   500   17k    2100    [x]      [-]     broken
+[CH] M777 LTH M795                6s     -   23k    4100    [x]      [-]
+[CH] M777 LTH M982 Exc           28s   20k   40k    4200    [ ]      [-]
+SPM 2S9 Nona 120mm M              9s    30    7k    9000    [ ]      [x]
+SPH Sd.Kfz.124 Wespe 105mm       22s     -   10k   11000    [ ]      [x]
+MLRS HL with B8M1 80mm           32s     -    5k   11000    [ ]      [x]
+MLRS LC with B8M1 80mm           32s     -    5k   11000    [ ]      [x]
 
 
 ARTILLERY > 11t
-Name                            Time   Min   Max   Weight   Static
---------------------------------------------------------------------
-SPH 2S1 Gvozdika 122mm            7s    30   15k   15000
-SPH M109 Paladin 155mm            9s    30   22k   24000
-SPH 2S3 Akatsia 152mm             7s    30   23k   28000
-SPH Dana vz77 152mm               7s    30   19k   29000
-SPH 2S19 Msta 152mm               9s    30   23k   40000
-SPH T155 Firtina 155mm            9s     -   41k   47000
-SPH M12 GMC 155mm                20s     -   18k   27000
-PLZ-05                            9s    50   23k   35000
-MLRS 9A52 Smerch CM 300mm       180s   20k   70k   43000
-MLRS 9A52 Smerch HE 300mm       180s   20k   70k   43000
-MLRS 9K57 Uragan BM-27 220mm    170s   11k   35k   20000
-MLRS BM-21 Grad 122mm           170s    5k   19k   13000
-MLRS M270 227mm                 170s   10k   32k   25000
-[CH] PzH 2000 SPG M1711           9s    50   40k   57000
-[CH] PzH 2000 SPG M982 Exc       14s   20k   50k   57000
+Name                            Time   Min   Max   Weight   Static   Turns   Notes
+-----------------------------------------------------------------------------------
+SPH 2S1 Gvozdika 122mm            7s    30   15k   15000             [x]
+SPH M109 Paladin 155mm            9s    30   22k   24000             [x]
+SPH 2S3 Akatsia 152mm             7s    30   23k   28000             [x]
+SPH Dana vz77 152mm               7s    30   19k   29000             [x]
+SPH 2S19 Msta 152mm               9s    30   23k   40000             [x]
+SPH T155 Firtina 155mm            9s     -   41k   47000             [x]
+SPH M12 GMC 155mm                20s     -   18k   27000             [x]
+PLZ-05                            9s    50   23k   35000             [x]
+MLRS 9A52 Smerch CM 300mm       180s   20k   70k   43000             [x]
+MLRS 9A52 Smerch HE 300mm       180s   20k   70k   43000             [x]
+MLRS 9K57 Uragan BM-27 220mm    180s   11k   35k   20000             [x]
+MLRS BM-21 Grad 122mm           180s    5k   19k   13000             [x]
+MLRS M270 227mm                 180s   10k   32k   25000             [x]
+[CH] PzH 2000 SPG M1711           9s    50   40k   57000             [x]
+[CH] PzH 2000 SPG M982 Exc       14s   20k   50k   57000             [x]
+[CH] M777 LTH M795 (MTVR)        50s   20k   40k   17000             [-]
+[CH] M777 LTH M982 Exc (MTVR)    77s   20k   40k   17000             [-]
