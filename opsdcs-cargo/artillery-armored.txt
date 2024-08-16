@@ -1,5 +1,4 @@
-ARMORED
-
+ARMORED < 12t
 Name                            Weight   Static
 -------------------------------------------------
 [CH] Wiesel 1A4 AWC              2800    [x]
@@ -25,8 +24,7 @@ Tractor M4 High Speed            8500    [ ]
 [CH] Oshkosh M-ATV MRAP (Mk19)  11000    [ ]
 
 
-ARTILLERY
-
+ARTILLERY < 11t
 Name                            Time   Min   Max   Weight   Static
 --------------------------------------------------------------------
 Mortar 2B11 120mm                 6s    30    7k     200    [ ]
@@ -36,9 +34,14 @@ FH M2A1 105mm                     6s     -   11k    2200    [ ]
 L118 Light Artillery              ??   500   17k    2100    [x]    (is broken)
 [CH] M777 LTH M795                6s     -   23k    4100    [x]
 SPM 2S9 Nona 120mm M              9s    30    7k    9000    [ ]
-SPH Sd.Kfz.124 Wespe 105mm       22s     -   10k   12000    [ ]
-MLRS HL with B8M1 80mm           32s     -    5k   12000    [ ]
-MLRS LC with B8M1 80mm           32s     -    5k   12000    [ ]
+SPH Sd.Kfz.124 Wespe 105mm       22s     -   10k   11000    [ ]
+MLRS HL with B8M1 80mm           32s     -    5k   11000    [ ]
+MLRS LC with B8M1 80mm           32s     -    5k   11000    [ ]
+
+
+ARTILLERY > 11t
+Name                            Time   Min   Max   Weight   Static
+--------------------------------------------------------------------
 SPH 2S1 Gvozdika 122mm            7s    30   15k   15000
 SPH M109 Paladin 155mm            9s    30   22k   24000
 SPH 2S3 Akatsia 152mm             7s    30   23k   28000
