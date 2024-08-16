@@ -1,5 +1,3 @@
--- todo: add all stuff from manual, add voices + voice checklist logic
-
 OpsdcsCrew["CH-47Fbl1"] = {
     soundpack = {
         plt = "default",

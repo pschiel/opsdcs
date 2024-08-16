@@ -6,7 +6,6 @@
 
 local self_ID = 'example-aircraftmod'
 local binaries = {}
-local useSFM = true
 
 declare_plugin(self_ID, {
     installed = true,
@@ -70,17 +69,30 @@ dofile(current_mod_path .. "/views.lua")
 make_view_settings(self_ID, ViewSettings, SnapViews)
 
 -- FM
-local FM = nil
-if not useSFM then
-    dofile(current_mod_path .. "/suspension.lua")
-    FM = {
-        [1] = self_ID,
-        [2] = "DLLName",
-        center_of_mass = { 0, 0, 0 },
-        moment_of_inertia = { 100, 1000, 1234, 100 },
-        suspension = suspension
-    }
-end
+local suspension = dofile(current_mod_path .. "/suspension.lua")
+local FM = {
+    -- modname and dll
+    [1] = "F-15C", --self_ID, -- "F-15C"
+    [2] = "F15", --"DLLName", -- "F15"
+    user_options = self_ID,
+
+    -- center of mass and inertia
+    center_of_mass = { 0, 0, 0 },
+    moment_of_inertia = { 100, 1000, 1234, 100 },
+
+    -- suspension (gears)
+    suspension = suspension,
+
+    -- oxygen
+    disable_built_in_oxygen_system	= true,
+
+    -- view shake
+    minor_shake_ampl = 0.21,
+    major_shake_ampl = 0.5,
+
+    -- debug
+    debugLine = "{M}:%1.3f {KCAS}:%4.1f {KEAS}:%4.1f {KTAS}:%4.1f {IAS}:%4.1f {AoA}:%2.1f {ny}:%2.1f {nx}:%1.2f {AoS}:%2.1f {mass}:%2.1f {Fy}:%2.1f {Fx}:%2.1f {wx}:%.1f {wy}:%.1f {wz}:%.1f {Vy}:%2.1f {dPsi}:%2.1f",
+}
 
 -- make flyable
 -- cockpit_path scripts load order

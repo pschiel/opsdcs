@@ -1,6 +1,8 @@
--- todo: voices + voice checklist logic
-
 OpsdcsCrew["OH58D"] = {
+    soundpack = {
+        plt = "default",
+        cp = "default",
+    },
     procedures = {
         ["coldstart"] = {
             text = "Cold Start",
@@ -17,16 +19,17 @@ OpsdcsCrew["OH58D"] = {
         -- Cold Start
         ["coldstart-before-engine-start"] = {
             text = "Before Engine Start",
+            needAllPrevious = true,
             conditions = {
-                { text = "Throttle closed", cond = { "arg_eq", "THROTTLE_HANDLE1", 0 }, len = 3 },
-                { text = "Ignition CB switch to IGN", cond = { "arg_eq", "HLP_IGN", 1 }, len = 3 },
-                { text = "FADEC CB switch to FADEC", cond = { "arg_eq", "HLP_FADEC", 1 }, len = 3 },
+                { text = "Throttle closed", cond = { "arg_eq", "THROTTLE_HANDLE1", 0 } },
+                { text = "Ignition CB switch to IGN", cond = { "arg_eq", "HLP_IGN", 1 } },
+                { text = "FADEC CB switch to FADEC", cond = { "arg_eq", "HLP_FADEC", 1 } },
                 { text = "Anti-collision lights to ANTI COLL", cond = { "arg_eq", "HLP_ANTI_COLL", 1 } },
                 { text = "Ignition key set to ON", cond = { "arg_eq", "HLP_MAIN_KEY", 1 } },
                 { text = "BATT 1 switch to BATT 1", cond = { "arg_eq", "HLP_BATT1", 1 } },
                 { text = "Check FADEC mode is in AUTO", cond = { "arg_eq", "FADEC_ON_MODE", 0.5 }, highlights = { "HLP_FADEC_BUTTON" } },
                 { text = "Wait for CAUTION", cond = { "ind_neq", "Caution", nil }, onlyOnce = true },
-                { text = "ACK switch to reset CAUTION", cond = { "ind_eq", "Caution", nil }, highlights = { "HLP_MFK_REC_ACK" },  needAllPrevious = true },
+                { text = "ACK switch to reset CAUTION", cond = { "ind_eq", "Caution", nil }, highlights = { "HLP_MFK_REC_ACK" } },
                 { text = "Hold MPD TEST switch up", cond = { "arg_eq", "HLP_MPD_TEST", 1 }, onlyOnce = true },
                 { text = "BIT/Reset switch UP", cond = { "arg_eq", "HLP_MPD_BIT", 1 }, onlyOnce = true },
                 { text = "Wait for BIT test to complete", cond = { "ind_eq", "NGParamDisplay", "ERR", "ind_eq", "LeftParamDisplay", "00" }, onlyOnce = true },
@@ -36,6 +39,7 @@ OpsdcsCrew["OH58D"] = {
         },
         ["coldstart-engine-start"] = {
             text = "Engine Start",
+            needAllPrevious = true,
             conditions = {
                 { text = "ACK switch to reset CAUTION", cond = { "ind_eq", "Caution", nil }, highlights = { "HLP_MFK_REC_ACK" } },
                 { text = "Set MPD selector to BATTV/STARTV", cond = { "param_gt", "BATTV_STARTV_vis", 0 }, highlights = { "HLP_MPD_SEL" } },
@@ -52,6 +56,7 @@ OpsdcsCrew["OH58D"] = {
         },
         ["coldstart-run-up"] = {
             text = "Run Up",
+            needAllPrevious = true,
             conditions = {
                 { text = "DC GEN switch to ON", cond = { "arg_eq", "HLP_DC_GEN", 1 } },
                 { text = "AC GEN switch to ON", cond = { "arg_eq", "HLP_AC_GEN", 1 } },
@@ -67,6 +72,7 @@ OpsdcsCrew["OH58D"] = {
         },
         ["coldstart-systems"] = {
             text = "Systems",
+            needAllPrevious = true,
             conditions = {
                 { text = "RADAR DETR switch to ON", cond = { "arg_eq", "HLP_RADAR_DETR", 1 } },
                 { text = "RADAR WARN switch to ON", cond = { "arg_eq", "HLP_RADAR_WARN", 1 } },
@@ -83,6 +89,7 @@ OpsdcsCrew["OH58D"] = {
         },
         ["coldstart-before-takeoff"] = {
             text = "Before Take-Off",
+            needAllPrevious = true,
             conditions = {
                 { text = "SCAS PITCH/ROLL/YAW to ON", cond = { "arg_eq", "HLP_SCAS_PITCHROLL_SWITCH", 1, "arg_eq", "HLP_SCAS_YAW_SWITCH", 1 } },
                 { text = "Set MPD selector to FUEL QTY", cond = { "param_gt", "FUELQTY_ENGTRQ_vis", 0 }, highlights = { "HLP_MPD_SEL" } },
