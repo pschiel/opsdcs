@@ -6,6 +6,12 @@ Cargo statics for slingloading and script to spawn into units.
 
 Copy folder into `Saved Games/DCS`
 
+## Bugs
+
+- Cargo statics seem buggy in general currently.
+- Kiowa sinks half into the ground.
+- Stuff can fall through world on drop (gets fixed by spawn script).
+
 ## List of cargo statics
 
     ARMORED < 11t
