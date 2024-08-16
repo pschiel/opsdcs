@@ -57,9 +57,9 @@ dofile(current_mod_path .. "/Database/Destroyer/CH_Arleigh_Burke_IIa.lua")
 
 dofile(current_mod_path .. "/Database/Helicopter/OH58D.lua")
 
-dofile(current_mod_path .. "/Database/Infantry/M92_Personnel_Crouch_Worker.lua")
-dofile(current_mod_path .. "/Database/Infantry/M92_Personnel_Directives.lua")
-dofile(current_mod_path .. "/Database/Infantry/M92_Personnel_Salute.lua")
+-- dofile(current_mod_path .. "/Database/Infantry/M92_Personnel_Crouch_Worker.lua")
+-- dofile(current_mod_path .. "/Database/Infantry/M92_Personnel_Directives.lua")
+-- dofile(current_mod_path .. "/Database/Infantry/M92_Personnel_Salute.lua")
 dofile(current_mod_path .. "/Database/Infantry/Paratrooper_AKS-74.lua")
 dofile(current_mod_path .. "/Database/Infantry/Paratrooper_RPG-16.lua")
 
