@@ -1,6 +1,6 @@
 # Daumenkino Video Player
 
-DCS doesn't let us play videos, but we can show images real fast.
+DCS doesn't let us play videos, but we can show images fast (if your PC is fast).
 
 ## Preparing the video
 
