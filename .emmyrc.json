@@ -50,7 +50,7 @@
         "paths": []
     },
     "codeLens": {
-        "enable": true
+        "enable": false
     },
     "strict": {
         "requirePath": false,

@@ -697,10 +697,11 @@ end
 
 -- converts any coordinate format
 function OpsdcsApi:getCoords(query)
+    ---@type terrain
     local Terrain = require("terrain")
     local x, z, result = nil, nil, {}
     if query.x and query.z then
-        x, z =tonumber(query.x), tonumber(query.z)
+        x, z = tonumber(query.x), tonumber(query.z)
     elseif query.lat and query.lon then
         local lat, lon = self:parseCoordinate(query.lat), self:parseCoordinate(query.lon)
         x, z = Terrain.convertLatLonToMeters(lat, lon)

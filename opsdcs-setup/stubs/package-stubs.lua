@@ -409,7 +409,7 @@ db = {}
 --- @field Release fun()
 --- @field convertLatLonToMeters fun()
 --- @field convertMGRStoMeters fun()
---- @field convertMetersToLatLon fun()
+--- @field convertMetersToLatLon fun():number, number
 --- @field findPathOnRoads fun()
 --- @field getBeacons fun()
 --- @field getClosestPointOnRoads fun()
