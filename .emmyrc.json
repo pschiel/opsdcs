@@ -21,10 +21,10 @@
         "enables": []
     },
     "hint": {
-        "paramHint": true,
-        "indexHint": true,
-        "localHint": true,
-        "overrideHint": true
+        "paramHint": false,
+        "indexHint": false,
+        "localHint": false,
+        "overrideHint": false
     },
     "runtime": {
         "version": "Lua5.2",
