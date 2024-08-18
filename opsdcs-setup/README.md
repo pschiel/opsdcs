@@ -5,28 +5,33 @@
 
 1. Install [VSCode](https://code.visualstudio.com/download)
 
-2. Install [yinfei.luahelper](https://marketplace.visualstudio.com/items?itemName=yinfei.luahelper) extension (intellisense)
+2. Install [tangzx.emmylua](https://marketplace.visualstudio.com/items?itemName=tangzx.emmylua) extension (debugging and stubs)
 
-3. Install [tangzx.emmylua](https://marketplace.visualstudio.com/items?itemName=tangzx.emmylua) extension **v0.6.18** (debugging and stubs)
+3. Install [omltcat.dcs-lua-runner](https://marketplace.visualstudio.com/items?itemName=omltcat.dcs-lua-runner) extension (inject code at runtime)
 
-4. Install [omltcat.dcs-lua-runner](https://marketplace.visualstudio.com/items?itemName=omltcat.dcs-lua-runner) extension (inject code at runtime)
+4. Install [dcs-fiddle-server.lua](https://github.com/omltcat/dcs-snippets/blob/master/Scripts/Hooks/dcs-fiddle-server.lua) into `Saved Games/DCS/Scripts/Hooks` folder (required for lua runner)
 
-5. Install [dcs-fiddle-server.lua](https://github.com/omltcat/dcs-snippets/blob/master/Scripts/Hooks/dcs-fiddle-server.lua) into `Saved Games/DCS/Scripts/Hooks` folder (required for lua runner)
+5. Create a [launch.json](launch.json) debug config (emmylua debugger setup)
 
-6. Create a [launch.json](launch.json) debug config (emmylua debugger setup)
+
+## Injecting code at runtime
+
+For the Mission Scripting environment, just send the code (snippet) to the DCS LUA Runner extension (^k ^s to setup hotkey).
 
 
 ## Enable debugging
 
-1. Insert code snippet into `DCS World/Scripts/MissionScripting.lua` (global mission debugging) or before any script you want to debug
+1. Run following code snippet in the env you want to debug (by either injecting, or insert in any script)
 
-    ```
-    pcall(function() package.cpath = package.cpath .. ';C:/Users/USERNAME/.vscode/extensions/tangzx.emmylua-0.6.18/debugger/emmy/windows/x64/?.dll'; local dbg = require('emmy_core'); dbg.tcpConnect('localhost', 9966) end)
+    ```lua
+    package.cpath = package.cpath .. ';C:/Users/USERNAME/.vscode/extensions/tangzx.emmylua-0.8.18-win32-x64/debugger/emmy/windows/x64/?.dll'
+    local dbg = require('emmy_core')
+    dbg.tcpConnect('localhost', 9966) end)
     ```
 
 2. Desanitize `DCS World/Scripts/MissionScripting.lua` to enable mission scripting debugging and fiddle server (for DCS LUA Runner)
 
-    ```
+    ```lua
     sanitizeModule('os')
 	sanitizeModule('io')
 	sanitizeModule('lfs')
@@ -40,16 +45,9 @@
 4. Start DCS
 
 
-## Injecting code at runtime
-
-For the Mission Scripting environment, just send the code (snippet) to the DCS LUA Runner extension (^k ^s to setup hotkey).
-
-
 ## Auto-completion via LUA stubs
 
-Menu > File > Add Folder to Workspace, select [LUA stubs](stubs) folder.
-
-*(Notice: stubs are not complete)*
+Create `.emmyrc.json` in root directory of your project, and set path to stubs in workspace library, see [.emmyrc.json](../.emmyrc.json)
 
 
 ## Notes on debugging

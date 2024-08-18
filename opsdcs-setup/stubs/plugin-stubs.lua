@@ -75,7 +75,7 @@ function declare_service_life(obj_name, country_name, from_year, to_year) return
 function declare_weapon(weapon_data) return end
 
 --- Makes a flyable object.
---- @param obj_name string @The name of the object.
+--- @param obj_name string @The name of the object created by add_aircraft.
 --- @param cockpit_path string @The path to the cockpit scripts (optional).
 --- @param fm FM @optional flight model. if nil, then SFM is used.
 --- @param comm_path string @The path to the comm.lua script (radio menu).
@@ -93,45 +93,23 @@ function MAC_flyable(obj_name, cockpit_path, fm, comm_path) return end
 --- @param clsids string[] @The required CLSIDs.
 function make_payload_rules_list(stations, clsids) return end
 
---- Makes view settings.
---- @param obj_name string @The name of the object.
+--- Makes view settings for an aircraft.
+--- @param obj_name string @The name of the object created by add_aircraft.
 --- @param viewSettings table @The view settings table.
 --- @param snapViews table @The snap views table.
 function make_view_settings(obj_name, viewSettings, snapViews) return end
 
 ---------------------------------------------------------------------------
---- Engine, FM parameters
+--- FM parameters
 ---------------------------------------------------------------------------
 
 --- @class FM
---- @description [1] = modname_of_fm_origin, [2] = dll_with_fm
+--- @description [1] = plugin_id_of_fm_origin, [2] = dll_with_fm
 --- @field center_of_mass table @{ x, y, z }
 --- @field moment_of_inertia table @{ Ix, Iy, Iz, Ixy }
 --- @field suspension table
 --- @field config_path string @path to FM config file
 --- @field old any @true (F-15C), 3 (Su-27), 4 (Su-33), 6 (F-15 SFM), 54 (Su-25T)
-
---- Returns predefined engine parameters.
---- @param name string @The name of the engine.
---- @return table @The engine parameters.
-function predefined_engine(name) return end
-
---- Returns predefined FM parameters.
---- @param name string @The name of the FM.
---- @return table @The FM parameters.
-function predefined_fm(name) return end
-
---- Returns specialized engine parameters.
---- @param base_params table @The base engine parameters.
---- @param params table @The modified parameters.
---- @return table @The specialized engine parameters.
-function specialize_engine_parameters(base_params, params) return end
-
---- Returns specialized FM parameters.
---- @param base_params table @The base FM parameters.
---- @param params table @The modified parameters.
---- @return table @The specialized FM parameters.
-function specialize_fm_parameters(base_params, params) return end
 
 ---------------------------------------------------------------------------
 --- Resource paths
@@ -276,6 +254,28 @@ function gun_mount(name, ammo_override, mount_override, trigger_override) return
 --- @param pylon_data table @pylon data
 --- @return table @The pylon parameters.
 function pylon(index, weapon_start, x, y, z, connector_data, pylon_data) return end
+
+--- Returns predefined weapon engine parameters.
+--- @param name string @The name of the engine.
+--- @return table @The engine parameters.
+function predefined_engine(name) return end
+
+--- Returns predefined weapon FM parameters.
+--- @param name string @The name of the FM.
+--- @return table @The FM parameters.
+function predefined_fm(name) return end
+
+--- Returns specialized weapon engine parameters.
+--- @param base_params table @The base engine parameters.
+--- @param params table @The modified parameters.
+--- @return table @The specialized engine parameters.
+function specialize_engine_parameters(base_params, params) return end
+
+--- Returns specialized weapon FM parameters.
+--- @param base_params table @The base FM parameters.
+--- @param params table @The modified parameters.
+--- @return table @The specialized FM parameters.
+function specialize_fm_parameters(base_params, params) return end
 
 ---------------------------------------------------------------------------
 --- Misc

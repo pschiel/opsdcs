@@ -1,0 +1,59 @@
+{
+    "completion": {
+        "autoRequire": true,
+        "autoRequireFunction": "require",
+        "autoRequireNamingConvention": "camelCase",
+        "callSnippet": false,
+        "postfix": "@"
+    },
+    "signature": {
+        "detailSignatureHelper": false
+    },
+    "diagnostics": {
+        "disable": [
+            "undefined-global",
+            "missing-parameter"
+        ],
+        "globals": [],
+        "globalsRegex": [],
+        "severity": {},
+        "enables": []
+    },
+    "hint": {
+        "paramHint": true,
+        "indexHint": true,
+        "localHint": true,
+        "overrideHint": true
+    },
+    "runtime": {
+        "version": "Lua5.2",
+        "requireLikeFunction": [],
+        "frameworkVersions": [],
+        "extensions": [
+            ".lua",
+            ".cfg",
+            ".lods"
+        ],
+        "requirePattern": []
+    },
+    "workspace": {
+        "ignoreDir": [],
+        "ignoreGlobs": [],
+        "library": [
+            "E:/Work/dcs/opsdcs/opsdcs-setup/stubs"
+        ],
+        "workspaceRoots": [],
+        "preloadFileSize": 1048576,
+        "encoding": ""
+    },
+    "resource": {
+        "paths": []
+    },
+    "codeLens": {
+        "enable": true
+    },
+    "strict": {
+        "requirePath": false,
+        "typeCall": true
+    }
+}
