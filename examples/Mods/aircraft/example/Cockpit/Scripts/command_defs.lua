@@ -1,2 +1,0 @@
--- This file is responsible for holding specified internal numbers for the arguments and actions of certain things in DCS.
--- (An example such as the landing gear requires the internal ID of 68.)

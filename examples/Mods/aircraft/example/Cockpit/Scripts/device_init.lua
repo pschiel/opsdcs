@@ -1,1 +1,0 @@
--- This file helps you declare the system type of your systems, the file path, the mainpanel_init file, and your 3D representations (ie. MFD, HUD)

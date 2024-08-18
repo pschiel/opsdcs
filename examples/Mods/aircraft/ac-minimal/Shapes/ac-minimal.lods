@@ -1,0 +1,10 @@
+model = {
+    lods = {
+        { "mq-9_reaper.edm",      100.000000 },
+        { "mq-9_reaper_lod1.edm", 500.000000 },
+        { "mq-9_reaper_lod2.edm", 1000.000000 },
+        { "mq-9_reaper_lod3.edm", 1500.000000 },
+        { "mq-9_reaper_lod4.edm", 50000.000000 },
+    },
+    collision_shell = "mq-9_reaper_collision.edm",
+}
