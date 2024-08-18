@@ -1,5 +1,5 @@
 declare_plugin("CargoCow", {
-    dirName    = current_mod_path,
+    dirName = current_mod_path,
     displayName = _("CargoCow"),
     shortName = "CargoCow",
     version = __DCS_VERSION__,

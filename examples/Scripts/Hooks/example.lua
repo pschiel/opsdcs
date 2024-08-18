@@ -5,8 +5,8 @@ local myData = {
 local exampleHook = {}
 
 function exampleHook.onPlayerConnect(playerId)
-    local playerName = net.get_player_info(playerId, 'name')
-    local message = 'helo ' .. playerName .. ' current mission: ' .. myData.currentMissionName
+    local playerName = net.get_player_info(playerId, "name")
+    local message = "helo " .. playerName .. " current mission: " .. myData.currentMissionName
     net.send_chat_to(message, playerId)
 end
 

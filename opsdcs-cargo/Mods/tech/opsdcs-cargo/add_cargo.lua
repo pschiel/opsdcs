@@ -14,10 +14,10 @@ function add_cargo(params)
     if params.ShapeNameDestr then
         params.shape_table_data[2] = {
             name = params.ShapeName,
-            file = params.ShapeNameDestr,    
+            file = params.ShapeNameDestr,
         }
     end
-    
+
     -- icon on the map
     params.mapclasskey = params.mapclasskey or "P0091000352";
 

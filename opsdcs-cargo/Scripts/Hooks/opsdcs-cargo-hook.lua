@@ -33,11 +33,11 @@ end
 
 --- inject mission script into MSE
 function OpsdcsCargoHook:injectScript()
-    local code = 'a_do_script("'
-        .. 'OpsdcsCargoBasedir=[[' .. OpsdcsCargoBasedir .. ']];OpsdcsCargoInject=true;'
-        .. 'dofile(OpsdcsCargoBasedir..[[opsdcs-cargo-mission.lua]])'
-        .. '")'
-    net.dostring_in('mission', code)
+    local code = "a_do_script('"
+        .. "OpsdcsCargoBasedir=[[" .. OpsdcsCargoBasedir .. "]];OpsdcsCargoInject=true;"
+        .. "dofile(OpsdcsCargoBasedir..[[opsdcs-cargo-mission.lua]])"
+        .. "')"
+    net.dostring_in("mission", code)
 end
 
 ------------------------------------------------------------------------------

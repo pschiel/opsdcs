@@ -3,31 +3,32 @@
 -- if OpsdcsCrew then return end -- do not load twice (mission+hook)
 OpsdcsCrew = {
     options = {
-        timeDelta = 0.1, -- seconds between updates
-        showChecklist = true, -- show interactive checklist
-        pilotVoice = true, -- plays pilot voice sounds @todo
-        autoAdvance = 2, -- auto advance to next state if all checked within this time (0 to disable)
-        headNodAdvance = 0, -- advance when nodding up>down within this time @todo
-        commandAdvance = 0, -- advance on user command @todo
+        timeDelta = 0.1,            -- seconds between updates
+        showChecklist = true,       -- show interactive checklist
+        pilotVoice = true,          -- plays pilot voice sounds @todo
+        autoAdvance = 2,            -- auto advance to next state if all checked within this time (0 to disable)
+        headNodAdvance = 0,         -- advance when nodding up>down within this time @todo
+        commandAdvance = 0,         -- advance on user command @todo
         autoStartProcedures = true, -- autostart procedures when condition is met @todo
-        showHighlights = true, -- shows highlights for next check
-        debug = true, -- debug setting
+        showHighlights = true,      -- shows highlights for next check
+        debug = true,               -- debug setting
     },
-    typeName = nil, -- player unit type
-    groupId = nil, -- player group id
-    menu = {}, -- stores f10 menu items
-    params = {}, -- current params
-    args = {}, -- current args
-    indications = {}, -- current indications
-    state = nil, -- current state
+
+    typeName = nil,       -- player unit type
+    groupId = nil,        -- player group id
+    menu = {},            -- stores f10 menu items
+    params = {},          -- current params
+    args = {},            -- current args
+    indications = {},     -- current indications
+    state = nil,          -- current state
     firstUnchecked = nil, -- current first unchecked item
-    numHighlights = 0, -- current number of highlights
-    zones = {}, -- opsdcs-crew zones
-    isRunning = false, -- when procedure is running
+    numHighlights = 0,    -- current number of highlights
+    zones = {},           -- opsdcs-crew zones
+    isRunning = false,    -- when procedure is running
     basedir = OpsdcsCrewBasedir or "",
-    supportedTypes = { "CH-47Fbl1", "F-16C_50", "OH58D", "SA342L", "UH-1H" }, -- supported types (@todo: autocheck, variants)
     argsDebugMaxId = 4000,
     sndPlayUntil = nil,
+    supportedTypes = { "CH-47Fbl1", "F-16C_50", "OH58D", "SA342L", "UH-1H" }, -- supported types (@todo: autocheck, variants)
 }
 
 --- tries to load the plugin for the player unit type
@@ -54,9 +55,9 @@ function OpsdcsCrew:loadPluginData()
     -- inject script (relative to mission or full path via hook and/or basedir)
     local filename = self.basedir .. "aircraft/opsdcs-crew-" .. self.typeName .. ".lua"
     if self.basedir == "" then
-        net.dostring_in('mission', 'a_do_script_file("' .. filename .. '")')
+        net.dostring_in("mission", "a_do_script_file('" .. filename .. "')")
     else
-        net.dostring_in('mission', 'a_do_script("dofile([[' .. filename .. ']])")')
+        net.dostring_in("mission", "a_do_script('dofile([[" .. filename .. "]])')")
     end
 end
 
@@ -83,7 +84,7 @@ function OpsdcsCrew:playSound(filename, duration)
     if self.basedir == "" then
         trigger.action.outSound(filename)
     else
-        local code = 'require("sound").playSound("' .. self.basedir .. filename .. '")'
+        local code = "require('sound').playSound('" .. self.basedir .. filename .. "')"
         net.dostring_in("gui", code)
     end
     self.sndPlayUntil = timer.getTime() + (duration or 1)
@@ -100,7 +101,7 @@ end
 
 --- sets up user input (space and backspace)
 function OpsdcsCrew:setupWaitForUserFlags()
-    local code = 'a_clear_flag("pressedSpace");a_clear_flag("pressedBS");c_start_wait_for_user("pressedSpace", "pressedBS")'
+    local code = "a_clear_flag('pressedSpace');a_clear_flag('pressedBS');c_start_wait_for_user('pressedSpace','pressedBS')"
     net.dostring_in("mission", code)
 end
 
@@ -111,7 +112,7 @@ function OpsdcsCrew:getCockpitParams()
     for line in list:gmatch("[^\n]+") do
         local key, value = line:match("([^:]+):(.+)")
         if key and value then
-            value = value:match('^%s*(.-)%s*$')
+            value = value:match("^%s*(.-)%s*$")
             if tonumber(value) then
                 params[key] = tonumber(value)
             else
@@ -135,18 +136,17 @@ function OpsdcsCrew:getCockpitArgs(maxId, idList)
     local code
     local keys = {}
     if maxId == nil and idList == nil then
-        code = 'local d=GetDevice(0);return ""'
+        code = "local d=GetDevice(0);return ''"
         for k, v in pairs(self[self.typeName].args) do
-            code = code .. '..tostring(d:get_argument_value(' .. v .. '))..";"'
+            code = code .. "..tostring(d:get_argument_value(" .. v .. "))..';'"
             table.insert(keys, k)
         end
     elseif maxId then
-        code = 'local d,r=GetDevice(0),"";for i=1,' .. maxId .. ' do r=r..d:get_argument_value(i)..";" end;return r'
+        code = "local d,r=GetDevice(0),'';for i=1," .. maxId .. " do r=r..d:get_argument_value(i)..';' end;return r"
     elseif idList then
-        local xx = table.concat(idList, ",")
-        code = 'local d,r=GetDevice(0),"";for _,i in ipairs({' .. table.concat(idList, ",") .. '}) do r=r..d:get_argument_value(i)..";" end;return r'
+        code = "local d,r=GetDevice(0),'';for _,i in ipairs({" .. table.concat(idList, ",") .. "}) do r=r..d:get_argument_value(i)..';' end;return r"
     end
-    local csv = net.dostring_in('export', code)
+    local csv = net.dostring_in("export", code)
     local args = {}
     local i = 1
     for value in csv:gmatch("([^;]+)") do
@@ -165,17 +165,17 @@ end
 --- returns indications from specified devices @todo refactor usage
 --- @param number maxId @maximum device id (if nil, get only devices from aircraft definition)
 function OpsdcsCrew:getIndications(maxId)
-    local code = 'return ""'
+    local code = "return ''"
     if maxId == nil then
         for device_id, _ in pairs(self[self.typeName].indications) do
-            code = code .. '.."##' .. device_id .. '##\\n"..list_indication(' .. device_id .. ')'
+            code = code .. "..'##" .. device_id .. "##\\n'..list_indication(" .. device_id .. ")"
         end
     else
         for device_id = maxId, maxId do
-            code = code .. '.."##' .. device_id .. '##\\n"..list_indication(' .. device_id .. ')'
+            code = code .. "..'##" .. device_id .. "##\\n'..list_indication(" .. device_id .. ")"
         end
     end
-    local lfsv = net.dostring_in('export', code)
+    local lfsv = net.dostring_in("export", code)
     local indications = {}
     local device_id, key, content = nil, nil, ""
     for line in lfsv:gmatch("[^\n]+") do
@@ -373,7 +373,7 @@ function OpsdcsCrew:update()
             local n = math.random(1, 5)
             self:playSound("sounds/" .. self.typeName .. "/cp/" .. self[self.typeName].soundpack.cp .. "/wait" .. n .. ".ogg", 2)
         end
-    
+
         -- condition true: create checked item, clear highlights
         if condIsTrue then
             if not condition.hide then
@@ -407,7 +407,7 @@ function OpsdcsCrew:update()
     end
 
     -- look for user input
-    local code = 'return (c_flag_is_true("pressedSpace") and "1" or "0") .. (c_flag_is_true("pressedBS") and "1" or "0")'
+    local code = "return (c_flag_is_true('pressedSpace') and '1' or '0') .. (c_flag_is_true('pressedBS') and '1' or '0')"
     local keys = net.dostring_in("mission", code)
     if keys ~= "00" then self:setupWaitForUserFlags() end
     local pressedSpace, pressedBS = keys:sub(1, 1) == "1", keys:sub(2, 2) == "1"
@@ -458,7 +458,7 @@ end
 function OpsdcsCrew:showHighlights(highlights)
     local code, id = "", 1
     for _, arg in ipairs(highlights) do
-        code = code .. 'a_cockpit_highlight(' .. id .. ', "' .. arg .. '", 0, "");'
+        code = code .. "a_cockpit_highlight(" .. id .. ', "' .. arg .. '", 0, "");'
         id = id + 1
     end
     net.dostring_in("mission", code)
@@ -469,7 +469,7 @@ end
 function OpsdcsCrew:clearHighlights()
     local code = ""
     for id = 1, self.numHighlights do
-        code = code .. 'a_cockpit_remove_highlight(' .. id .. ');'
+        code = code .. "a_cockpit_remove_highlight(" .. id .. ");"
     end
     net.dostring_in("mission", code)
 end

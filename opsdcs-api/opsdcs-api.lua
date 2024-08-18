@@ -187,8 +187,8 @@ end
 
 -- lerp between camera positions
 function OpsdcsApi:lerpCamera(cam1, cam2, t)
-    for _, vec in ipairs({"x", "y", "z", "p"}) do
-        for _, coord in ipairs({"x", "y", "z"}) do
+    for _, vec in ipairs({ "x", "y", "z", "p" }) do
+        for _, coord in ipairs({ "x", "y", "z" }) do
             cam1[vec][coord] = cam1[vec][coord] + (cam2[vec][coord] - cam1[vec][coord]) * t
         end
     end
@@ -197,8 +197,8 @@ end
 
 -- compare camera positions
 function OpsdcsApi:cameraEquals(cam1, cam2, precision)
-    for _, vec in ipairs({"x", "y", "z", "p"}) do
-        for _, coord in ipairs({"x", "y", "z"}) do
+    for _, vec in ipairs({ "x", "y", "z", "p" }) do
+        for _, coord in ipairs({ "x", "y", "z" }) do
             if math.abs(cam1[vec][coord] - cam2[vec][coord]) >= precision then
                 return false
             end
@@ -230,7 +230,7 @@ end
 
 -- loads file content
 function OpsdcsApi:getFileContent(path)
-    local file, err = io.open( path, "r" )
+    local file, err = io.open(path, "r")
     if err then return err end
     local content = file:read("*a")
     file:close()
@@ -239,7 +239,7 @@ end
 
 -- saves file content
 function OpsdcsApi:saveFileContent(path, content)
-    local file, err = io.open( path, "w+" )
+    local file, err = io.open(path, "w+")
     if err then return err end
     file:write(content)
     file:close()
@@ -319,7 +319,7 @@ end
 -- returns orientation matrix from roll, pitch and heading
 function OpsdcsApi:getOrientation(roll, pitch, heading)
     local h, p, r = math.rad(heading), math.rad(pitch), math.rad(roll)
-    local o = {x = {x = 1, y = 0, z = 0}, y = {x = 0, y = 1, z = 0}, z = {x = 0, y = 0, z = 1}}
+    local o = { x = { x = 1, y = 0, z = 0 }, y = { x = 0, y = 1, z = 0 }, z = { x = 0, y = 0, z = 1 } }
     self:applyRotation(o.x, o.z, h)
     self:applyRotation(o.x, o.y, p)
     self:applyRotation(o.z, o.y, r)
@@ -549,13 +549,13 @@ function OpsdcsApi:deleteStaticObjects(slug, data)
     local luaCode = ""
     if slug == "all" then
         for name, _ in pairs(self.staticObjects) do
-            luaCode = luaCode .. 'local s=StaticObject.getByName("' .. name .. '");if s then s:destroy() end;'
+            luaCode = luaCode .. "local s=StaticObject.getByName('" .. name .. "');if s then s:destroy() end;"
             self.staticObjects[name] = nil
         end
     else
         for _, name in ipairs(data) do
             if self.staticObjects[name] then
-                luaCode = luaCode .. 'local s=StaticObject.getByName("' .. name .. '");if s then s:destroy() end;'
+                luaCode = luaCode .. "local s=StaticObject.getByName('" .. name .. "');if s then s:destroy() end;"
                 self.staticObjects[name] = nil
             else
                 table.insert(result, "static object not found: " .. name)
@@ -566,7 +566,7 @@ function OpsdcsApi:deleteStaticObjects(slug, data)
         luaCode = "a_do_script([[" .. luaCode .. "]])"
         net.dostring_in("mission", luaCode)
     end
-return 200, result
+    return 200, result
 end
 
 -- creates groups
@@ -682,12 +682,21 @@ function OpsdcsApi:getDbTerrains()
         ["Sinai"] = { bounds = { 26.2339014, 28.8214748, 32.4262997, 36.2080106 } },
         ["SouthAtlantic"] = { bounds = { -56.3646796, -77.4595916, -47.6054687, -52.4547088 } },
         ["Syria"] = { bounds = { 31.9365414, 30.2493664, 37.6623492, 41.1213013 } },
-        ["TheChannel"] = { bounds = { 49.6773349, -0.08918, 51.5572647, 3.4399315 } } 
+        ["TheChannel"] = { bounds = { 49.6773349, -0.08918, 51.5572647, 3.4399315 } }
     }
     for terrain, _ in pairs(terrains) do
-        local hasBeacons, beacons = pcall(function() loadfile("./Mods/terrains/" .. terrain .. "/beacons.lua")() return beacons end)
-        local hasRadio, radio = pcall(function() loadfile("./Mods/terrains/" .. terrain .. "/radio.lua")() return radio end)
-        local hasTowns, towns = pcall(function() loadfile("./Mods/terrains/" .. terrain .. "/map/towns.lua")() return towns end)
+        local hasBeacons, beacons = pcall(function()
+            loadfile("./Mods/terrains/" .. terrain .. "/beacons.lua")()
+            return beacons
+        end)
+        local hasRadio, radio = pcall(function()
+            loadfile("./Mods/terrains/" .. terrain .. "/radio.lua")()
+            return radio
+        end)
+        local hasTowns, towns = pcall(function()
+            loadfile("./Mods/terrains/" .. terrain .. "/map/towns.lua")()
+            return towns
+        end)
         if hasBeacons then terrains[terrain].beacons = beacons end
         if hasRadio then terrains[terrain].radio = radio end
         if hasTowns then terrains[terrain].towns = towns end
@@ -746,7 +755,7 @@ if DCS ~= nil then
         onShowGameMenu = function() end,
         onTriggerMessage = function(message, duration, clearView) end,
         onRadioMessage = function(message, duration) end,
-        onChatMessage = function (message, id) end,
+        onChatMessage = function(message, id) end,
         onShowRadioMenu = function(id) end,
         onNetConnect = function(id) end,
         onNetDisconnect = function() end,
