@@ -1,6 +1,6 @@
 -- Goldeneye Hook
 
-GoldeneyeBasedir = GoldeneyeBasedir or lfs.writedir() .. "Scripts/goldeneye/"
+GoldeneyeBasedir = GoldeneyeBasedir or (lfs.writedir():gsub("\\", "/") .. "Scripts/goldeneye/")
 
 GoldeneyeHook = {
     logging = true,
