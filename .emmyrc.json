@@ -32,7 +32,6 @@
         "frameworkVersions": [],
         "extensions": [
             ".lua",
-            ".cfg",
             ".lods"
         ],
         "requirePattern": []
