@@ -12,7 +12,8 @@
     "diagnostics": {
         "disable": [
             "undefined-global",
-            "missing-parameter"
+            "missing-parameter",
+            "need-import"
         ],
         "globals": [],
         "globalsRegex": [],
