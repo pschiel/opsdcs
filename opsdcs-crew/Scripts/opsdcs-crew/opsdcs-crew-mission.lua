@@ -73,7 +73,7 @@ end
 --- @param string msg
 function OpsdcsCrew:log(msg)
     if self.options.debug then
-        trigger.action.outText(msg, 5)
+        trigger.action.outText("[opsdcs-crew] " .. msg, 5)
     end
 end
 

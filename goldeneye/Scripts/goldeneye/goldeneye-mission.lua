@@ -26,12 +26,13 @@ Goldeneye = {
     sceneryObjects = {},
     nObjects = 0,
     eventNamesById = nil,
+    camViewActive = false,
 }
 
 -- debug log helper
 function Goldeneye:log(msg, duration)
     if self.options.debug then
-        trigger.action.outText("[debug] " .. msg, duration or 2)
+        trigger.action.outText("[Goldeneye] " .. msg, duration or 10)
     end
 end
 
@@ -39,16 +40,16 @@ end
 function Goldeneye:loadScript(filename)
     self:log("loading " .. filename)
     if self.basedir == "" then
-        net.dostring_in('mission', 'a_do_script_file("' .. filename .. '")')
+        net.dostring_in("mission", "a_do_script_file('" .. filename .. "')")
     else
-        net.dostring_in('mission', 'a_do_script("dofile([[' .. self.basedir .. filename .. ']])")')
+        net.dostring_in("mission", "a_do_script('dofile([[" .. self.basedir .. filename .. "]])')")
     end
 end
 
 -- start script
 function Goldeneye:start()
     self:log("start")
-    for _, aircraftType in ipairs(self.aircraftTypes) do 
+    for _, aircraftType in ipairs(self.aircraftTypes) do
         self:loadScript("aircraft/goldeneye-aircraft-" .. aircraftType .. ".lua")
     end
     for _, sensorType in ipairs(self.sensorTypes) do
@@ -116,37 +117,100 @@ function Goldeneye:enableSensorPayloadMenu(unit)
     local group = unit:getGroup()
     local groupID = group:getID()
     self:log("enable sensor payload menu for group " .. groupID .. ", unit type: " .. unit:getTypeName(), 10)
-    missionCommands.addCommandForGroup(groupID, "Camera view", nil, Goldeneye.camView, self)
-    missionCommands.addCommandForGroup(groupID, "Camera reset", nil, Goldeneye.camReset, self)
-    missionCommands.addCommandForGroup(groupID, "Start update", nil, Goldeneye.update, self)
-    missionCommands.addCommandForGroup(groupID, "Save objects", nil, Goldeneye.saveObjects, self)
-    missionCommands.addCommandForGroup(groupID, "Load objects", nil, Goldeneye.loadObjects, self)
+    local mainmenu = missionCommands.addSubMenuForGroup(groupID, "Goldeneye", nil)
+    missionCommands.addCommandForGroup(groupID, "Camera view", mainmenu, Goldeneye.camView, self)
+    missionCommands.addCommandForGroup(groupID, "Camera reset", mainmenu, Goldeneye.camReset, self)
+    missionCommands.addCommandForGroup(groupID, "Start update", mainmenu, Goldeneye.update, self)
+    missionCommands.addCommandForGroup(groupID, "Save objects", mainmenu, Goldeneye.saveObjects, self)
+    missionCommands.addCommandForGroup(groupID, "Load objects", mainmenu, Goldeneye.loadObjects, self)
 end
 
 ------------------------------------------------------------------------------
 
 -- cam view
 function Goldeneye:camView()
-    self:log("Camera view")
-    local pos = world.getPlayer():getPosition()
-    self:applyRotation(pos.x, pos.y, 0)
-    local dist = -1
-    pos.p.x = pos.p.x - dist * pos.x.x
-    pos.p.y = pos.p.y - dist * pos.x.y
-    pos.p.z = pos.p.z - dist * pos.x.z
-    local code = "Export.LoSetCommand(1708);Export.LoSetCameraPosition({"
-        .. "p = {x=" .. pos.p.x .. ",y=" .. pos.p.y .. ",z=" .. pos.p.z .. "},"
-        .. "x = {x=" .. pos.x.x .. ",y=" .. pos.x.y .. ",z=" .. pos.x.z .. "},"
-        .. "y = {x=" .. pos.y.x .. ",y=" .. pos.y.y .. ",z=" .. pos.y.z .. "},"
-        .. "z = {x=" .. pos.z.x .. ",y=" .. pos.z.y .. ",z=" .. pos.z.z .. "}"
-        .. "});DCS.setCurrentFOV(40)"
+    self:log("Camera view F2 local")
+    local code = "Export.LoSetCommand(1708)"
     net.dostring_in("gui", code)
+    -- need set position in another frame
+    timer.scheduleFunction(self.camViewPosition, self, timer.getTime() + 0.01)
 end
 
--- reset cam
+-- reset cam view to cockpit
 function Goldeneye:camReset()
     local code = "Export.LoSetCommand(7);Export.LoSetCommand(36)"
     net.dostring_in("gui", code)
+    self.camViewActive = false
+end
+
+-- cam view set position
+function Goldeneye:camViewPosition()
+    self:log("Camera view")
+    local pos = world.getPlayer():getPosition()
+    -- @todo get from sensor data
+    local sensordata = self.aircraft["UH-1H"].payloads["1 Cam"][1]
+    local fov = 30
+    self:applyTranslation(pos.p, pos.x, sensordata.position.x)
+    self:applyTranslation(pos.p, pos.z, sensordata.position.z)
+    self:applyTranslation(pos.p, pos.y, sensordata.position.y)
+    local yaw, pitch, roll = self:getEulerAngles(pos)
+    local o = self:getOrientation(roll + sensordata.orientation.roll, pitch + sensordata.orientation.pitch, yaw + sensordata.orientation.yaw)
+    local code = "Export.LoSetCameraPosition({"
+        .. "p = {x=" .. pos.p.x .. ",y=" .. pos.p.y .. ",z=" .. pos.p.z .. "},"
+        .. "x = {x=" .. o.x.x .. ",y=" .. o.x.y .. ",z=" .. o.x.z .. "},"
+        .. "y = {x=" .. o.y.x .. ",y=" .. o.y.y .. ",z=" .. o.y.z .. "},"
+        .. "z = {x=" .. o.z.x .. ",y=" .. o.z.y .. ",z=" .. o.z.z .. "}"
+        .. "});DCS.setCurrentFOV(" .. fov .. ")"
+    net.dostring_in("gui", code)
+    self.camViewActive = true
+    self:camViewLoop()
+end
+
+-- displays camera position offset and angles
+function Goldeneye:camViewLoop()
+    if not self.camViewActive then return end
+    local code = "return net.lua2json(Export.LoGetCameraPosition())"
+    local pos = net.json2lua(net.dostring_in("gui", code))
+    local heading, pitch, roll = self:getEulerAngles(pos)
+    local ppos = world.getPlayer():getPosition()
+    local pheading, ppitch, proll = self:getEulerAngles(ppos)
+
+    -- Calculate the displacement vector in world space
+    local dx_world, dy_world, dz_world = pos.p.x - ppos.p.x, pos.p.y - ppos.p.y, pos.p.z - ppos.p.z
+
+    -- Project world displacement onto player's local axes
+    local dx = dx_world * ppos.x.x + dy_world * ppos.x.y + dz_world * ppos.x.z -- Forward/Backward
+    local dy = dx_world * ppos.y.x + dy_world * ppos.y.y + dz_world * ppos.y.z -- Up/Down
+    local dz = dx_world * ppos.z.x + dy_world * ppos.z.y + dz_world * ppos.z.z -- Right/Left
+
+    local dheading, dpitch, droll = heading - pheading, pitch - ppitch, roll - proll
+
+    local fov = net.dostring_in("gui", "return DCS.getCurrentFOV()")
+    local msg = string.format("\n\nOffset:\nx: %.5f\ny: %.5f\nz: %.5f\nyaw: %.3f\npitch: %.3f\nroll: %.3f\nfov: %d", dx, dy, dz, dheading, dpitch, droll, fov)
+    trigger.action.outText(msg, 10, true)
+
+    timer.scheduleFunction(self.camViewLoop, self, timer.getTime() + 0.1)
+end
+
+------------------------------------------------------------------------------
+
+-- Function to calculate heading, pitch, and roll from DCS position
+function Goldeneye:getEulerAngles(p)
+    local heading = math.atan2(p.x.z, p.x.x)
+    if heading < 0 then heading = heading + 2 * math.pi end
+    local pitch = math.asin(p.x.y)
+    local roll = math.atan2(p.y.z, p.y.y)
+    return math.deg(heading), math.deg(pitch), math.deg(roll)
+end
+
+-- returns orientation matrix from roll, pitch and heading
+function Goldeneye:getOrientation(roll, pitch, heading)
+    local h, p, r = math.rad(heading), math.rad(pitch), math.rad(roll)
+    local o = { x = { x = 1, y = 0, z = 0 }, y = { x = 0, y = 1, z = 0 }, z = { x = 0, y = 0, z = 1 } }
+    self:applyRotation(o.x, o.z, h)
+    self:applyRotation(o.x, o.y, p)
+    self:applyRotation(o.z, o.y, r)
+    return o
 end
 
 -- rotates two vectors around their axes by the given angle
@@ -167,14 +231,14 @@ end
 -- search objects
 function Goldeneye:searchObjects(sensor)
     local volume = {
-		id = world.VolumeType.PYRAMID,
-		params = {
-			pos = sensor.position,
-			length = sensor.maxDistance,
-			halfAngleHor = math.rad(sensor.horizFOV / 2),
-			halfAngleVer = math.rad(sensor.vertFOV / 2)
-		}
-	}
+        id = world.VolumeType.PYRAMID,
+        params = {
+            pos = sensor.position,
+            length = sensor.maxDistance,
+            halfAngleHor = math.rad(sensor.horizFOV / 2),
+            halfAngleVer = math.rad(sensor.vertFOV / 2)
+        }
+    }
     local onFoundObject = function(object, sensor)
         local category = object:getCategory()
         local id = (category == Object.Category.SCENERY) and object.id_ or object:getID()
@@ -197,7 +261,7 @@ function Goldeneye:searchObjects(sensor)
 end
 
 function Goldeneye:recordObject(object)
-    
+
 end
 
 ------------------------------------------------------------------------------
@@ -205,9 +269,9 @@ end
 -- persist objects
 function Goldeneye:saveObjects()
     self:log("saving sensor data")
-    local missionName = net.dostring_in("server","return DCS.getMissionName()")
+    local missionName = net.dostring_in("server", "return DCS.getMissionName()")
     local path = lfs.writedir() .. "goldeneye-sensordata-" .. missionName .. ".json"
-    local file, err = io.open( path, "w+" )
+    local file, err = io.open(path, "w+")
     if err then return err end
     local data = {
         missionName = missionName,
@@ -225,9 +289,9 @@ end
 -- load objects
 function Goldeneye:loadObjects()
     self:log("loading sensor data")
-    local missionName = net.dostring_in("server","return DCS.getMissionName()")
+    local missionName = net.dostring_in("server", "return DCS.getMissionName()")
     local path = lfs.writedir() .. "goldeneye-sensordata-" .. missionName .. ".json"
-    local file, err = io.open( path, "r" )
+    local file, err = io.open(path, "r")
     if err then return err end
     local json = file:read("*a")
     file:close()
@@ -244,7 +308,7 @@ end
 
 -- debug scenery objects scan
 function Goldeneye:scanSceneryObjects()
-    
+
 end
 
 ------------------------------------------------------------------------------

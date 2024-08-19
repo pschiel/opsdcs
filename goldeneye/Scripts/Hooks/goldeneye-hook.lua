@@ -5,18 +5,14 @@ GoldeneyeBasedir = GoldeneyeBasedir or (lfs.writedir():gsub("\\", "/") .. "Scrip
 GoldeneyeHook = {
     logging = true,
     autoInjectMissionPatterns = {
-        "^myMission$", -- exact match "myMission"
-        "^recon", -- starts with "recon"
-        "recon$", -- ends with "recon"
-        "recon.*mission", -- contains "recon" followed by anthing, then "mission"
-        --".*", -- all missions
-        "cargocow"
+        -- see http://lua-users.org/wiki/PatternsTutorial
+        ".*",
     }
 }
 
 -- log helper
 function GoldeneyeHook:log(message)
-    if self.logging then log.info("[goldeneye] " .. message) end
+    if self.logging then log.info("[Goldeneye] " .. message) end
 end
 
 -- mission loaded
