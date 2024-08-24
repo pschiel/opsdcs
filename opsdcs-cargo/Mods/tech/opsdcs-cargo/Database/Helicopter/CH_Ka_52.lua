@@ -1,11 +1,11 @@
--- OH58D
+-- [CH RUS] Ka-52
 add_cargo({
-    Name = "oh58d_cargo",
-    DisplayName = _("OH58D Cargo"),
-    ShapeName = "OH58D",
-    ShapeNameDestr = "OH58D-oblomok",
+    Name = "ka_52_cargo",
+    DisplayName = _("[CH] Ka-52 Cargo"),
+    ShapeName = "CH_Ka-52",
+    ShapeNameDestr = "self",
     Life = 100,
-    mass = 1600,
-    minMass = 1500,
-    maxMass = 3000,
+    mass = 7700,
+    minMass = 7700,
+    maxMass = 7700,
 })

@@ -1,11 +1,11 @@
--- OH58D
+-- SA342Minigun
 add_cargo({
-    Name = "oh58d_cargo",
-    DisplayName = _("OH58D Cargo"),
-    ShapeName = "OH58D",
-    ShapeNameDestr = "OH58D-oblomok",
+    Name = "sa342minigun_cargo",
+    DisplayName = _("SA342Minigun Cargo"),
+    ShapeName = "SA342minigun",
+    ShapeNameDestr = "sa342-oblomok",
     Life = 100,
-    mass = 1600,
-    minMass = 1500,
-    maxMass = 3000,
+    mass = 2000,
+    minMass = 2000,
+    maxMass = 2000,
 })

@@ -1,11 +1,11 @@
--- OH58D
+-- SA342Mistral
 add_cargo({
-    Name = "oh58d_cargo",
-    DisplayName = _("OH58D Cargo"),
-    ShapeName = "OH58D",
-    ShapeNameDestr = "OH58D-oblomok",
+    Name = "sa342mistral_cargo",
+    DisplayName = _("SA342Mistral Cargo"),
+    ShapeName = "SA342mistral",
+    ShapeNameDestr = "sa342-oblomok",
     Life = 100,
-    mass = 1600,
-    minMass = 1500,
-    maxMass = 3000,
+    mass = 2000,
+    minMass = 2000,
+    maxMass = 2000,
 })

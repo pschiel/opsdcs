@@ -6,6 +6,6 @@ add_cargo({
     ShapeNameDestr = "OH58D-oblomok",
     Life = 100,
     mass = 1600,
-    minMass = 1500,
-    maxMass = 3000,
+    minMass = 1600,
+    maxMass = 1600,
 })

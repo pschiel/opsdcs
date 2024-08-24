@@ -1,11 +1,11 @@
--- OH58D
+-- UH-1H
 add_cargo({
-    Name = "oh58d_cargo",
-    DisplayName = _("OH58D Cargo"),
-    ShapeName = "OH58D",
-    ShapeNameDestr = "OH58D-oblomok",
+    Name = "uh_1h_cargo",
+    DisplayName = _("UH-1H Cargo"),
+    ShapeName = "ab-212",
+    ShapeNameDestr = "ab-212-oblomok",
     Life = 100,
-    mass = 1600,
-    minMass = 1500,
-    maxMass = 3000,
+    mass = 4500,
+    minMass = 4500,
+    maxMass = 4500,
 })

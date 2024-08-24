@@ -51,6 +51,12 @@ dofile(current_mod_path .. "/Database/Artillery/SPM_2S9_Nona_120mm_M.lua")
 dofile(current_mod_path .. "/Database/Cargo/Bambi_Bucket.lua")
 dofile(current_mod_path .. "/Database/Destroyer/CH_Arleigh_Burke_IIa.lua")
 dofile(current_mod_path .. "/Database/Helicopter/OH58D.lua")
+dofile(current_mod_path .. "/Database/Helicopter/AH-1W.lua")
+dofile(current_mod_path .. "/Database/Helicopter/SA342L.lua")
+dofile(current_mod_path .. "/Database/Helicopter/SA342M.lua")
+dofile(current_mod_path .. "/Database/Helicopter/SA342Minigun.lua")
+dofile(current_mod_path .. "/Database/Helicopter/SA342Mistral.lua")
+dofile(current_mod_path .. "/Database/Helicopter/UH-1H.lua")
 
 ---------------------------------------------------------------------------
 
@@ -72,12 +78,14 @@ dofile(current_mod_path .. "/Database/Artillery/CH_M777_LTH_M982_Excalibur.lua")
 
 -- [CH RUS]
 dofile(current_mod_path .. "/Database/Armored/CH_TigrM.lua")
+dofile(current_mod_path .. "/Database/Helicopter/CH_Ka_52.lua")
 
 ---------------------------------------------------------------------------
 
 -- [CH SWE]
 dofile(current_mod_path .. "/Database/Armored/CH_Bv_410_ATV.lua")
 dofile(current_mod_path .. "/Database/Armored/CH_Volvo_740_IFV.lua")
+dofile(current_mod_path .. "/Database/Helicopter/CH_HKP_15B_LUH.lua")
 
 ---------------------------------------------------------------------------
 

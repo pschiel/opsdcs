@@ -131,12 +131,11 @@ SPAAA LC with zu-23 4500
     ----------------------------------------------------------------
     OH58D                                1600     OH58D
     AH-1W                                7000     AH-1W
-    OH-6A                                2000     
-    SA342L                               2000     
-    SA342M                               2000     
-    SA342Minigun                         2000     
-    SA342Mistral                         2000     
-    UH-1H                                4500     
-    [CH RUS] Ka-52                       7700     
-    [CH SWE] HKP 15B LUH                 4000     
+    SA342L                               2000     SA342L
+    SA342M                               2000     SA342M
+    SA342Minigun                         2000     SA342minigun
+    SA342Mistral                         2000     SA342mistral
+    UH-1H                                4500     ab-212
+    [CH RUS] Ka-52                       7700     CH_Ka-52
+    [CH SWE] HKP 15B LUH                 4000     HKP15B
 
