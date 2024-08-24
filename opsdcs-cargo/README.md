@@ -2,7 +2,8 @@
 
 Cargo mod to sling them all.
 
-Features:
+## Features
+
 - Cargo static equivalents for armored, air defense, artillery and more (up to ~10 tons)
 - Slingload capability for all statics
 - Converts statics to units when dropped (WIP)
@@ -15,6 +16,8 @@ Features:
 Copy `Mods` and `Scripts` folders into `Saved Games/DCS`.
 
 Copy `Data` folder into DCS installation folder.
+
+If you don't have the [CH Assets](https://www.currenthill.com/) installed, use the `entry-no-ch.lua` file instead of `entry.lua`.
 
 ## Credits
 
