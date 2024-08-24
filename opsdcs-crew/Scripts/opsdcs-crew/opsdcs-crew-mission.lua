@@ -1,37 +1,76 @@
 --- OpsdcsCrew - Virtual Crew (mission script)
 
 -- if OpsdcsCrew then return end -- do not load twice (mission+hook)
+
 OpsdcsCrew = {
     options = {
-        timeDelta = 0.1,            -- seconds between updates
-        showChecklist = true,       -- show interactive checklist
-        pilotVoice = true,          -- plays pilot voice sounds @todo
-        autoAdvance = 2,            -- auto advance to next state if all checked within this time (0 to disable)
-        headNodAdvance = 0,         -- advance when nodding up>down within this time @todo
-        commandAdvance = 0,         -- advance on user command @todo
-        autoStartProcedures = true, -- autostart procedures when condition is met @todo
-        showHighlights = true,      -- shows highlights for next check
-        debug = true,               -- debug setting
+        debug = true,               --- @type boolean @debug mode, set true for ingame debug messages
+        timeDelta = 0.1,            --- @type number @seconds between updates
+        showChecklist = true,       --- @type boolean @show interactive checklist when true
+        pilotVoice = true,          --- @type boolean @plays pilot voice sounds when true @todo
+        autoAdvance = 2,            --- @type number @auto advance to next state if all checked within this time (0 to disable)
+        commandAdvance = 0,         --- @type number @advance on user command @todo
+        autoStartProcedures = true, --- @type boolean @autostart procedures when condition is met @todo
+        showHighlights = true,      --- @type boolean @shows highlights for next check
     },
 
-    typeName = nil,       -- player unit type
-    groupId = nil,        -- player group id
-    menu = {},            -- stores f10 menu items
-    params = {},          -- current params
-    args = {},            -- current args
-    indications = {},     -- current indications
-    state = nil,          -- current state
-    firstUnchecked = nil, -- current first unchecked item
-    numHighlights = 0,    -- current number of highlights
-    zones = {},           -- opsdcs-crew zones
-    isRunning = false,    -- when procedure is running
-    basedir = OpsdcsCrewBasedir or "",
-    argsDebugMaxId = 4000,
-    sndPlayUntil = nil,
-    supportedTypes = { "CH-47Fbl1", "F-16C_50", "OH58D", "SA342L", "UH-1H" }, -- supported types (@todo: autocheck, variants)
+    --- @type string[] @supported types (@todo: autocheck, variants)
+    aircraftTypes = {
+        "CH-47Fbl1",
+        "F-16C_50",
+        "OH58D",
+        "SA342L",
+        "UH-1H",
+    },
+
+    basedir = OpsdcsCrewBasedir or "", --- @type string @path to Scripts/opsdcs-crew
+    typeName = nil,                    --- @type string? @player unit type
+    groupId = nil,                     --- @type number? @player group id
+    menu = {},                         --- @type table @stores f10 menu items
+    params = {},                       --- @type table @current params
+    args = {},                         --- @type table @current args
+    indications = {},                  --- @type table @current indications
+    state = nil,                       --- @type string? @current state
+    firstUnchecked = nil,              --- @type current? @first unchecked item
+    numHighlights = 0,                 --- @type number @current number of highlights
+    zones = {},                        --- @type table @opsdcs-crew zones
+    isRunning = false,                 --- @type boolean @true when procedure is running
+    argsDebugMaxId = 4000,             --- @type number @maximum argument id for debug
+    sndPlayUntil = nil,                --- @type number? @sound play until time
+
 }
 
---- tries to load the plugin for the player unit type
+------------------------------------------------------------------------------
+
+--- debug log helper
+--- @param msg string @message
+--- @param duration number @duration
+function OpsdcsCrew:log(msg, duration)
+    if self.options.debug then
+        trigger.action.outText("[opsdcs-crew] " .. msg, duration or 10)
+    end
+end
+
+--- load script (from inside mission or from file system)
+--- @param filename string @filename relative to basedir
+function OpsdcsCrew:loadScript(filename)
+    self:log("loading " .. filename)
+    if self.basedir == "" then
+        net.dostring_in("mission", "a_do_script_file('" .. filename .. "')")
+    else
+        net.dostring_in("mission", "a_do_script('dofile([[" .. self.basedir .. filename .. "]])')")
+    end
+end
+
+--- loads/resets plugin data and states
+function OpsdcsCrew:loadPluginData()
+    local filename = "aircraft/" .. self.typeName .. ".lua"
+    self:loadScript(filename)
+end
+
+------------------------------------------------------------------------------
+
+--- start script
 function OpsdcsCrew:start()
     if world.getPlayer() == nil then return end
     self.groupId = world.getPlayer():getGroup():getID()
@@ -39,43 +78,26 @@ function OpsdcsCrew:start()
 
     -- check if player unit type is supported
     local isSupported = false
-    for _, typeName in ipairs(self.supportedTypes) do
+    for _, typeName in ipairs(self.aircraftTypes) do
         isSupported = isSupported or self.typeName == typeName
     end
     if not isSupported then return end
 
     self:loadPluginData()
-    self:log("opsdcs-crew start: " .. self.typeName .. " (" .. (self.basedir == "" and "mission" or "hook") .. ")")
+    self:log("start: " .. self.typeName .. " (" .. (self.basedir == "" and "mission" or "hook") .. ")")
     self:setupWaitForUserFlags()
     self:showMainMenu()
 end
 
--- loads/resets plugin data and states
-function OpsdcsCrew:loadPluginData()
-    -- inject script (relative to mission or full path via hook and/or basedir)
-    local filename = self.basedir .. "aircraft/opsdcs-crew-" .. self.typeName .. ".lua"
-    if self.basedir == "" then
-        net.dostring_in("mission", "a_do_script_file('" .. filename .. "')")
-    else
-        net.dostring_in("mission", "a_do_script('dofile([[" .. filename .. "]])')")
-    end
-end
-
---- stops script
+--- stop script
 function OpsdcsCrew:stop()
-    self:log("opsdcs-crew stop")
+    self:log("stop")
     self.isRunning = false
     self:clearHighlights()
     self:clearMenu()
 end
 
---- ingame debug log helper
---- @param string msg
-function OpsdcsCrew:log(msg)
-    if self.options.debug then
-        trigger.action.outText("[opsdcs-crew] " .. msg, 5)
-    end
-end
+------------------------------------------------------------------------------
 
 --- plays sound (from inside miz, or absolute path when using basedir)
 --- @param string filename
@@ -98,6 +120,8 @@ function OpsdcsCrew:playSoundFromText(text, duration, seat)
     filename = filename .. text:gsub("[/>:]", "-") .. ".ogg"
     self:playSound(filename, duration)
 end
+
+------------------------------------------------------------------------------
 
 --- sets up user input (space and backspace)
 function OpsdcsCrew:setupWaitForUserFlags()
@@ -201,6 +225,8 @@ function OpsdcsCrew:getIndications(maxId)
     return indications
 end
 
+------------------------------------------------------------------------------
+
 --- converts ranges string to list
 --- @param string str @ranges string (e.g. "1-3 5 7-12 18 33")
 function OpsdcsCrew:rangesToList(str)
@@ -292,7 +318,7 @@ function OpsdcsCrew:evaluateCond(cond)
             end
             i = i + check[op][1] + 1
         else
-            self:log("Unknown condition: " .. op)
+            self:log("unknown condition: " .. op)
             i = i + 1
         end
     end
@@ -486,6 +512,8 @@ function OpsdcsCrew:showMainMenu()
         self.menu["args_debug"] = missionCommands.addCommandForGroup(self.groupId, "Toggle Arguments Debug", nil, OpsdcsCrew.onArgsDebug, self)
     end
 end
+
+------------------------------------------------------------------------------
 
 --- toggles cockpit argument debug display
 function OpsdcsCrew:onArgsDebug()

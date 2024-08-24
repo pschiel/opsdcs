@@ -1,0 +1,6 @@
+model = {
+    lods = {
+        { "Sd_Kfz_234_2_Puma.edm", 2000.0 },
+    },
+    collision_shell = "bambi_bucket_collision.edm",
+}

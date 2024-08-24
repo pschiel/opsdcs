@@ -1271,12 +1271,12 @@ AI = {}
 --- @type AI.Task
 AI.Task = {}
 
---- @class AI.Task.OrbitPattern
---- @description Enumerator for orbit patterns.
---- @field RACE_TRACK string @Race-Track ("Race-Track")
---- @field CIRCLE string @Circle ("Circle")
---- @type AI.Task.OrbitPattern
-AI.Task.OrbitPattern = {}
+--- @class AI.Task.AltitudeType
+--- @description Enumerator for altitude types.
+--- @field RADIO string @Radio ("RADIO")
+--- @field BARO string @Barometric ("BARO")
+--- @type AI.Task.AltitudeType
+AI.Task.AltitudeType = {}
 
 --- @class AI.Task.Designation
 --- @description Enumerator for designations.
@@ -1287,6 +1287,13 @@ AI.Task.OrbitPattern = {}
 --- @field AUTO string @Auto ("Auto")
 --- @type AI.Task.Designation
 AI.Task.Designation = {}
+
+--- @class AI.Task.OrbitPattern
+--- @description Enumerator for orbit patterns.
+--- @field RACE_TRACK string @Race-Track ("Race-Track")
+--- @field CIRCLE string @Circle ("Circle")
+--- @type AI.Task.OrbitPattern
+AI.Task.OrbitPattern = {}
 
 --- @class AI.Task.TurnMethod
 --- @description Enumerator for turn methods. @todo parking
@@ -1307,13 +1314,6 @@ AI.Task.TurnMethod = {}
 --- @field DIAMOND string @Diamond ("Diamond")
 --- @type AI.Task.VehicleFormation
 AI.Task.VehicleFormation = {}
-
---- @class AI.Task.AltitudeType
---- @description Enumerator for altitude types.
---- @field RADIO string @Radio ("RADIO")
---- @field BARO string @Barometric ("BARO")
---- @type AI.Task.AltitudeType
-AI.Task.AltitudeType = {}
 
 --- @class AI.Task.WaypointType
 --- @description Enumerator for waypoint types.

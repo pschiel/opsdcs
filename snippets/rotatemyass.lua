@@ -6,6 +6,8 @@ function applyRotation(a, b, angle)
     b.x, b.y, b.z = cos_angle * bx - sin_angle * ax, cos_angle * by - sin_angle * ay, cos_angle * bz - sin_angle * az
 end
 
+local results = {}
+
 ------------------------------------------------------------------------------------
 -- Given: A = { p, x, y, z }
 --  p is the position
@@ -44,11 +46,11 @@ local A = {
 local expected = {
     p = { x = -318116.06376304, y = 39.900899534828, z = 635832.12734334 },
     x = { x = 0.23245367852197, y = -0.47797699095517, z = 0.8470556861546 },
-    y = { x = 0.34507033339587, y = 0.85478610837449, z = 0.38764307873697 },
-    z = { x = -0.90933589697372, y = 0.20218471270864, z = 0.3636338639859 }
+    y = { x = 0.886999151857, y = 0.46145887228713, z = 0.016977078561446 },
+    z = { x = -0.39899600639595, y = 0.7473912351042, z = 0.53123302074844 }
 }
-return { actual = translateAndRotate(A, 10, 20, 30, 45, -30, 15), expected = expected }
-
+local actual = translateAndRotate(A, 10, 20, 30, 45, -30, 60)
+return { expected = expected, actual = actual }
 
 ------------------------------------------------------------------------------------
 -- Given: A = { p, x, y, z }
@@ -64,10 +66,10 @@ function relativePositionAndRotation(A, B)
     local dy = wdx * A.y.x + wdy * A.y.y + wdz * A.y.z
     local dz = wdx * A.z.x + wdy * A.z.y + wdz * A.z.z
 
-    -- calculate relative rotation *THIS PART IS WRONG*
-    local dyaw = math.deg(math.atan2(A.x.x * B.z.y - A.x.y * B.z.x, A.x.x * B.z.x + A.x.y * B.z.y))
-    local dpitch = math.deg(math.asin(A.x.z * B.z.x - A.x.x * B.z.z))
-    local droll = math.deg(math.atan2(A.z.y * B.x.x - A.z.x * B.x.y, A.z.x * B.x.x + A.z.y * B.x.y))
+    -- calculate relative rotation in degrees
+    local dyaw = -math.deg(math.atan2(A.x.z, A.x.x) - math.atan2(B.x.z, B.x.x))
+    local dpitch = -math.deg(math.asin(A.x.y) - math.asin(B.x.y))
+    local droll = -math.deg(math.atan2(A.z.y, A.y.y) - math.atan2(B.z.y, B.y.y))
     
     return { dx, dy, dz, dyaw, dpitch, droll }
 end
@@ -81,8 +83,9 @@ local A = {
 local B  = {
     p = { x = -318116.06376304, y = 39.900899534828, z = 635832.12734334 },
     x = { x = 0.23245367852197, y = -0.47797699095517, z = 0.8470556861546 },
-    y = { x = 0.34507033339587, y = 0.85478610837449, z = 0.38764307873697 },
-    z = { x = -0.90933589697372, y = 0.20218471270864, z = 0.3636338639859 }
+    y = { x = 0.886999151857, y = 0.46145887228713, z = 0.016977078561446 },
+    z = { x = -0.39899600639595, y = 0.7473912351042, z = 0.53123302074844 }
 }
-local expected = { 10, 20, 30, 45, -30, 15 }
-return { actual = relativePositionAndRotation(A, B), expected = expected }
+local expected = { 10, 20, 30, 45, -30, 60 }
+local actual = relativePositionAndRotation(A, B)
+return { expected = expected, actual = actual }

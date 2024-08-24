@@ -1,0 +1,6 @@
+model = {
+    lods = {
+        { "ttHL-B8M1.edm", 2000.0 },
+    },
+    collision_shell = "bambi_bucket_collision.edm",
+}

@@ -364,6 +364,8 @@ function Get_RFGU_GUISettings_Preset(name) return end
 --- @field dirName string @The name of the directory containing the plugin.
 --- @field displayName string @The name of the plugin shown within UI elements. (exc. module viewer)
 --- @field fileMenuName string @The name of the file containing the flyable declaration.
+--- @field developerName string @Name of developer
+--- @field developerLink string @Link to developer
 --- @field update_id string @The ID to check for in DCS updates.
 --- @field state string @String representing plugin accessibility state. (“installed” or “uninstalled”)
 --- @field info string @The description of the plugin, shown in the main menu.
