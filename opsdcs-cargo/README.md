@@ -5,10 +5,10 @@ Cargo mod to sling them all.
 Features:
 - Cargo static equivalents for armored, air defense, artillery and more (up to ~10 tons)
 - Slingload capability for all statics
-- Converts statics to units when dropped
-- Convert nearby units to cargo statics via F10
+- Converts statics to units when dropped (WIP)
+- Convert nearby units to cargo statics via F10 (WIP)
 - Simulates bambi bucket water filling for fire fighting (no zones needed, autodetects water)
-- Simulates fire fighting (creates fires in named zones, extinguish with bambi bucket)
+- Simulates fire fighting (creates fires in named zones, extinguish with bambi bucket) (WIP)
 
 ## Installation
 
@@ -22,9 +22,8 @@ Bambi bucket taken from https://forum.dcs.world/topic/103564-addon-tents-watchto
 
 ## TODO
 
-- better collision shapes
-- better cargo csv data
-- disable ingame voice
+- better collision shapes (currently bambi bucket collision edm is used for all missing)
+- better cargo csv data (currently copied from oil barrel)
 
 ## List of cargo statics
 
@@ -39,44 +38,43 @@ Bambi bucket taken from https://forum.dcs.world/topic/103564-addon-tents-watchto
     AAA Fire Can SON-9                         6500     son-9
     AAA Flak 38 20mm                           1000     flak30
     AAA Flak-Vierling 38 Quad 20mm             1500     flak38
-    AAA Kdo.G.40                               1800     KDO_Mod40 
-    
-    AAA KS-19 100mm                            9200     KS-19 KS-19_p_1 
-    AAA M1 37mm                                2500     M1_37mm M1_37mm-p_1
-    AAA M45 Quadmount HB 12.7mm                1100     M45_Quadmount M45_Quadmount_p_1
-    AAA QF 3.7                                 8000     QF_37_AA QF_37_AA_p_1
-    AAA S-60 57mm                              4700     S-60_Type59_Artillery S-60_Type59_Artillery_p_1
-    AAA ZU-23 on Ural-4320                     9200     Ural_ZU-23 Ural_ZU-23_P1
-    Allies Rangefinder DRT                     4500     Bedford_MWD Bedford_MWD_p_1 c
-    HQ-7 LN                                    9000     hq7_ln hq7_ln_dstr c
-    HQ-7 Self-Propelled LN                     9000     hq7_ln hq7_ln_dstr c
-    HQ-7 Self-Propelled STR                    9000     hq7_str hq7_str_dstr c
-    Maschinensatz 33 Gen                       3000     Maschinensatz_33 Maschinensatz_33_p_1 c
-    SAM Avenger Stinger                        4200     HMMWV_M973 HMMWV_M973_P_1
-    SAM Chaparral M48                         10500     M48 M48_P1
-    SAM Hawk CWAR AN/MPQ-55                    2200     hawk-cwar hawk-cwar_p_1
-    SAM Hawk LN M192                           9000     hawk-pu hawk-pu_p_1
-    SAM Hawk Platoon Command Post PCP          3000     hawk-cv hawk-cv_p_1
-    SAM Hawk SR AN/MPQ-50                      5000     hawk-rls hawk-rls_p_1 c
-    SAM Hawk TR AN/MPQ-46                      6500     hawk-upr hawk-upr_p_1
-    SAM NASAMS C2                              5000     NASAMS_Command_Post NASAMS_Command_Post_p_1
-    SAM NASAMS LN AIM-120B                     5000     NASAMS_Missile_Launcher NASAMS_Missile_Launcher_p_1
-    SAM NASAMS LN AIM-120C                     5000     NASAMS_Missile_Launcher NASAMS_Missile_Launcher_p_1
-    SAM NASAMS SR MPQ64F1                      4500     NASAMS_Radar_MPQ64F1 NASAMS_Radar_MPQ64F1_p_1
-    SAM Patriot C2 ICC                         7500     patriot-kp Patriot-kp_p_1
-    SAM Patriot ECS                            7500     patriot-ECS Patriot-ecs_p_1
-    SAM Rapier Blindfire TR                    5000     rapier_fsa_blindfire_radar rapier_fsa_blindfire_radar_p_1
-    SAM Rapier LN                              2000     rapier_fsa_launcher rapier_fsa_launcher_p_1
-    SAM Rapier Tracker                         1500     rapier_fsa_optical_tracker_unit rapier_fsa_optical_tracker_unit_p_1
-    SAM SA-2 S-75 Guideline LN                 7000     S_75_Launcher S_75_Launcher_p_1
-    SAM SA-2 S-75 RD-75 Amazonka RF            8000     RD_75 RD_75_p_1
-    SAM SA-9 Strela 1 Gaskin TEL               7500     9p31 9P31_P_1
-    SL Flakscheinwerfer 37                     8000     flak37 Flakscheinwerfer_37_p_1 c
-    SPAAA HL with ZU-23                        6000     ttHL-zu23 ttHL_p_1
-    SPAAA LC with ZU-23                        4500     tt70-zu23 tt70_p_1
-    [CH GER] Skyshield C-RAM Gun               4600     CH_Skyshield_Gun CH_Skyshield_Gun-dest c
-    [CH GER] Wiesel 2 Ozelot VSHORAD           4780     Wiesel2_Ozelot Wiesel2_Ozelot-dest c
-    [CH SWE] RBS 90 Stationary SAM LN           100     RBS-90-lod0 RBS-90-dest
+    AAA Kdo.G.40                               1800     KDO_Mod40
+    AAA KS-19 100mm                            9200     KS-19
+    AAA M1 37mm                                2500     M1_37mm
+    AAA M45 Quadmount HB 12.7mm                1100     M45_Quadmount
+    AAA QF 3.7                                 8000     QF_37_AA
+    AAA S-60 57mm                              4700     S-60_Type59_Artillery
+    AAA ZU-23 on Ural-4320                     9200     Ural_ZU-23
+    Allies Rangefinder DRT                     4500     Bedford_MWD
+    HQ-7 LN                                    9000     hq7_ln
+    HQ-7 Self-Propelled LN                     9000     hq7_ln
+    HQ-7 Self-Propelled STR                    9000     hq7_str
+    Maschinensatz 33 Gen                       3000     Maschinensatz_33
+    SAM Avenger Stinger                        4200     HMMWV_M973
+    SAM Chaparral M48                         10500     M48
+    SAM Hawk CWAR AN/MPQ-55                    2200     hawk-cwa
+    SAM Hawk LN M192                           9000     hawk-pu
+    SAM Hawk Platoon Command Post PCP          3000     hawk-cv
+    SAM Hawk SR AN/MPQ-50                      5000     hawk-rls
+    SAM Hawk TR AN/MPQ-46                      6500     hawk-upr
+    SAM NASAMS C2                              5000     NASAMS_Command_Post
+    SAM NASAMS LN AIM-120B                     5000     NASAMS_Missile_Launcher
+    SAM NASAMS LN AIM-120C                     5000     NASAMS_Missile_Launcher
+    SAM NASAMS SR MPQ64F1                      4500     NASAMS_Radar_MPQ64F1
+    SAM Patriot C2 ICC                         7500     patriot-kp
+    SAM Patriot ECS                            7500     patriot-ECS
+    SAM Rapier Blindfire TR                    5000     rapier_fsa_blindfire_radar
+    SAM Rapier LN                              2000     rapier_fsa_launcher
+    SAM Rapier Tracker                         1500     rapier_fsa_optical_tracker_unit
+    SAM SA-2 S-75 Guideline LN                 7000     S_75_Launcher
+    SAM SA-2 S-75 RD-75 Amazonka RF            8000     RD_75
+    SAM SA-9 Strela 1 Gaskin TEL               7500     9p31
+    SL Flakscheinwerfer 37                     8000     flak37
+    SPAAA HL with ZU-23                        6000     ttHL-zu23
+    SPAAA LC with ZU-23                        4500     tt70-zu23
+    [CH GER] Skyshield C-RAM Gun               4600     CH_Skyshield_Gun
+    [CH GER] Wiesel 2 Ozelot VSHORAD           4780     Wiesel2_Ozelot
+    [CH SWE] RBS 90 Stationary SAM LN           100     RBS-90-lod0
 
 
     ARMORED
