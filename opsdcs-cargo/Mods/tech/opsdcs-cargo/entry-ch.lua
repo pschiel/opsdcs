@@ -18,6 +18,7 @@ declare_plugin(self_ID, {
     info = _("opsdcs-cargo statics for slingload"),
 })
 
+mount_vfs_model_path("Bazar/World/Shapes")
 mount_vfs_model_path(current_mod_path .. "/Shapes")
 mount_vfs_texture_path(current_mod_path .. "/Textures")
 
@@ -100,6 +101,45 @@ dofile(current_mod_path .. "/Database/Helicopter/SA342M.lua")
 dofile(current_mod_path .. "/Database/Helicopter/SA342Minigun.lua")
 dofile(current_mod_path .. "/Database/Helicopter/SA342Mistral.lua")
 dofile(current_mod_path .. "/Database/Helicopter/UH-1H.lua")
+
+---------------------------------------------------------------------------
+
+-- [CH GER]
+dofile(current_mod_path .. "/Database/Airdefense/CH_Skyshield_C_RAM_Gun.lua")
+dofile(current_mod_path .. "/Database/Airdefense/CH_Wiesel_2_Ozelot_VSHORAD.lua")
+dofile(current_mod_path .. "/Database/Armored/CH_EagleIV_MRAP.lua")
+dofile(current_mod_path .. "/Database/Armored/CH_Wiesel_1A4_AWC.lua")
+
+---------------------------------------------------------------------------
+
+-- [CH USA]
+dofile(current_mod_path .. "/Database/Armored/CH_Oshkosh_LATV_M2.lua")
+dofile(current_mod_path .. "/Database/Armored/CH_Oshkosh_LATV_MK19.lua")
+dofile(current_mod_path .. "/Database/Armored/CH_Oshkosh_MATV_MRAP_M2.lua")
+dofile(current_mod_path .. "/Database/Armored/CH_Oshkosh_MATV_MRAP_MK19.lua")
+dofile(current_mod_path .. "/Database/Artillery/CH_M777_LTH_M795.lua")
+dofile(current_mod_path .. "/Database/Artillery/CH_M777_LTH_M982_Excalibur.lua")
+
+---------------------------------------------------------------------------
+
+-- [CH RUS]
+dofile(current_mod_path .. "/Database/Armored/CH_TigrM.lua")
+dofile(current_mod_path .. "/Database/Helicopter/CH_Ka_52.lua")
+
+---------------------------------------------------------------------------
+
+-- [CH SWE]
+dofile(current_mod_path .. "/Database/Airdefense/CH_RBS_90_Stationary_SAM_LN.lua")
+dofile(current_mod_path .. "/Database/Armored/CH_Bv_410_ATV.lua")
+dofile(current_mod_path .. "/Database/Armored/CH_Volvo_740_IFV.lua")
+dofile(current_mod_path .. "/Database/Helicopter/CH_HKP_15B_LUH.lua")
+
+---------------------------------------------------------------------------
+
+-- [CH UKR]
+dofile(current_mod_path .. "/Database/Armored/CH_BRDM_2L1_ARV.lua")
+dofile(current_mod_path .. "/Database/Armored/CH_Kozak_5_APC.lua")
+dofile(current_mod_path .. "/Database/Armored/CH_KrAZ_SPARTAN_APC.lua")
 
 ---------------------------------------------------------------------------
 

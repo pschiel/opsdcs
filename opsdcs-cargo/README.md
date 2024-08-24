@@ -17,7 +17,7 @@ Copy `Mods` and `Scripts` folders into `Saved Games/DCS`.
 
 Copy `Data` folder into DCS installation folder.
 
-If you don't have the [CH Assets](https://www.currenthill.com/) installed, use the `entry-no-ch.lua` file instead of `entry.lua`.
+If you have the [CH Assets](https://www.currenthill.com/) installed, use the `entry-ch.lua` file instead of `entry.lua`.
 
 ## Credits
 
