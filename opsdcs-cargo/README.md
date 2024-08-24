@@ -1,4 +1,4 @@
-HMMWV_M1043# opsdcs-cargo
+# opsdcs-cargo
 
 Cargo mod to sling them all.
 
