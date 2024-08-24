@@ -1,4 +1,4 @@
-# opsdcs-cargo
+HMMWV_M1043# opsdcs-cargo
 
 Cargo mod to sling them all.
 
@@ -29,54 +29,55 @@ Bambi bucket taken from https://forum.dcs.world/topic/103564-addon-tents-watchto
 ## List of cargo statics
 
     AIR DEFENSE
-    Name                                 Weight   Shape
-    ----------------------------------------------------------------
-aaa 8.8cm flak 18 4000
-aaa 8.8cm flak 36 4500
-aaa 8.8cm flak 37 5000
-aaa 8.8cm flak 41 6000
-aaa bofors 40mm 2300
-aaa fire can son-9 6500
-aaa flak 38 20mm 1000
-aaa flak-vierling 38 quad 20mm 1500
-aaa kdo.g.40 1800
-aaa ks-19 100mm 9200
-aaa m1 37mm 2500
-aaa m45 quadmount hb 12.7mm 1100
-aaa qf 3.7" 8000
-aaa s-60 57mm 4700
-aaa zu-23 on ural-4320 9200
-allies rangefinder (DRT) 4500
-hq-7 ln 9000
-hq-7 self-propelled ln 9000
-hq-7 self-propelled str 9000
-maschinensaty 33 gen 3000
-sam avenger (stinger) 4200
-sam chaparral m48 10500
-sam hawk cwar an/mpq-55 2200
-sam hawk ln m192 9000
-sam hawk platoon command post pcp 3000
-sam hawk sr an/mpg-50 5000
-sam hawk tr an/mpq-46 6500
-sam nasams c2 5000
-sam nasams ln aim-120b 5000
-sam nasams ln aim-120c 5000
-sam nasams sr mpq64f1 4500
-sam patriot c2 icc 7500
-sam patriot ecs 7500
-sam rapier blindfire tr 5000
-sam rapier ln 2000
-sam rapier tracker 1500
-sam sa-2 s-75 guideline LN 7000
-sam sa-2 s-75 rd-75 amazonka rf 8000
-sam sa-9 strela 1 gaskin TEL 7500
-SL flakscheinwerfer 37 8000
-SPAAA HL with ZU-23 6000
-SPAAA LC with zu-23 4500
+    Name                                       Weight   Shape
+    --------------------------------------------------------------------
+    AAA 8.8cm Flak 18                          4000     flak18
+    AAA 8.8cm Flak 36                          4500     flak36
+    AAA 8.8cm Flak 37                          5000     flak37
+    AAA 8.8cm Flak 41                          6000     flak38
+    AAA Bofors 40mm                            2300     bofors40
+    AAA Fire Can SON-9                         6500     son-9
+    AAA Flak 38 20mm                           1000     flak30
+    AAA Flak-Vierling 38 Quad 20mm             1500     flak38
+    AAA Kdo.G.40                               1800     KDO_Mod40 
+    
+    AAA KS-19 100mm                            9200     KS-19 KS-19_p_1 
+    AAA M1 37mm                                2500     M1_37mm M1_37mm-p_1
+    AAA M45 Quadmount HB 12.7mm                1100     M45_Quadmount M45_Quadmount_p_1
+    AAA QF 3.7                                 8000     QF_37_AA QF_37_AA_p_1
+    AAA S-60 57mm                              4700     S-60_Type59_Artillery S-60_Type59_Artillery_p_1
+    AAA ZU-23 on Ural-4320                     9200     Ural_ZU-23 Ural_ZU-23_P1
+    Allies Rangefinder DRT                     4500     Bedford_MWD Bedford_MWD_p_1 c
+    HQ-7 LN                                    9000     hq7_ln hq7_ln_dstr c
+    HQ-7 Self-Propelled LN                     9000     hq7_ln hq7_ln_dstr c
+    HQ-7 Self-Propelled STR                    9000     hq7_str hq7_str_dstr c
+    Maschinensatz 33 Gen                       3000     Maschinensatz_33 Maschinensatz_33_p_1 c
+    SAM Avenger Stinger                        4200     HMMWV_M973 HMMWV_M973_P_1
+    SAM Chaparral M48                         10500     M48 M48_P1
+    SAM Hawk CWAR AN/MPQ-55                    2200     hawk-cwar hawk-cwar_p_1
+    SAM Hawk LN M192                           9000     hawk-pu hawk-pu_p_1
+    SAM Hawk Platoon Command Post PCP          3000     hawk-cv hawk-cv_p_1
+    SAM Hawk SR AN/MPQ-50                      5000     hawk-rls hawk-rls_p_1 c
+    SAM Hawk TR AN/MPQ-46                      6500     hawk-upr hawk-upr_p_1
+    SAM NASAMS C2                              5000     NASAMS_Command_Post NASAMS_Command_Post_p_1
+    SAM NASAMS LN AIM-120B                     5000     NASAMS_Missile_Launcher NASAMS_Missile_Launcher_p_1
+    SAM NASAMS LN AIM-120C                     5000     NASAMS_Missile_Launcher NASAMS_Missile_Launcher_p_1
+    SAM NASAMS SR MPQ64F1                      4500     NASAMS_Radar_MPQ64F1 NASAMS_Radar_MPQ64F1_p_1
+    SAM Patriot C2 ICC                         7500     patriot-kp Patriot-kp_p_1
+    SAM Patriot ECS                            7500     patriot-ECS Patriot-ecs_p_1
+    SAM Rapier Blindfire TR                    5000     rapier_fsa_blindfire_radar rapier_fsa_blindfire_radar_p_1
+    SAM Rapier LN                              2000     rapier_fsa_launcher rapier_fsa_launcher_p_1
+    SAM Rapier Tracker                         1500     rapier_fsa_optical_tracker_unit rapier_fsa_optical_tracker_unit_p_1
+    SAM SA-2 S-75 Guideline LN                 7000     S_75_Launcher S_75_Launcher_p_1
+    SAM SA-2 S-75 RD-75 Amazonka RF            8000     RD_75 RD_75_p_1
+    SAM SA-9 Strela 1 Gaskin TEL               7500     9p31 9P31_P_1
+    SL Flakscheinwerfer 37                     8000     flak37 Flakscheinwerfer_37_p_1 c
+    SPAAA HL with ZU-23                        6000     ttHL-zu23 ttHL_p_1
+    SPAAA LC with ZU-23                        4500     tt70-zu23 tt70_p_1
+    [CH GER] Skyshield C-RAM Gun               4600     CH_Skyshield_Gun CH_Skyshield_Gun-dest c
+    [CH GER] Wiesel 2 Ozelot VSHORAD           4780     Wiesel2_Ozelot Wiesel2_Ozelot-dest c
+    [CH SWE] RBS 90 Stationary SAM LN           100     RBS-90-lod0 RBS-90-dest
 
-[CH GER] skyshield c-ram 4600
-[CH GER] wiesel 2 ozelot vshorad 4780
-[CH SWE] rbs 90 stationary lam ln vshorad 100
 
     ARMORED
     Name                                 Weight   Shape
@@ -116,6 +117,7 @@ SPAAA LC with zu-23 4500
     FH LeFH/18 105mm                      9s     -   10k    1900    [x]     LeFH_18-40-105mm
     FH M2A1 105mm                         6s     -   11k    2200    [x]     M2A1-105mm
     FH Pak 40 75mm                        5s          3k    1500    [x]     Pak40
+    L118 Light Artillery Gun 105mm        6s   500   17k    2100    [x]     l118_cargo
     MLRS HL with B8M1 80mm               32s     -    5k   11000    [x]     ttHL-B8M1
     MLRS LC with B8M1 80mm               32s     -    5k   11000    [x]     tt70-B8M1
     Mortar 2B11 120mm                     6s    30    7k     200    [x]     2B11
