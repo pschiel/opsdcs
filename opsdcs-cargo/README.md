@@ -27,6 +27,7 @@ Bambi bucket model+textures taken from https://forum.dcs.world/topic/103564-addo
 
 - better collision shapes (currently bambi bucket collision edm is used for all missing)
 - better cargo csv data (currently copied from oil barrel)
+- some destr shapes don't get recognized
 
 ## List of cargo statics
 

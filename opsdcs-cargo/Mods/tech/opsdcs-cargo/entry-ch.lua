@@ -18,7 +18,6 @@ declare_plugin(self_ID, {
     info = _("opsdcs-cargo statics for slingload"),
 })
 
-mount_vfs_model_path("Bazar/World/Shapes")
 mount_vfs_model_path(current_mod_path .. "/Shapes")
 mount_vfs_texture_path(current_mod_path .. "/Textures")
 
