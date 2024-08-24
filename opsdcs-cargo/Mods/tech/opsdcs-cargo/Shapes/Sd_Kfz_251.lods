@@ -1,6 +1,11 @@
 model = {
     lods = {
-        { "Sd_Kfz_251.edm", 2000.0 },
+        { "sd_kfz_251_lod0.edm", 150.0 },
+        { "sd_kfz_251_lod1.edm", 300.0 },
+        { "sd_kfz_251_lod2.edm", 500.0 },
+        { "sd_kfz_251_lod3.edm", 1500.0 },
+        { "sd_kfz_251_lod4.edm", 20000.0 },
+
     },
-    collision_shell = "bambi_bucket_collision.edm",
+    collision_shell = "sd_kfz_251-COLLISION.edm",
 }

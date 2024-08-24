@@ -1,6 +1,9 @@
 model = {
     lods = {
-        { "M2A1_halftrack.edm", 2000.0 },
+        { "M2A1_HalfTrack_LOD0.edm", 250.0 },
+        { "M2A1_HalfTrack_LOD1.edm", 500.0 },
+        { "M2A1_HalfTrack_LOD2.edm", 1000.0 },
+        { "M2A1_HalfTrack_LOD3.edm", 20000.0 },
     },
-    collision_shell = "bambi_bucket_collision.edm",
+    collision_shell = "M2A1_HalfTrack-COLLISION.edm",
 }
