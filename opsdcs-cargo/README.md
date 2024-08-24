@@ -130,17 +130,13 @@ SPAAA LC with zu-23 4500
     Name                                 Weight   Shape
     ----------------------------------------------------------------
     OH58D                                1600     OH58D
-AH-1W 7000
-OH-6A 2000
-SA342L 2000
-SA342M 2000
-SA342Minigun 2000
-SA342Mistral 2000
-UH-1H 4500
-[CH RUS] Ka-52 AH 7700
-[CH SWE] HKP 15B LUHuh  4000
+    AH-1W                                7000     AH-1W
+    OH-6A                                2000     
+    SA342L                               2000     
+    SA342M                               2000     
+    SA342Minigun                         2000     
+    SA342Mistral                         2000     
+    UH-1H                                4500     
+    [CH RUS] Ka-52                       7700     
+    [CH SWE] HKP 15B LUH                 4000     
 
-    PLANES
-    Name                                 Weight   Shape
-    ----------------------------------------------------------------
-[CH TRK] TB2 UCAV 400

@@ -1,7 +1,7 @@
 -- [CH RUS] Tigr-M
 add_cargo({
     Name =  "tigr_m_cargo",
-    DisplayName = _("[CH] Tigr-M"),
+    DisplayName = _("[CH] Tigr-M Cargo"),
     ShapeName = "TigrM",
     ShapeNameDestr = "TigrM-dest",
     Life = 100,
