@@ -21,7 +21,7 @@ If you don't have the [CH Assets](https://www.currenthill.com/) installed, use t
 
 ## Credits
 
-Bambi bucket taken from https://forum.dcs.world/topic/103564-addon-tents-watchtower-uh-1-cargo/
+Bambi bucket model+textures taken from https://forum.dcs.world/topic/103564-addon-tents-watchtower-uh-1-cargo/
 
 ## TODO
 
