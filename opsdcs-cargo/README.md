@@ -129,18 +129,3 @@ Bambi bucket model+textures taken from https://forum.dcs.world/topic/103564-addo
     [CH USA] M777 LTH M795                6s     -   23k    4100    [-]     M777
     [CH USA] M777 LTH M982 Exc           28s   20k   40k    4200    [-]     M777
     (turns = will turn to target when fire at point)
-
-
-    HELICOPTER
-    Name                                 Weight   Shape
-    ----------------------------------------------------------------
-    OH58D                                1600     OH58D
-    AH-1W                                7000     AH-1W
-    SA342L                               2000     SA342L
-    SA342M                               2000     SA342M
-    SA342Minigun                         2000     SA342minigun
-    SA342Mistral                         2000     SA342mistral
-    UH-1H                                4500     ab-212
-    [CH RUS] Ka-52                       7700     CH_Ka-52
-    [CH SWE] HKP 15B LUH                 4000     HKP15B
-

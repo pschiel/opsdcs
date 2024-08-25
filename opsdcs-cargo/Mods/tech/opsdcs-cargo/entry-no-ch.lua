@@ -92,34 +92,6 @@ dofile(current_mod_path .. "/Artillery/oc_sph_sd_kfz124_wespe_105mm.lua")
 dofile(current_mod_path .. "/Artillery/oc_spm_2s9_nona_120mm_m.lua")
 dofile(current_mod_path .. "/Cargo/oc_bambi_bucket.lua")
 
--- ch ger
-dofile(current_mod_path .. "/Airdefense/oc_ch_ger_skyshield_c_ram_gun.lua")
-dofile(current_mod_path .. "/Airdefense/oc_ch_ger_wiesel_2_ozelot_vshorad.lua")
-dofile(current_mod_path .. "/Armored/oc_ch_ger_eagle_iv_mrap.lua")
-dofile(current_mod_path .. "/Armored/oc_ch_ger_wiesel_1a4_awc.lua")
-
--- ch usa
-dofile(current_mod_path .. "/Armored/oc_ch_usa_oshkosh_latv_m2.lua")
-dofile(current_mod_path .. "/Armored/oc_ch_usa_oshkosh_latv_mk19.lua")
-dofile(current_mod_path .. "/Armored/oc_ch_usa_oshkosh_matv_mrap_m2.lua")
-dofile(current_mod_path .. "/Armored/oc_ch_usa_oshkosh_matv_mrap_mk19.lua")
-dofile(current_mod_path .. "/Artillery/oc_ch_usa_m777.lua")
-dofile(current_mod_path .. "/Artillery/oc_ch_usa_m777_excalibur.lua")
-dofile(current_mod_path .. "/Destroyer/oc_ch_usa_arleigh_burke_iia.lua")
-
--- ch swe
-dofile(current_mod_path .. "/Airdefense/oc_ch_swe_rbs_90_stationary_sam_ln.lua")
-dofile(current_mod_path .. "/Armored/oc_ch_swe_bv_410_atv.lua")
-dofile(current_mod_path .. "/Armored/oc_ch_swe_volvo_740_ifv.lua")
-
--- ch rus
-dofile(current_mod_path .. "/Armored/oc_ch_rus_tigr_m.lua")
-
--- ch ukr
-dofile(current_mod_path .. "/Armored/oc_ch_ukr_brdm_2l1_arv.lua")
-dofile(current_mod_path .. "/Armored/oc_ch_ukr_kozak_5_apc.lua")
-dofile(current_mod_path .. "/Armored/oc_ch_ukr_kraz_spartan_apc.lua")
-
 ----------------------------------
 
 plugin_done()

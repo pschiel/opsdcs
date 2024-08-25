@@ -50,8 +50,8 @@ local function convertCargo()
             local p = s:getPoint()
             local agl = p.y - land.getHeight({x = p.x, y = p.z})
             local v_y = s:getVelocity().y
-            if agl < 0 then
-                trigger.action.outText("c" .. i .. " agl<0, respawn " .. lastKnown[i].type, 10, false)
+            if agl < -10 then
+                trigger.action.outText("c" .. i .. " agl<-10, respawn " .. lastKnown[i].type, 10, false)
                 spawn(i)
                 s:destroy()
             else
