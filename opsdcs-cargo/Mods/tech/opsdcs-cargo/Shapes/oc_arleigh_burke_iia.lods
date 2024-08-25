@@ -1,0 +1,10 @@
+model = {
+    lods = {
+        { "Arleigh_Burke_IIa_LOD_0.edm", 400.000000 },
+        { "Arleigh_Burke_IIa_LOD_1.edm", 1000.000000 },
+        { "Arleigh_Burke_IIa_LOD_2.edm", 2000.000000 },
+        { "Arleigh_Burke_IIa_LOD_3.edm", 5000.000000 },
+        { "Arleigh_Burke_IIa_LOD_4.edm", 70000.000000 },
+    },
+    collision_shell = "Arleigh_Burke_IIa-collision.edm",
+}

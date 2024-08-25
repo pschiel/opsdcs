@@ -1,0 +1,11 @@
+model = {
+    lods = {
+        { "bofors40_lod0.edm", 50.0 },
+        { "bofors40_lod1.edm", 250.0 },
+        { "bofors40_lod2.edm", 500.0 },
+        { "bofors40_lod3.edm", 1500.0 },
+        { "bofors40_lod4.edm", 20000.0 },
+
+    },
+    collision_shell = "bofors40-COLLISION.edm",
+}

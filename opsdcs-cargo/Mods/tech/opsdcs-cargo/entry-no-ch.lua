@@ -25,7 +25,7 @@ dofile(current_mod_path .. "/add_cargo.lua")
 
 ---------------------------------------------------------------------------
 
-dofile(current_mod_path .. "/Airdefense/oc_aaa_8_8cm_flak_18.lua")
+dofile(current_mod_path .. "/Airdefense/oc_aaa_8_8cm_flak18.lua")
 dofile(current_mod_path .. "/Airdefense/oc_aaa_8_8cm_flak36.lua")
 dofile(current_mod_path .. "/Airdefense/oc_aaa_8_8cm_flak37.lua")
 dofile(current_mod_path .. "/Airdefense/oc_aaa_8_8cm_flak41.lua")
@@ -91,6 +91,7 @@ dofile(current_mod_path .. "/Artillery/oc_mortar_2b11_120mm.lua")
 dofile(current_mod_path .. "/Artillery/oc_sph_sd_kfz124_wespe_105mm.lua")
 dofile(current_mod_path .. "/Artillery/oc_spm_2s9_nona_120mm_m.lua")
 dofile(current_mod_path .. "/Cargo/oc_bambi_bucket.lua")
+dofile(current_mod_path .. "/Destroyer/oc_arleigh_burke_iia.lua")
 
 ----------------------------------
 

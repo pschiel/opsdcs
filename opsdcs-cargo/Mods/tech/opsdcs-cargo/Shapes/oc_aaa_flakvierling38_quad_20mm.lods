@@ -1,0 +1,11 @@
+model = {
+    lods = {
+        { "flak38_lod0.edm", 50.0 },
+        { "flak38_lod1.edm", 250.0 },
+        { "flak38_lod2.edm", 500.0 },
+        { "flak38_lod3.edm", 1500.0 },
+        { "flak38_lod4.edm", 20000.0 },
+
+    },
+    collision_shell = "flak38-COLLISION.edm",
+}

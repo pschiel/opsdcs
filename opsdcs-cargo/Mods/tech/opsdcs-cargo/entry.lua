@@ -25,7 +25,7 @@ dofile(current_mod_path .. "/add_cargo.lua")
 
 ---------------------------------------------------------------------------
 
-dofile(current_mod_path .. "/Airdefense/oc_aaa_8_8cm_flak_18.lua")
+dofile(current_mod_path .. "/Airdefense/oc_aaa_8_8cm_flak18.lua")
 dofile(current_mod_path .. "/Airdefense/oc_aaa_8_8cm_flak36.lua")
 dofile(current_mod_path .. "/Airdefense/oc_aaa_8_8cm_flak37.lua")
 dofile(current_mod_path .. "/Airdefense/oc_aaa_8_8cm_flak41.lua")
@@ -91,6 +91,7 @@ dofile(current_mod_path .. "/Artillery/oc_mortar_2b11_120mm.lua")
 dofile(current_mod_path .. "/Artillery/oc_sph_sd_kfz124_wespe_105mm.lua")
 dofile(current_mod_path .. "/Artillery/oc_spm_2s9_nona_120mm_m.lua")
 dofile(current_mod_path .. "/Cargo/oc_bambi_bucket.lua")
+dofile(current_mod_path .. "/Destroyer/oc_arleigh_burke_iia.lua")
 
 -- ch ger
 dofile(current_mod_path .. "/Airdefense/oc_ch_ger_skyshield_c_ram_gun.lua")
@@ -105,7 +106,6 @@ dofile(current_mod_path .. "/Armored/oc_ch_usa_oshkosh_matv_mrap_m2.lua")
 dofile(current_mod_path .. "/Armored/oc_ch_usa_oshkosh_matv_mrap_mk19.lua")
 dofile(current_mod_path .. "/Artillery/oc_ch_usa_m777.lua")
 dofile(current_mod_path .. "/Artillery/oc_ch_usa_m777_excalibur.lua")
-dofile(current_mod_path .. "/Destroyer/oc_ch_usa_arleigh_burke_iia.lua")
 
 -- ch swe
 dofile(current_mod_path .. "/Airdefense/oc_ch_swe_rbs_90_stationary_sam_ln.lua")

@@ -1,0 +1,6 @@
+model = {
+    lods = {
+        { "hq7_str_lod0.edm", 50000.0 },
+    },
+    collision_shell = "hq7_str_collision.edm",
+}

@@ -1,0 +1,7 @@
+model = {
+    lods = {
+        { "HAWK-RLS.EDM", 10000.000000 },
+        { "LD_Tec1.edm", 20000.000000 },
+    },
+    collision_shell = "V_lom.edm",
+}
