@@ -131,7 +131,7 @@ env.mission.triggers.zones = {}
 --- @description contains triggers
 --- @field actions table @actions lua, alphanumeric indexed
 --- @field conditions table @conditions lua, alphanumeric indexed
---- @field custom table 
+--- @field custom table
 --- @field customStartup table
 --- @field events table
 --- @field flag table @flags
@@ -233,7 +233,7 @@ land.SurfaceType = {}
 ------------------------------------------------------------------------------
 
 --- @class atmosphere
---- @description atmosphere is a singleton whose functions return atmospheric data about the mission. Currently limited only to wind data. 
+--- @description atmosphere is a singleton whose functions return atmospheric data about the mission. Currently limited only to wind data.
 --- @field getTemperatureAndPressure fun(point:vec3):number, number @Returns the temperature (Kelvins) and pressure (Pascals) at a given 3D point.
 --- @field getWind fun(point:vec3):vec3 @Returns a velocity vector of the wind at a specified 3D point.
 --- @field getWindWithTurbulence fun(point:vec3):vec3 @Returns a velocity vector of the wind at a specified 3D point, including effects of turbulence.
@@ -350,7 +350,7 @@ world.VolumeType = {}
 ------------------------------------------------------------------------------
 
 --- @class coalition
---- @description The coalition singleton contains functions that gets information on the all of the units within the mission. It also has two of the most powerful functions that are capable of spawning groups and static objects into the mission. 
+--- @description The coalition singleton contains functions that gets information on the all of the units within the mission. It also has two of the most powerful functions that are capable of spawning groups and static objects into the mission.
 --- @field addGroup fun(countryId:number, groupCategory:number, groupData:table):Group @Adds a group of the specified category for the specified country using provided group data. (country.id, Group.Category)
 --- @field addRefPoint fun(coalitionId:number, refPoint:table) @Adds a reference point for the specified coalition, used by JTACs. (coalition.side)
 --- @field addStaticObject fun(countryId:number, groupData:table):StaticObject @Dynamically spawns a static object for the specified country based on the provided group data. (country.id)
@@ -447,7 +447,7 @@ trigger.flareColor = {}
 --- @field outSoundForCountry fun(country:number, soundfile:string) @Plays a sound file to all players in the specified country.
 --- @field outSoundForGroup fun(groupId:number, soundfile:string) @Plays a sound file to all players in the specified group.
 --- @field outSoundForUnit fun(unitId:number, soundfile:string) @Plays a sound file to all players in the specified unit.
---- @field outText fun(text:string, displayTime:number, clearview:boolean) @Displays text to all players for the specified time.
+--- @field outText fun(text:string, displayTime:number, clearview?:boolean) @Displays text to all players for the specified time.
 --- @field outTextForCoalition fun(coalition:number, text:string, displayTime:number, clearview:boolean) @Displays text to players in a specified coalition for a set time.
 --- @field outTextForCountry fun(country:number, text:string, displayTime:number, clearview:boolean) @Displays text to players in a specified country for a set time.
 --- @field outTextForGroup fun(groupId:number, text:string, displayTime:number, clearview:boolean) @Displays text to players in a specified group for a set time.
@@ -497,7 +497,7 @@ trigger.misc = {}
 --- @description The coord singleton contains functions used to convert coordinates between the game's XYZ, Longitude and Latitude, and the MGRS coordinate systems.
 --- @field LLtoLO fun(latitude:number, longitude:number, altitude:number):vec3 @Converts latitude, longitude, and altitude to game world coordinates (vec3).
 --- @field LOtoLL fun(point:vec3):number, number, number @Converts game world coordinates (vec3) to latitude, longitude, and altitude.
---- @field LLtoMGRS fun(latitude:number, longitude:number):MGRS @Returns an MGRS table from the latitude and longitude coordinates provided. Note that in order to get the MGRS coordinate from a vec3 you must first use coord.LOtoLL on it. 
+--- @field LLtoMGRS fun(latitude:number, longitude:number):MGRS @Returns an MGRS table from the latitude and longitude coordinates provided. Note that in order to get the MGRS coordinate from a vec3 you must first use coord.LOtoLL on it.
 --- @field MGRStoLL fun(mgrs:MGRS):number, number, number @Converts an MGRS table to latitude, longitude, and altitude.
 --- @type coord
 coord = {}
@@ -554,7 +554,7 @@ VoiceChat.RoomType = {}
 ------------------------------------------------------------------------------
 
 --- @class mission.net
---- @description The net singleton are a number of functions from the network API that work in the mission scripting environment. Notably for mission scripting purposes there is now a way to send chat, check if players are in Combined Arms slots, kick people from the server, and move players to certain slots. 
+--- @description The net singleton are a number of functions from the network API that work in the mission scripting environment. Notably for mission scripting purposes there is now a way to send chat, check if players are in Combined Arms slots, kick people from the server, and move players to certain slots.
 --- @field CHAT_ALL number
 --- @field CHAT_TEAM number
 --- @field ERR_BAD_CALLSIGN number
@@ -1051,9 +1051,9 @@ Controller.Detection = {}
 --- @description Task Wrapper - functions as a wrapper for setting commands and options as a task within a mission, comboTask, or controlledTask.
 --- @field params table
 
--- Main Tasks: AttackGroup, AttackUnit, Bombing, Strafing, CarpetBombing, AttackMapObject, BombingRunway, orbit, refueling, land, follow, followBigFormation, escort, Embarking, fireAtPoint, hold, FAC_AttackGroup, EmbarkToTransport, DisembarkFromTransport, CargoTransportation, goToWaypoint, groundEscort, RecoveryTanker 
+-- Main Tasks: AttackGroup, AttackUnit, Bombing, Strafing, CarpetBombing, AttackMapObject, BombingRunway, orbit, refueling, land, follow, followBigFormation, escort, Embarking, fireAtPoint, hold, FAC_AttackGroup, EmbarkToTransport, DisembarkFromTransport, CargoTransportation, goToWaypoint, groundEscort, RecoveryTanker
 
--- Enroute Tasks: engageTargets, engageTargetsInZone, engageGroup, engageUnit, awacs, tanker, ewr, FAC_engageGroup, FAC 
+-- Enroute Tasks: engageTargets, engageTargetsInZone, engageGroup, engageUnit, awacs, tanker, ewr, FAC_engageGroup, FAC
 
 ------------------------------------------------------------------------------
 --- Route

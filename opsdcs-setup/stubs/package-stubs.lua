@@ -244,15 +244,15 @@ db = {}
 --- @field getLayouts fun()
 --- @field getWaveInfo fun()
 --- @field init fun()
---- @field pauseMusic fun()
---- @field playMusic fun(playlist) @plays a playlist (table of filenames)
---- @field playPreview fun(file)
---- @field playSound fun(file)
---- @field resumeMusic fun()
---- @field setEffectsGain fun()
---- @field setMusicGain fun()
---- @field stopMusic fun()
---- @field stopPreview fun()
+--- @field pauseMusic fun() @pauses the current music
+--- @field playMusic fun(playlist:table<string>) @plays a playlist (table of filenames)
+--- @field playPreview fun(filename:string) @plays preview of a sound file
+--- @field playSound fun(filename:string) @plays a sound file (ogg or wav)
+--- @field resumeMusic fun() @resumes the current music
+--- @field setEffectsGain fun(gain:number) @set effects gain
+--- @field setMusicGain fun(gain:number) @set music gain
+--- @field stopMusic fun() @stops the current music
+--- @field stopPreview fun() @stops the preview
 --- @field update fun()
 --- @field updateSettings fun()
 --- @type sound
@@ -394,37 +394,37 @@ db = {}
 --- terrain
 ------------------------------------------------------------------------------
 
---- @class terrain
+--- @class Terrain
 --- @field Create fun()
---- @field FindNearestPoint fun()
---- @field FindOptimalPath fun()
---- @field GetHeight fun()
---- @field GetMGRScoordinates fun()
---- @field GetSeasons fun()
---- @field GetSurfaceHeightWithSeabed fun()
---- @field GetSurfaceType fun()
---- @field GetTerrainConfig fun()
---- @field Init fun()
---- @field InitLight fun()
+--- @field FindNearestPoint fun(x:number, y:number, range:number):number,number @finds nearest point (on road?)
+--- @field FindOptimalPath fun(x1:number, y1:number, x2:number, y2:number):table @finds optimal path (on road?)
+--- @field GetHeight fun(x:number, y:number):number @returns height at a point
+--- @field GetMGRScoordinates fun(x:number, y:number):string @returns MGRS coordinates
+--- @field GetSeasons fun():table @returns seasons
+--- @field GetSurfaceHeightWithSeabed fun(x:number, y:number):number,number @returns surface, depth in point
+--- @field GetSurfaceType fun(x:number, y:number):string @returns surface type at a point
+--- @field GetTerrainConfig fun(type:string):table @returns terrain config. type: Airdromes, id, SW_bound, NE_bound, defaultcamera, standDescriptionVersion, SummerTimeDelta, defaultBullseye
+--- @field Init fun(terrain_config:table, reason, date)
+--- @field InitLight fun(terrain_config:table, reason, date)
 --- @field Release fun()
---- @field convertLatLonToMeters fun()
---- @field convertMGRStoMeters fun()
---- @field convertMetersToLatLon fun():number, number
---- @field findPathOnRoads fun()
---- @field getBeacons fun()
---- @field getClosestPointOnRoads fun()
---- @field getClosestValidPoint fun()
+--- @field convertLatLonToMeters fun(x:number, y:number):number,number @converts lat/lon to meters
+--- @field convertMGRStoMeters fun(mgrs:string):number,number @converts MGRS to x/y
+--- @field convertMetersToLatLon fun(x:number, y:number):number, number @converts x/y to lat/lon
+--- @field findPathOnRoads fun(type:string, x1:number, y1:number, x2:number, y2:number):table @finds path on roads. type: roads, railroads
+--- @field getBeacons fun():table @returns beacons
+--- @field getClosestPointOnRoads fun(type:string, x:number, y:number):number,number @finds closest point on road. type: roads, railroads
+--- @field getClosestValidPoint fun(type:string, x:number, y:number):number,number @finds closest valid point. type: land
 --- @field getCrossParam fun()
---- @field getObjectPosition fun()
---- @field getObjectsAtMapPoint fun()
---- @field getRadio fun()
---- @field getRunwayHeading fun()
---- @field getRunwayList fun()
---- @field getStandList fun()
---- @field getTechSkinByDate fun()
---- @field getTempratureRangeByDate fun()
+--- @field getObjectPosition fun(o:Object):number,number @returns object position
+--- @field getObjectsAtMapPoint fun(mapX:number, mapY:number):table
+--- @field getRadio fun(roadnet:string):table @returns radio frequencies of an airport roadnet
+--- @field getRunwayHeading fun(roadnet:string):number @returns runway heading of an airport roadnet
+--- @field getRunwayList fun(roadnet:string):table @returns runways of an airport roadnet (runway: course, edge1name, edge1y, edge1x, edge2name, edge2y, edge2x)
+--- @field getStandList fun(roadnet:string):table
+--- @field getTechSkinByDate fun(day, month)
+--- @field getTempratureRangeByDate fun(day, month):number,number @returns min, max temperature
 --- @field getTerrainShpare fun()
---- @field isVisible fun()
+--- @field isVisible fun(x1:number, alt1:number, y1:number, x2:number, alt2:number, y2:number):boolean @returns true if there is LOS
 
 ------------------------------------------------------------------------------
 --- LockOn_Options
