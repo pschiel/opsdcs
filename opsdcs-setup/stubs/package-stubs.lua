@@ -423,7 +423,7 @@ db = {}
 --- @field getStandList fun(roadnet:string):table
 --- @field getTechSkinByDate fun(day, month)
 --- @field getTempratureRangeByDate fun(day, month):number,number @returns min, max temperature
---- @field getTerrainShpare fun()
+--- @field getTerrainShpare fun() @???
 --- @field isVisible fun(x1:number, alt1:number, y1:number, x2:number, alt2:number, y2:number):boolean @returns true if there is LOS
 
 ------------------------------------------------------------------------------
