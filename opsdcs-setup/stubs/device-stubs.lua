@@ -193,7 +193,7 @@ function get_random_orderly() end
 
 --- Returns terrain related data
 --- @param file string @"beacons", "beaconsFile", "Airdromes", "name", "TAD_vfs_archives", "TAD_chart_map_set_file", "edterrainVersion", "KNEEBOARD"
---- @return table
+--- @return table @terrain related data (display_name, radio={})
 function get_terrain_related_data(file) end
 
 --- Returns cockpit parameters

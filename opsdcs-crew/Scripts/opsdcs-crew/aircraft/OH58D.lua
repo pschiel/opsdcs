@@ -4,13 +4,13 @@ OpsdcsCrew["OH58D"] = {
         cp = "default",
     },
     procedures = {
-        ["coldstart"] = {
-            text = "Cold Start",
+        {
+            name = "Cold Start",
             cond = { "param_eq", "ENGINE_NG_RPM", 0 },
             start_state = "coldstart-before-engine-start",
         },
-        ["shutdown"] = {
-            text = "Engine Shutdown",
+        {
+            name = "Engine Shutdown",
             cond = { "param_gt", "ENGINE_NG_RPM", 0 },
             start_state = "shutdown-start",
         }

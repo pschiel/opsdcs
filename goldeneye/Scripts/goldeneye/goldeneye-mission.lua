@@ -62,7 +62,7 @@ Goldeneye = {
 
 --- debug log helper
 --- @param msg string @message
---- @param duration number @duration
+--- @param duration? number @duration
 function Goldeneye:log(msg, duration)
     if self.options.debug then
         trigger.action.outText("[Goldeneye] " .. msg, duration or 10)
@@ -426,9 +426,7 @@ function Goldeneye:searchObjects(sensor)
     world.searchObjects(Object.Category.SCENERY, volume, onFoundObject, sensor)
 end
 
-function Goldeneye:recordObject(object)
-
-end
+function Goldeneye:recordObject(object) end
 
 ------------------------------------------------------------------------------
 

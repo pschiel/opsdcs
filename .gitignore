@@ -2,9 +2,10 @@
 /moose-emmy
 /opsdcs-camcontrol
 /opsdcs-crew/Scripts/opsdcs-crew/sounds
+/opsdcs-fm/build
 /opsdcs-pmca
 /opsdcs-samsites
+/opsdcs-setup/stubs/fm-stubs.cpp
 /opsdcs-tacview
 /scratch
-/opsdcs-setup/stubs/fm-stubs.cpp
 *.png
