@@ -33,4 +33,4 @@ $(OBJDIR_RELEASE)/%.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	rm -rf obj build
+	rm -rf build
