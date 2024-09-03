@@ -1,0 +1,50 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build FM (Debug)",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "debug"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/opsdcs-fm"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Build FM (Release)",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "release"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/opsdcs-fm"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Clean FM",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "clean"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/opsdcs-fm"
+            },
+            "group": "none",
+            "problemMatcher": []
+        }
+    ]
+}
