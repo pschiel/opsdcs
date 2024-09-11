@@ -2,4 +2,4 @@ package.cpath = package.cpath .. ';C:/Users/ops/.vscode/extensions/tangzx.emmylu
 local dbg = require('emmy_core')
 dbg.tcpConnect('localhost', 9966)
 
-dofile([[E:/Work\dcs\opsdcs\opsdcs-cargo\Scripts\opsdcs-cargo\opsdcs-cargo-mission.lua]])
+dofile([[E:\Work\dcs\opsdcs\snippets\dynamic-spawn-test.lua]])

@@ -3,12 +3,6 @@
 --- used by device_init/sounds_init/clickabledata, mainpanel_init, devices
 ---------------------------------------------------------------------------
 
---- @type table
-package = {}
-
---- @param module string
-function require(module) end
-
 --- @type lfs
 lfs = {}
 
@@ -288,7 +282,7 @@ function a_start_listen_event(event, flag) end
 --- Cockpit conditions
 ------------------------------------------------------------------------------
 
-function c_argument_in_range(argument,  min, max, plugin) end
+function c_argument_in_range(argument, min, max, plugin) end
 function c_cockpit_highlight_visible(id) end
 function c_cockpit_param_equal_to(param, value) end
 function c_cockpit_param_in_range(param, min, max) end
@@ -420,7 +414,106 @@ function update() end
 --- Graphic elements
 ------------------------------------------------------------------------------
 
+--- Adds an element
+--- @param element Element
+function Add(element) end
+
 --- Creates a graphic element
---- @param type string @"ceBoundingMeshBox", "ceBoundingTexBox", "ceCircle", "ceHWLine", "ceHWSector", "ceHint", "ceMeshPoly", "ceSCircle", "ceSMultiLine", "ceSVarLenLine", "ceSimple", "ceSimpleLineObject", "ceStringPoly", "ceTMultiLine", "ceTexPoly"
---- @return table
+--- @param type ElementType @element type
+--- @return Element
 function CreateElement(type) end
+
+--- @class Element
+--- @field name string @element name
+--- @field parent_element string @parent element name
+--- @field element_params string[] @list of shared element parameters
+--- @field material string @material name
+--- @field init_pos vec2 @initial position
+--- @field init_rot vec3 @initial rotation
+--- @field width number @element width
+--- @field h_clip_relation h_clip_relations
+--- @field level number @element level
+--- @field collimated boolean @if true, element is collimated (HUD)
+--- @field isvisible boolean @when false, not visible and rendered only to stencil buffer
+--- @field z_enabled boolean
+--- @field use_mipfilter boolean
+--- @field additive_alpha boolean
+--- @field change_opacity boolean
+--- @field isdraw boolean
+--- @field alignment ElementAlignment @alignment
+--- @field primitivetype PrimitiveType @"triangles" or "lines"
+--- @field vertices vec3[] @list of vertices
+--- @field indices number[] @list of vertex indices (3 per triangle, 1 per point on line)
+--- @field UseBackground boolean @if true, use background material
+--- @field BackgroundMaterial string @background material name
+--- @field value string @string value
+--- @field stringdefs table @vertical_size, horizontal_size, horizontal_spacing, vertical_spacing
+--- @field controllers ElementController[] @list of controllers
+--- @field formats table @string format(s?), e.g. {"%s"} or {"%03.0f"}
+--- @field tex_params table @center x, center y, scale x, scale y
+--- @field blend_mode blend_mode @blend mode, from Scripts\Aircrafts\_Common\Cockpit\elements_defs.lua
+
+--- @alias ElementType string
+---| '"ceBoundingMeshBox"'
+---| '"ceBoundingTexBox"'
+---| '"ceCircle"'
+---| '"ceHWLine"'
+---| '"ceHWSector"'
+---| '"ceHint"'
+---| '"ceMeshPoly"'
+---| '"ceSCircle"'
+---| '"ceSMultiLine"'
+---| '"ceSVarLenLine"'
+---| '"ceSimple"'
+---| '"ceSimpleLineObject"'
+---| '"ceStringPoly"'
+---| '"ceTMultiLine"'
+---| '"ceTexPoly"'
+
+--- @alias ElementAlignment string
+---| '"LeftTop"'
+---| '"CenterTop"'
+---| '"RightTop"'
+---| '"LeftCenter"'
+---| '"CenterCenter"'
+---| '"RightCenter"'
+---| '"LeftBottom"'
+---| '"CenterBottom"'
+---| '"RightBottom"'
+
+--- @alias PrimitiveType string
+---| '"triangles"'
+---| '"lines"'
+
+--- @alias ElementControllerType string
+---| '"opacity_using_parameter"'
+---| '"text_using_parameter"'
+---| '"parameter_in_range"'
+---| '"move_left_right_using_parameter"'
+---| '"move_up_down_using_parameter"'
+---| '"rotate_using_parameter"'
+---| '"screenspace_position"'
+
+--- @class h_clip_relations
+--- @field NULL number @0 - No clipping
+--- @field COMPARE number @1 - Test of equality of element level value with the already existing level (set by previously rendered elements). If the level at the given pixel is the same as of the element, the pixel is drawn.
+--- @field REWRITE_LEVEL number @2 - Rewrite the level at all pixels affected by the element render.
+--- @field INCREASE_LEVEL number @3 - Increment the level (existing value + 1) at all pixels affected by the element render.
+--- @field INCREASE_IF_LEVEL number @4 - Increment the level (existing value + 1) at all pixels affected by the element render, but only if the existing level at the pixel is the same as the level of the element.
+--- @field DECREASE_LEVEL number @5 - Decrement the level (existing value - 1) at all pixels affected by the element render.
+--- @field DECREASE_IF_LEVEL number @6 - Decrement the level (existing value - 1) at all pixels affected by the element render, but only ifthe existing level at the pixel is the same as the level of the element.
+h_clip_relations = {}
+
+--- @class blend_mode
+--- @field IBM_NO_WRITECOLOR number @0 - element will be rendered only to stencil buffer
+--- @field IBM_REGULAR number @1 - regular work with write mask set to RGBA
+--- @field IBM_REGULAR_ADDITIVE_ALPHA number @2 - regular work with write mask set to RGBA , additive alpha for HUD
+--- @field IBM_REGULAR_RGB_ONLY number @3 - regular work with write mask set to RGB (without alpha)
+--- @field IBM_REGULAR_RGB_ONLY_ADDITIVE_ALPHA number @4 - regular work with write mask set to RGB (without alpha) , additive alpha for HUD
+--- @field IBM_ONLY_ALPHA number @5 - write mask set only for alpha
+
+--- @class ElementController
+--- @field [1] ElementControllerType @controller type/name
+--- @field [2] number @params index
+--- @field [3] number? @formats index (text), min (range), x (move, position)
+--- @field [4] number? @max (range), y (move, position)

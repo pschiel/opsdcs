@@ -64,6 +64,7 @@ Goldeneye = {
 --- @param msg string @message
 --- @param duration? number @duration
 function Goldeneye:log(msg, duration)
+    log.info("[Goldeneye] " .. msg)
     if self.options.debug then
         trigger.action.outText("[Goldeneye] " .. msg, duration or 10)
     end
@@ -134,6 +135,8 @@ function Goldeneye:onEvent(event)
         -- elseif event.id == world.event.S_EVENT_LAND then
         -- elseif event.id == world.event.S_EVENT_ENGINE_STARTUP then
         -- elseif event.id == world.event.S_EVENT_ENGINE_SHUTDOWN then
+        
+        -- S_EVENT_PLAYER_LEAVE_UNIT
     else
         self:genericOnEvent(event)
     end

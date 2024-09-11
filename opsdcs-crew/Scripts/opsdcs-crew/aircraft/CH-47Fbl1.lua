@@ -1,4 +1,8 @@
 OpsdcsCrew["CH-47Fbl1"] = {
+    options = {
+        showHighlights = false,
+        playSounds = false,
+    },
     soundpack = {
         plt = "default",
         cp = "default",
@@ -7,6 +11,10 @@ OpsdcsCrew["CH-47Fbl1"] = {
     procedures = {
         {
             name = "Cold Start",
+            start_state = "coldstart-apu-start",
+        },
+        {
+            name = "Cold Start (Full)",
             start_state = "coldstart-before-apu-start",
         },
         {

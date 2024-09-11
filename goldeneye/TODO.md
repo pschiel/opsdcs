@@ -1,22 +1,30 @@
 # TODO
 
+General:
 - [x] mission patterns for hook
 - [x] player spawn, detect sp player
-- [ ] detect mp player
+- [x] detect mp player
+- [x] check player leave/rejoin/multi
+- [ ] config
+
+Menu system:
 - [ ] f10 payloads
 - [ ] f10 cam commands
+- [ ] debug submenu
+- [x] debug spawn
+- [x] debug cam
+
+Markers:
 - [ ] marker + infos
-- [ ] unit dead
-- [ ] mp poc chat/gui hook
+- [ ] tracked unit dead
 - [x] persistence
-- [ ] config
+
+Misc:
 - [ ] arcade/sim
 - [ ] truck
-- [ ] exceptions
-- [ ] old data
-- [ ] screenshots
-- [ ] screenshots pic overlay
-- [ ] stable cam switch (gui frame queue)
+- [ ] scenery exceptions/whitelist
+- [ ] check old data
+- [x] stable cam switch (gui frame queue)
 - [ ] grouping/details
 - [ ] sounds
-- [ ] sp/mp mode
+- [ ] mp poc chat/gui hook
