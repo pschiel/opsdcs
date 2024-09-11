@@ -427,7 +427,7 @@ function CreateElement(type) end
 --- @field name string @element name
 --- @field parent_element string @parent element name
 --- @field element_params string[] @list of shared element parameters
---- @field material string @material name
+--- @field material string @material name, see MakeMaterial()
 --- @field init_pos vec2 @initial position
 --- @field init_rot vec3 @initial rotation (degrees)
 --- @field width number @element width
@@ -435,23 +435,23 @@ function CreateElement(type) end
 --- @field level number @element level (starting from 1)
 --- @field collimated boolean @if true, element is collimated (HUD)
 --- @field isvisible boolean @when false, not visible and rendered only to stencil buffer
---- @field z_enabled boolean
---- @field use_mipfilter boolean
---- @field additive_alpha boolean
---- @field change_opacity boolean
---- @field isdraw boolean
---- @field alignment ElementAlignment @alignment
---- @field primitivetype PrimitiveType @"triangles" or "lines"
+--- @field z_enabled boolean @???
+--- @field use_mipfilter boolean @???
+--- @field additive_alpha boolean @???
+--- @field change_opacity boolean @???
+--- @field isdraw boolean @if false, element is not drawn
+--- @field alignment ElementAlignment @aligns what to what??? "LeftTop", "CenterTop", "RightTop", "LeftCenter", "CenterCenter", "RightCenter", "LeftBottom", "CenterBottom", "RightBottom"
+--- @field primitivetype PrimitiveType @"triangles", "lines"
 --- @field vertices vec3[] @list of vertices
 --- @field indices number[] @list of vertex indices (3 per triangle, 1 per point on line)
 --- @field UseBackground boolean @if true, use background material
 --- @field BackgroundMaterial string @background material name
---- @field value string @string value
+--- @field controllers ElementController[] @list of controllers: opacity_using_parameter, text_using_parameter, parameter_in_range, move_left_right_using_parameter, move_up_down_using_parameter, rotate_using_parameter, screenspace_position
+--- @field value string @string value (only for string???)
 --- @field stringdefs table @vertical_size, horizontal_size, horizontal_spacing, vertical_spacing
---- @field controllers ElementController[] @list of controllers
 --- @field formats table @string format(s?), e.g. {"%s"} or {"%03.0f"}
 --- @field tex_params table @center x, center y, scale x, scale y
---- @field blend_mode blend_mode @blend mode, from Scripts\Aircrafts\_Common\Cockpit\elements_defs.lua
+--- @field blend_mode blend_mode @blend mode 0-5, see Scripts\Aircrafts\_Common\Cockpit\elements_defs.lua
 
 --- @alias ElementType string
 ---| '"ceBoundingMeshBox"'
