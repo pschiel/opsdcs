@@ -429,10 +429,10 @@ function CreateElement(type) end
 --- @field element_params string[] @list of shared element parameters
 --- @field material string @material name
 --- @field init_pos vec2 @initial position
---- @field init_rot vec3 @initial rotation
+--- @field init_rot vec3 @initial rotation (degrees)
 --- @field width number @element width
---- @field h_clip_relation h_clip_relations
---- @field level number @element level
+--- @field h_clip_relation h_clip_relations @hardware clipping relations (pixel test/modify)
+--- @field level number @element level (starting from 1)
 --- @field collimated boolean @if true, element is collimated (HUD)
 --- @field isvisible boolean @when false, not visible and rendered only to stencil buffer
 --- @field z_enabled boolean
