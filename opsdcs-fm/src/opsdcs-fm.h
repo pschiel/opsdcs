@@ -1,5 +1,12 @@
-#include "ED_FM_TemplateAPI.h"
-#include "include/FM/wHumanCustomPhysicsAPI.h"
+#pragma once
+
+#ifdef ED_FM_TEMPLATE_EXPORTS
+#define ED_FM_TEMPLATE_API __declspec(dllexport)
+#else
+#define ED_FM_TEMPLATE_API __declspec(dllimport)
+#endif
+
+#include "../include/FM/wHumanCustomPhysicsAPI.h"
 
 extern "C"
 {

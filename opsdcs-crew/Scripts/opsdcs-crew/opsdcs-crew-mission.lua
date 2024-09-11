@@ -3,15 +3,16 @@
 -- if OpsdcsCrew then return end -- do not load twice (mission+hook)
 
 OpsdcsCrew = {
+    --- @type table @default options
     options = {
         debug = true,               --- @type boolean @debug mode, set true for ingame debug messages
         timeDelta = 0.1,            --- @type number @seconds between updates
         showChecklist = true,       --- @type boolean @show interactive checklist when true
-        pilotVoice = true,          --- @type boolean @plays pilot voice sounds when true @todo
+        showHighlights = true,      --- @type boolean @shows highlights for next check
+        playSounds = true,          --- @type boolean @play sounds
         autoAdvance = 2,            --- @type number @auto advance to next state if all checked within this time (0 to disable)
         commandAdvance = 0,         --- @type number @advance on user command @todo
         autoStartProcedures = true, --- @type boolean @autostart procedures when condition is met @todo
-        showHighlights = true,      --- @type boolean @shows highlights for next check
     },
 
     --- @type string[] @supported types (@todo: autocheck, variants)
@@ -42,11 +43,22 @@ OpsdcsCrew = {
 
 ------------------------------------------------------------------------------
 
+--- get option (default or from plugin) TODO zone config?
+--- @param string name @option name
+--- @return any @option value
+function OpsdcsCrew:getOption(name)
+    local option = self.options[name]
+    if self[self.typeName] and self[self.typeName].options and self[self.typeName].options[name] ~= nil then
+        option = self[self.typeName].options[name]
+    end
+    return option
+end
+
 --- debug log helper
 --- @param msg string @message
 --- @param duration number @duration
 function OpsdcsCrew:log(msg, duration)
-    if self.options.debug then
+    if self:getOption("debug") then
         trigger.action.outText("[opsdcs-crew] " .. msg, duration or 10)
     end
 end
@@ -329,7 +341,7 @@ end
 function OpsdcsCrew:update()
     if not self.isRunning then return end
 
-    local timeDelta = self.options.timeDelta
+    local timeDelta = self:getOption("timeDelta")
     if self.sndPlayUntil and timer.getTime() > self.sndPlayUntil then
         self.sndPlayUntil = nil
     end
@@ -344,7 +356,7 @@ function OpsdcsCrew:update()
     local foundUnchecked = nil
 
     -- play state sound
-    if state.sndPlayed == nil and state.snd ~= nil then
+    if self:getOption("playSounds") and state.sndPlayed == nil and state.snd ~= nil then
         self:playSoundFromText(state.text, state.snd, state.seat)
         state.sndPlayed = true
     end
@@ -376,28 +388,33 @@ function OpsdcsCrew:update()
             condition.sndPlayed = true
         end
 
-        -- condition sound not played yet - mark false
-        if condition.snd and condition.sndPlayed == nil then
-            condIsTrue = false
-            -- play when nothing else playing and all other checked so far
-            if condition.sndPlayUntil == nil and self.sndPlayUntil == nil and allCondsAreTrue then
-                self:playSoundFromText(condition.text, condition.snd, condition.seat)
-                condition.sndPlayUntil = timer.getTime() + condition.snd
+        -- sounds
+        if self:getOption("playSounds") then
+
+            -- condition sound not played yet - mark false
+            if condition.snd and condition.sndPlayed == nil then
+                condIsTrue = false
+                -- play when nothing else playing and all other checked so far
+                if condition.sndPlayUntil == nil and self.sndPlayUntil == nil and allCondsAreTrue then
+                    self:playSoundFromText(condition.text, condition.snd, condition.seat)
+                    condition.sndPlayUntil = timer.getTime() + condition.snd
+                end
             end
-        end
 
-        -- play check if not played yet and everything checked until here
-        if condIsTrue and condition.check and allCondsAreTrue and condition.checkPlayed == nil and self.sndPlayUntil == nil then
-            local n = math.random(1, 8)
-            self:playSound("sounds/" .. self.typeName .. "/plt/" .. self[self.typeName].soundpack.plt .. "/check" .. n .. ".ogg", 1)
-            condition.checkPlayed = true
-        end
+            -- play check if not played yet and everything checked until here
+            if condIsTrue and condition.check and allCondsAreTrue and condition.checkPlayed == nil and self.sndPlayUntil == nil then
+                local n = math.random(1, 8)
+                self:playSound("sounds/" .. self.typeName .. "/plt/" .. self[self.typeName].soundpack.plt .. "/check" .. n .. ".ogg", 1)
+                condition.checkPlayed = true
+            end
 
-        -- long pause, repeat
-        if not condIsTrue and condition.snd and self.sndLastPlayed and timer.getTime() - self.sndLastPlayed > 30 then
-            condition.sndPlayed, condition.sndPlayUntil = nil, nil
-            local n = math.random(1, 5)
-            self:playSound("sounds/" .. self.typeName .. "/cp/" .. self[self.typeName].soundpack.cp .. "/wait" .. n .. ".ogg", 2)
+            -- long pause, repeat
+            if not condIsTrue and condition.snd and self.sndLastPlayed and timer.getTime() - self.sndLastPlayed > 30 then
+                condition.sndPlayed, condition.sndPlayUntil = nil, nil
+                local n = math.random(1, 5)
+                self:playSound("sounds/" .. self.typeName .. "/cp/" .. self[self.typeName].soundpack.cp .. "/wait" .. n .. ".ogg", 2)
+            end
+
         end
 
         -- condition true: create checked item, clear highlights
@@ -420,7 +437,7 @@ function OpsdcsCrew:update()
                 foundUnchecked = i
                 if foundUnchecked ~= self.firstUnchecked then
                     self.firstUnchecked = foundUnchecked
-                    if self.options.showHighlights then
+                    if self:getOption("showHighlights") then
                         self:showHighlights(condition.highlights or highlights)
                     end
                 end
@@ -438,10 +455,10 @@ function OpsdcsCrew:update()
     if keys ~= "00" then self:setupWaitForUserFlags() end
     local pressedSpace, pressedBS = keys:sub(1, 1) == "1", keys:sub(2, 2) == "1"
 
-    -- advance state when all conditions are true (auto or spacebar)
+    -- advance state when all conditions are true (auto or spacebar) TODO: and/or for skip?
     state.allCondsAreTrueSince = allCondsAreTrue and (state.allCondsAreTrueSince or timer.getTime()) or nil
-    if state.allCondsAreTrueSince and timer.getTime() - state.allCondsAreTrueSince >= self.options.autoAdvance then
-        if self.options.autoAdvance > 0 then
+    if state.allCondsAreTrueSince and timer.getTime() - state.allCondsAreTrueSince >= self:getOption("autoAdvance") then
+        if self:getOPtion("autoAdvance") > 0 then
             self:transition(state)
         else
             if pressedSpace or state.next_state == nil then
@@ -454,7 +471,7 @@ function OpsdcsCrew:update()
     end
 
     -- show text/checklist
-    if self.options.showChecklist then
+    if self:getOption("showChecklist") then
         local text = lines[1] .. (#lines > 1 and "\n\n" or "")
         text = text .. table.concat(lines, "\n", 2)
         -- if self.sndPlayUntil then
@@ -508,9 +525,7 @@ function OpsdcsCrew:showMainMenu()
         self.menu[procedure.name] = missionCommands.addCommandForGroup(self.groupId, procedure.name, nil, OpsdcsCrew.onProcedure, self, procedure)
     end
     self.menu["whats_this"] = missionCommands.addCommandForGroup(self.groupId, "Cockpit Tutor", nil, OpsdcsCrew.onWhatsThis, self)
-    if self.options.debug then
-        self.menu["args_debug"] = missionCommands.addCommandForGroup(self.groupId, "Toggle Arguments Debug", nil, OpsdcsCrew.onArgsDebug, self)
-    end
+    self.menu["args_debug"] = missionCommands.addCommandForGroup(self.groupId, "Toggle Arguments Debug", nil, OpsdcsCrew.onArgsDebug, self)
 end
 
 ------------------------------------------------------------------------------

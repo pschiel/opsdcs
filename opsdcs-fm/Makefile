@@ -1,7 +1,7 @@
 CXX = g++
 CXXFLAGS = -std=c++14 -D ED_FM_TEMPLATE_EXPORTS
 
-SOURCES = $(wildcard *.cpp) $(wildcard */*.cpp) $(wildcard */*/*.cpp)
+SOURCES = $(wildcard src/*.cpp) $(wildcard src/*/*.cpp)
 OBJDIR_DEBUG = build/x64/Debug
 OBJDIR_RELEASE = build/x64/Release
 TARGET_DEBUG = build/x64/Debug/opsdcs-fm.dll
