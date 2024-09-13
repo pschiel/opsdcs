@@ -1,8 +1,6 @@
 -- zone colors
 
 --- returns detailed zone data
---- @param zoneName string @name of zone
---- @return table @zone data (zoneId, name, verticies, ...)
 function getZoneData(zoneName)
     for _, zone in ipairs(env.mission.triggers.zones) do
         if zone.name == zoneName then
@@ -12,7 +10,6 @@ function getZoneData(zoneName)
 end
 
 --- draws a rectangle from a quad zone (quad background fill seems bugged)
---- @param zoneName string @name of zone
 function drawRectFromQuadZone(zoneName)
     local zoneData = getZoneData(zoneName)
     trigger.action.rectToAll(
@@ -27,9 +24,6 @@ function drawRectFromQuadZone(zoneName)
 end
 
 --- changes border and fill color of a zone rectangle
---- @param zoneName string @name of zone
---- @param color table @color { r, g, b, a }
---- @param fillColor table @fill color { r, g, b, a }
 function setZoneColors(zoneName, color, fillColor)
     local zoneData = getZoneData(zoneName)
     trigger.action.setMarkupColor(1000 + zoneData.zoneId, color)
