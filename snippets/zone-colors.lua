@@ -47,5 +47,6 @@ drawQuadFromZone("z2")
 setZoneColors("z1", { 0, 0, 1, 1 }, { 0, 0, 1, 0.2 })
 setZoneColors("z2", { 1, 0, 0, 1 }, { 1, 0, 0, 0.2 })
 
--- for testing: f10 command to kill unit "u1"
-missionCommands.addCommand("poof", nil, function() trigger.action.explosion(Unit.getByName("u1"):getPoint(), 100) end)
+-- for testing: f10 command to kill units "u1" and "u2"
+missionCommands.addCommand("poof u1", nil, function() trigger.action.explosion(Unit.getByName("u1"):getPoint(), 100) end)
+missionCommands.addCommand("poof u2", nil, function() trigger.action.explosion(Unit.getByName("u2"):getPoint(), 100) end)
