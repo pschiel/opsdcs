@@ -458,3 +458,10 @@ db = {}
 --- @field tcpListen fun()
 --- @field tcpSharedListen fun()
 --- @field waitIDE fun()
+
+------------------------------------------------------------------------------
+--- dxgui
+------------------------------------------------------------------------------
+
+--- @class dxgui
+--- Gui.AddFontSearchPathes({'dxgui/skins/fonts/', base.tostring(base.os.getenv('windir')) .. '/Fonts/'})
