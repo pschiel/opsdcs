@@ -1,4 +1,4 @@
-local cy = 904215 -- kobuleti
+local cy = 904215 -- vaziani
 local cx = -319621
 local n = 100 -- total number of units
 local r = 10000 -- radius
