@@ -69,8 +69,9 @@ function create_sound_host(name, type, x, y, z) end
 --- @param value number
 function dispatch_action(device_id, command, value) end
 
---- ??
-function do_mission_file() end
+--- Loads mission file
+--- @param file string
+function do_mission_file(file) end
 
 --- Finds viewport by name
 --- @param name string
