@@ -140,23 +140,3 @@ for i=1,n do
     local con = Group.getByName("dg" .. tostring(i)):getController()
     con:setOption(AI.Option.Air.id.ROE, AI.Option.Air.val.ROE.WEAPON_FREE)
 end
-
-local blue_kills = 0
-local red_kills = 0
-eventsHandler = {
-    onEvent = function(self, event)
-        local ini = event.initiator and event.initiator:getName() or "-"
-        if event.id == world.event.S_EVENT_UNIT_LOST then
-            if event.initiator and event.initiator.getCoalition then
-                local targetCoalition = event.initiator:getCoalition()
-                if targetCoalition == coalition.side.BLUE then
-                    red_kills = red_kills + 1
-                elseif targetCoalition == coalition.side.RED then
-                    blue_kills = blue_kills + 1
-                end
-                trigger.action.outText("blue kills: " .. tostring(blue_kills) .. ", red kills: " .. tostring(red_kills), 10, true)
-            end
-        end
-    end
-}
-world.addEventHandler(eventsHandler)
