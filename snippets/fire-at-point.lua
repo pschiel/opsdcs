@@ -1,9 +1,9 @@
-local grp = Group.getByName("g1")
+local grp = Group.getByName("Ground-1")
 local ctrl = grp:getController()
 ctrl:setOption(AI.Option.Ground.id.ALARM_STATE, AI.Option.Ground.val.ALARM_STATE.RED)
 ctrl:setOption(AI.Option.Ground.id.ROE, AI.Option.Ground.val.ROE.OPEN_FIRE)
 
-local tgt = Unit.findByName("u1")
+local tgt = Unit.getByName("Ground-2-1")
 local pos = tgt:getPoint()
 local newTask = {
     id = "FireAtPoint",
