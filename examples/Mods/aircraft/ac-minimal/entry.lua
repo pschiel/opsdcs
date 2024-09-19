@@ -1,7 +1,8 @@
 plugin_name = "ac-minimal by ops"
 obj_name = "ac-minimal"
 
-declare_plugin(plugin_name, {
+---@type PluginProperties
+local props = {
     installed = true,
     dirName = current_mod_path,
     displayName = _(plugin_name),
@@ -13,7 +14,8 @@ declare_plugin(plugin_name, {
     InputProfiles =	{
         [obj_name] = current_mod_path .. "/Input"
     }
-})
+}
+declare_plugin(plugin_name, props)
 
 mount_vfs_model_path(current_mod_path .. "/Shapes")
 mount_vfs_liveries_path(current_mod_path .. "/Liveries")
