@@ -374,7 +374,7 @@ function Get_RFGU_GUISettings_Preset(name) return end
 --- @field Skins PluginSkinsTable @Defines the path and representation of UI elements.
 --- @field Missions PluginMissionsTable @Defines the path and UI representation for flyable missions.
 --- @field LogBook PluginLogBookTable @Defines the path and UI representation for the pilot logbook.
---- @field InputProfiles PluginInputProfilesTable @Defines the path and UI representation for input profile bindings.
+--- @field InputProfiles table<string,string> @array with input profiles (["input_id"] = "path/to/inputdir")
 --- @field Options PluginOptionsTable @Option properties
 
 --- @class PluginSkinsTable
