@@ -496,7 +496,26 @@ function CreateElement(type) end
 ---| '"rotate_using_parameter"'
 ---| '"screenspace_position"'
 ---| '"change_color_when_parameter_equal_to_number"'
+--[[
 
+{"change_color_when_parameter_equal_to_number", param_nr, number, red, green, blue}
+{"text_using_parameter", param_nr, format_nr}
+{"move_left_right_using_parameter", param_nr, gain}
+{"move_up_down_using_parameter", param_nr, gain}
+{"opacity_using_parameter", param_nr}
+{"rotate_using_parameter", param_nr, gain}
+{"compare_parameters", param1_nr, param2_nr} -- if param1 == param2 then visible
+{"parameter_in_range", param_nr, greaterthanvalue, lessthanvalue} -- if greaterthanvalue < param < lessthanvalue then visible
+{"parameter_compare_with_number", param_nr, number} -- if param == number then visible
+{"line_object_set_point_using_parameters", point_nr, param_x, param_y, gain_x, gain_y}
+
+{"change_texture_state_using_parameter",???} -- exists but crashed DCS when used with one argument.
+{"line_object_set_point_using_parameters", ???}
+{"change_color_using_parameter", ???} -- exists but crashed DCS when used with one to five arguments.
+{"fov_control", ???}
+{"increase_render_target_counter", ???}
+
+--]]
 --- @class h_clip_relations
 --- @field NULL number @0 - No clipping
 --- @field COMPARE number @1 - Test of equality of element level value with the already existing level (set by previously rendered elements). If the level at the given pixel is the same as of the element, the pixel is drawn.

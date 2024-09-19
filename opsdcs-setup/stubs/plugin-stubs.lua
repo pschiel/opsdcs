@@ -386,7 +386,7 @@ function Get_RFGU_GUISettings_Preset(name) return end
 --- @description Missions table
 --- @field name string @The name of the plugin to show within most UI.
 --- @field dir string @The folder path of mission files used.
---- @field CLSID string @Customisable string text showing a class ID, e.g. {CLSID...CLSID}.
+--- @field CLSID string @Customisable string text.
 
 --- @class PluginLogBookTable
 --- @description LogBook table
