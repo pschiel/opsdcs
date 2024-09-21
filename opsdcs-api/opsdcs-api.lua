@@ -672,7 +672,7 @@ end
 function OpsdcsApi:getDbTerrains()
     local terrains = {
         -- fixme: bounds are not accurate
-        -- key = foldername
+        -- key = theatre name
         ["Afghanistan"] = { folder = "Afghanistan", bounds = { 29.1380386, 60.3788263, 39.0009356, 74.7805963 } },
         ["Caucasus"] = { folder = "Caucasus", bounds = { 40.3895774, 27.5420023, 47.6790855, 43.7848066 } },
         ["Kola"] = { folder = "Kola", bounds = { 64.2500055, 8.9591349, 71.8464196, 42.1817912 } },
