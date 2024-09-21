@@ -672,34 +672,35 @@ end
 function OpsdcsApi:getDbTerrains()
     local terrains = {
         -- fixme: bounds are not accurate
-        ["Afghanistan"] = { bounds = { 29.1380386, 60.3788263, 39.0009356, 74.7805963 } },
-        ["Caucasus"] = { bounds = { 40.3895774, 27.5420023, 47.6790855, 43.7848066 } },
-        ["Kola"] = { bounds = { 64.2500055, 8.9591349, 71.8464196, 42.1817912 } },
-        ["MarianaIslands"] = { bounds = { 10.8794944, 137.7591797, 21.6984876, 149.213188 } },
-        ["Nevada"] = { bounds = { 34.3483316, -119.985425, 39.7982463, -112.1130805 } },
-        ["Normandy"] = { bounds = { 48.209369, -1.9236945, 51.395154, 2.676616 } },
-        ["PersianGulf"] = { bounds = { 22.5840866, 47.1226709, 32.8089894, 60.3479854 } },
-        ["Sinai"] = { bounds = { 26.2339014, 28.8214748, 32.4262997, 36.2080106 } },
-        ["SouthAtlantic"] = { bounds = { -56.3646796, -77.4595916, -47.6054687, -52.4547088 } },
-        ["Syria"] = { bounds = { 31.9365414, 30.2493664, 37.6623492, 41.1213013 } },
-        ["TheChannel"] = { bounds = { 49.6773349, -0.08918, 51.5572647, 3.4399315 } }
+        -- key = foldername
+        ["Afghanistan"] = { folder = "Afghanistan", bounds = { 29.1380386, 60.3788263, 39.0009356, 74.7805963 } },
+        ["Caucasus"] = { folder = "Caucasus", bounds = { 40.3895774, 27.5420023, 47.6790855, 43.7848066 } },
+        ["Kola"] = { folder = "Kola", bounds = { 64.2500055, 8.9591349, 71.8464196, 42.1817912 } },
+        ["MarianaIslands"] = { folder = "MarianaIslands", bounds = { 10.8794944, 137.7591797, 21.6984876, 149.213188 } },
+        ["Nevada"] = { folder = "Nevada", bounds = { 34.3483316, -119.985425, 39.7982463, -112.1130805 } },
+        ["Normandy"] = { folder = "Normandy", bounds = { 48.209369, -1.9236945, 51.395154, 2.676616 } },
+        ["PersianGulf"] = { folder = "PersianGulf", bounds = { 22.5840866, 47.1226709, 32.8089894, 60.3479854 } },
+        ["SinaiMap"] = { folder = "Sinai", bounds = { 26.2339014, 28.8214748, 32.4262997, 36.2080106 } },
+        ["SouthAtlantic"] = { folder = "SouthAtlantic", bounds = { -56.3646796, -77.4595916, -47.6054687, -52.4547088 } },
+        ["Syria"] = { folder = "Syria", bounds = { 31.9365414, 30.2493664, 37.6623492, 41.1213013 } },
+        ["TheChannel"] = { folder = "TheChannel", bounds = { 49.6773349, -0.08918, 51.5572647, 3.4399315 } }
     }
-    for terrain, _ in pairs(terrains) do
+    for theatre, terraindata in pairs(terrains) do
         local hasBeacons, beacons = pcall(function()
-            loadfile("./Mods/terrains/" .. terrain .. "/beacons.lua")()
+            loadfile("./Mods/terrains/" .. terraindata.folder .. "/beacons.lua")()
             return beacons
         end)
         local hasRadio, radio = pcall(function()
-            loadfile("./Mods/terrains/" .. terrain .. "/radio.lua")()
+            loadfile("./Mods/terrains/" .. terraindata.folder .. "/radio.lua")()
             return radio
         end)
         local hasTowns, towns = pcall(function()
-            loadfile("./Mods/terrains/" .. terrain .. "/map/towns.lua")()
+            loadfile("./Mods/terrains/" .. terraindata.folder .. "/map/towns.lua")()
             return towns
         end)
-        if hasBeacons then terrains[terrain].beacons = beacons end
-        if hasRadio then terrains[terrain].radio = radio end
-        if hasTowns then terrains[terrain].towns = towns end
+        if hasBeacons then terrains[theatre].beacons = beacons end
+        if hasRadio then terrains[theatre].radio = radio end
+        if hasTowns then terrains[theatre].towns = towns end
     end
     return 200, terrains
 end
