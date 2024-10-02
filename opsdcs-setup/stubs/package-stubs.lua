@@ -119,7 +119,7 @@ log = {}
 --- @field round fun(value:number, accuracy:number):number
 --- @field round_qty fun(qty:number):number
 --- @field units table @units of measurement
---- @field verifyChunk fun(chunk:function, errmsg:string) @returns fun(x:number, parameters:table) with params set
+--- @field verifyChunk fun(chunk:function, errmsg:string) @returns fun(mainMenuPos:number, parameters:table) with params set
 --- @type utils
 utils = {}
 

@@ -220,8 +220,8 @@ function mount_vfs_model_path(path) return end
 
 --- Mounts a path to a mountpoint
 --- @param mount_point string @e.g. "/textures/tad/"
---- @param data table @see get_terrain_related_data()
-function mount_vfs_path_to_mount_point(mount_point, data) end
+--- @param path string
+function mount_vfs_path_to_mount_point(mount_point, path) end
 
 --- Mounts a texture archives path.
 --- @param path string The directory path.
