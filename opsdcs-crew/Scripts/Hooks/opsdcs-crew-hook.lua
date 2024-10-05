@@ -2,12 +2,15 @@
 --
 -- Auto-injects mission script into running missions.
 
+--- basedir, where mission scripts are located (can be customized in dev loader)
 OpsdcsCrewBasedir = OpsdcsCrewBasedir or (lfs.writedir():gsub("\\", "/") .. "Scripts/opsdcs-crew/")
 
+--- options
 OpsdcsCrewHook = {
     logging = true,
+    --- mission name patterns for auto-injection
+    --- see http://lua-users.org/wiki/PatternsTutorial
     autoInjectMissionPatterns = {
-        -- see http://lua-users.org/wiki/PatternsTutorial
         ".*",
     }
 }
@@ -31,7 +34,7 @@ function OpsdcsCrewHook:onMissionLoadEnd()
     end
 end
 
---- inject mission script into MSE
+--- inject script into MSE via mission env and a_do_script
 function OpsdcsCrewHook:injectScript()
     local code = "a_do_script('"
         .. "OpsdcsCrewBasedir=[[" .. OpsdcsCrewBasedir .. "]];OpsdcsCrewInject=true;"

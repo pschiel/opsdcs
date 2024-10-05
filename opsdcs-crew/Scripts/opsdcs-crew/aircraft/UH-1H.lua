@@ -1,25 +1,194 @@
--- todo: yes
-
 OpsdcsCrew["UH-1H"] = {
+    options = {
+        showHighlights = true,
+        playSounds = false,
+    },
     procedures = {
-        ["coldstart"] = {
-            text = "Cold Start",
-            start_state = "coldstart",
+        {
+            name = "Cold Start",
+            start_state = "coldstart-before-engine-start",
         },
     },
     states = {
         -- Cold Start
-        ["coldstart"] = {
-            text = "Coldstart",
+        ["coldstart-before-engine-start"] = {
+            text = "Before Engine Start",
+            needAllPrevious = true,
             conditions = {
+                { text = "DC circuit breakers IN, except armament/special equip", cond = { "skip" } }, -- why except?
+                { text = "ANTI-COLL to ON, DOME LT as required", cond = { "arg_eq", "ANTI-COLL-PTR", 1 } },
+                { text = "AC Voltmeter to AC PHASE", cond = { "arg_eq", "PHASE-SWITCHER-PTR", 0.1 } },
+                { text = "AC INVTR switch to OFF", cond = { "arg_eq", "INVTR-SWITCHER-PTR", 0 } },
+                { text = "DC MAIN GEN switch to ON, cover down", cond = { "arg_eq", "MAIN-GEN-SWITCHER-PTR", -1, "arg_eq", "MAIN-GEN-SWITCHER-COVER-PTR", 0 } },
+                { text = "DC VM selector to ESS BUS", cond = { "arg_eq", "VM-SWITCHER-PTR", 0.3 } },
+                { text = "DC NON-ESS BUS switch to NORMAL", cond = { "arg_eq", "NON-ESS-BUS-SWITCHERr-PTR", 0 } },
+                { text = "DC STARTER GEN switch to START", cond = { "arg_eq", "STARTER-GEN-SWITCHERr-PTR", 1 } },
+                { text = "DC BAT switch ON", cond = { "arg_eq", "BAT-SWITCHER-PTR", 0 } },
+                { text = "Set LOW RPM to OFF", cond = { "arg_eq", "LOW-RPM-PTR", 0  } },
+                { text = "Test FIRE warning indicator light", cond = { "arg_eq", "FIRE-DETECTOR-PTR", 1 }, onlyOnce = true },
+                { text = "Caution panel lights TEST, check lights", cond = { "arg_eq", "RESET-TEST-SWITCH-PTR", -1 }, onlyOnce = true },
+                { text = "Caution panel lights RESET", cond = { "arg_eq", "RESET-TEST-SWITCH-PTR", 1 }, onlyOnce = true },
+                { text = "Check external stores jettison handle safe tied", cond = { "skip" } }, --??
+                { text = "Check ARM/STBY/SAFE switch is SAFE", cond = { "arg_eq", "ARMED-SWITCH-PTR", -1 } },
+                { text = "Check JETTISON switch down and covered", cond = {"arg_eq", "JETT-COVER-PTR", 0, "arg_eq", "JETT-SWITCH-PTR", 0 } },
+                { text = "GOV switch to AUTO", cond = { "arg_eq", "GOV-PTR", 1 } },
+                { text = "DE-ICE switch to OFF", cond = { "arg_eq", "DE-ICE-PTR", 0 } },
+                { text = "MAIN FUEL switch to ON", cond = { "arg_eq", "FUEL-PTR", 1 } },
+                { text = "All other FUEL switches to OFF", cond = { "skip" } },
             },
-            next_state = "coldstart-complete",
+            next_state = "coldstart-flight-controls-check",
+        },
+        ["coldstart-flight-controls-check"] = {
+            text = "Flight Controls Check",
+            conditions = {
+                { text = "HYD CONT switch to ON", cond = { "arg_eq", "HYD-CONT-PTR", 1 } },
+                { text = "FORCE TRIM switch to ON", cond = { "arg_eq", "FORCE-TRIM-PTR", 1 }, needAllPrevious = true },
+                { text = "CHIP DET switch to BOTH", cond = { "arg_eq", "CHIP-DET-PTR", 0 }, needAllPrevious = true },
+                { text = "Move Cyclic full forward", cond = { "arg_lt", "PITCH", -0.9 }, onlyOnce = true },
+                { text = "Move Cyclic full left", cond = { "arg_lt", "ROLL", -0.65 }, onlyOnce = true },
+                { text = "Move Cyclic full back", cond = { "arg_gt", "PITCH", 0.9 }, onlyOnce = true },
+                { text = "Move Cyclic full right", cond = { "arg_gt", "ROLL", 0.65 }, onlyOnce = true },
+                { text = "Move Pedals full left", cond = { "arg_lt", "RUDDER", -0.8 }, onlyOnce = true },
+                { text = "Move Pedals full right", cond = { "arg_gt", "RUDDER", 0.8 }, onlyOnce = true },
+                { text = "Move Collective full up", cond = { "arg_gt", "COLLECTIVE", 0.9 }, onlyOnce = true },
+                { text = "Move Collective full down", cond = { "arg_eq", "COLLECTIVE", 0 }, needAllPrevious = true },
+                { text = "Center cyclic and pedals", cond = { "arg_between", "ROLL", -0.05, 0.05, "arg_between", "PITCH", -0.05, 0.05, "arg_between", "RUDDER", -0.05, 0.05 }, needAllPrevious = true },
+            },
+            next_state = "coldstart-starting-engine",
+        },
+        ["coldstart-starting-engine"] = {
+            text = "Engine Start",
+            needAllPrevious = true,
+            conditions = {
+                { text = "Roll throttle to FULL OPEN", cond = { "arg_eq", "THROTTLE-1-PTR", -1 }, onlyOnce = true },
+                { text = "Roll throttle back to IDLE STOP", cond = { "arg_eq", "THROTTLE-1-PTR", 0 }, onlyOnce = true },
+                { text = "Engage throttle stop switch", cond = { "arg_eq", "ENGINE-BTN-1-PTR", 1 }, onlyOnce = true },
+                { text = "Roll throttle slightly right of IDLE", cond = { "arg_gt", "THROTTLE-1-PTR", 0 }, onlyOnce = true },
+                { text = "Release throttle stop switch", cond = { "arg_eq", "ENGINE-BTN-1-PTR", 0 }, onlyOnce = true },
+                { text = "Press and hold START switch", cond = {  }, onlyOnce = true },
+                { text = "Wait for N1 reaching 15%", cond = {  } },
+                { text = "Check main rotor is turning", cond = {  } },
+                { text = "Wait for N1 reaching 40%", cond = {  } },
+                { text = "Release START switch", cond = {  } },
+                { text = "Advance throttle to IDLE, check idle stop", cond = {  }, onlyOnce = true },
+                { text = "Wait for N1 reaching 68-72%", cond = {  } },
+                { text = "Check engine and transmission oil pressures", cond = {  } },
+            },
+            next_state = "coldstart-engine-runup",
+        },
+        ["coldstart-starting-engine"] = {
+            text = "Engine Runup",
+            needAllPrevious = true,
+            conditions = {
+                { text = "INVTR switch to MAIN ON", cond = {  } },
+                { text = "STARTER GEN switch to STBY GEN", cond = {  } },
+                { text = "Advance throttle slowly to FULL", cond = {  } },
+                { text = "Systems check - FUEL", cond = {  } },
+                { text = "Systems check - Engine", cond = {  } },
+                { text = "Systems check - Transmission", cond = {  } },
+                { text = "Systems check - AC 112-118 Volts", cond = {  } },
+                { text = "Systems check - DC 27-28.5 Volts", cond = {  } },
+                { text = "Check low RPM warning OFF at 6100-6300 RPM", cond = {  } },
+                { text = "Wait for RPM reach 6600", cond = {  } },
+            },
+            next_state = "coldstart-setup-avionics",
+        },
+        ["coldstart-setup-avionics"] = {
+            text = "Setup Avionics",
+            conditions = {
+                { text = "Set baro altimeter to field evelation", cond = {  } },
+                { text = "Sync gyro compass to magnetic heading", cond = {  } },
+                { text = "Radar altimeter power to ON", cond = {  } },
+                { text = "Radar altimeter LO and HIGH as required", cond = {  } },
+                { text = "IFF MASTER to NORM", cond = {  } },
+                { text = "IFF MODE 4 to ON", cond = {  } },
+                { text = "Set NAV COMM as required", cond = {  } },
+                { text = "Set VHF COMM PWR to ON", cond = {  } },
+                { text = "Set FM COMM Mode to T/R", cond = {  } },
+                { text = "Set ADF Mode as required ", cond = {  } },
+                { text = "Set UHF Mode to T/R", cond = {  } },
+            },
+            next_state = "coldstart-complete"
         },
         ["coldstart-complete"] = {
             text = "Cold start complete",
         },
     },
     args = {
+        ["MHZ-SELECTOR-PTR"]  = 7,
+        ["KHZ-SELECTOR-PTR"] = 8,
+        ["MODE-SWITCH-PTR"] = 35,
+        ["TUNE-CONTROL-PTR"] = 39,
+        ["BFO-SWITCH-PTR"] = 41,
+        ["GAIN-CONTROL-PTR"] = 44,
+        ["WHOLE-MHZ-SELECTOR-KNOB-PTR"]  = 52,
+        ["FRACTIONAL-MHZ-SELECTOR-KNOB-KNOB-PTR"] = 53,
+        ["VOLUME-OFF-INCR-CONTROL-PTR"]  = 57,
+        ["CODE-PTR"]= 58,
+        ["MASTER-CONTROL-PTR"] = 59,
+        ["MODE-4-SWITCH-PTR"]= 67,
+        ["LOW-RPM-PTR"] = 80,
+        ["FUEL-PTR"] = 81,
+        ["DE-ICE-PTR"] = 84,
+        ["GOV-PTR"] = 85,
+        ["CHIP-DET-PTR"] = 86,
+        ["FORCE-TRIM-PTR"] = 89,
+        ["HYD-CONT-PTR"] = 90,
+        ["RESET-TEST-SWITCH-PTR"] = 111,
+        ["CAGING-KNOB-ROTATION-PTR"] = 140,
+        ["PILOT-ATT-PITCH-ADJ-KNOB-PTR"] = 144,
+        ["PILOT-ATT-ROLL-ADJ-KNOB-PTR"] = 145,
+        ["CDI-OBS-PTR"] = 155,
+        ["HDG-SYNC-PTR"] = 161,
+        ["HDG-SET-PTR"] = 163,
+        ["ADF-VOR-PTR"] = 164,
+        ["PILOT-ALT-SET-KNOB-PTR"] = 181,
+        ["RUDDER"] = 184,
+        ["PITCH"] = 186,
+        ["ROLL"] = 187,
+        ["COLLECTIVE"] = 200,
+        ["ENGINE-BTN-1-PTR"] = 206,
+        ["PHASE-SWITCHER-PTR"] = 214,
+        ["INVTR-SWITCHER-PTR"] = 215,
+        ["MAIN-GEN-SWITCHER-PTR"] = 216,
+        ["MAIN-GEN-SWITCHER-COVER-PTR"] = 217,
+        ["VM-SWITCHER-PTR"] = 218,
+        ["BAT-SWITCHER-PTR"] = 219,
+        ["STARTER-GEN-SWITCHERr-PTR"] = 220,
+        ["NON-ESS-BUS-SWITCHERr-PTR"] = 221,
+        ["ANTI-COLL-PTR"] = 225,
+        ["FUEL-GAUGE-PTR"] = 240,
+        ["DG-SLAVE-PTR"] = 241,
+        ["THROTTLE-1-PTR"] = 250,
+        ["ARMED-SWITCH-PTR"] = 252,
+        ["LRGUN-SWITCH-PTR"] = 253,
+        ["762-SWITCH-PTR"] = 256,
+        ["RKT-PAIR-PTR"] = 257,
+        ["RKT-RESET-PTR"] = 258,
+        ["JETT-COVER-PTR"] = 259,
+        ["JETT-SWITCH-PTR"] = 260,
+        ["FIRE-DETECTOR-PTR"] = 278,
+        ["PITCH-LO-ALT-PTR"] = 445,
+        ["PITCH-HI-ALT-PTR"] = 446,
+        ["RADAR-ALT-PTR"] = 449,
+        ["CHAFF-ARM-SWITCH-PTR"] = 456,
+        ["PGRM-SWITCH-PTR"] = 459,
+        ["FLARE-DISP-PTR"] = 464,
+
+    },
+    excludeDebugArgs = {
+        [132] = true,
+        [133] = true,
+        [185] = true,
+        [190] = true,
+        [191] = true,
+        [207] = true,
+        [243] = true,
+        [244] = true,
+        [246] = true,
+        [247] = true,
+        [264] = true,
+        [265] = true,
     },
     params = {
     },
@@ -33,310 +202,3 @@ OpsdcsCrew["UH-1H"] = {
     },
     commands = {},
 }
-
--- ADF_FREQ:0.000000\
--- BASE_SENSOR_ALTIMETER_ATMO_PRESSURE_HG:757.149375\
--- BASE_SENSOR_AOA:0.017331\
--- BASE_SENSOR_AOS:-0.000043\
--- BASE_SENSOR_BAROALT:31.515342\
--- BASE_SENSOR_CANOPY_POS:0.000000\
--- BASE_SENSOR_CANOPY_STATE:0.000000\
--- BASE_SENSOR_FLAPS_POS:0.000000\
--- BASE_SENSOR_FLAPS_RETRACTED:1.000000\
--- BASE_SENSOR_FUEL_TOTAL:629.349976\
--- BASE_SENSOR_GEAR_HANDLE:0.000000\
--- BASE_SENSOR_HEADING:1.629601\
--- BASE_SENSOR_HELI_COLLECTIVE:0.000000\
--- BASE_SENSOR_HELI_CORRECTION:0.000000\
--- BASE_SENSOR_HORIZONTAL_ACCEL:0.017304\
--- BASE_SENSOR_IAS:0.000035\
--- BASE_SENSOR_LATERAL_ACCEL:0.002502\
--- BASE_SENSOR_LEFT_ENGINE_FAN_RPM:1.000006\
--- BASE_SENSOR_LEFT_ENGINE_FUEL_CONSUPMTION:209.915415\
--- BASE_SENSOR_LEFT_ENGINE_RPM:0.875047\
--- BASE_SENSOR_LEFT_ENGINE_TEMP_BEFORE_TURBINE:450.382523\
--- BASE_SENSOR_LEFT_GEAR_DOWN:0.000000\
--- BASE_SENSOR_LEFT_GEAR_UP:1.000000\
--- BASE_SENSOR_LEFT_THROTTLE_POS:1.000000\
--- BASE_SENSOR_LEFT_THROTTLE_RAW_CONTROL:1.000000\
--- BASE_SENSOR_MACH:0.000000\
--- BASE_SENSOR_MAG_HEADING:4.538123\
--- BASE_SENSOR_NOSE_GEAR_DOWN:0.000000\
--- BASE_SENSOR_NOSE_GEAR_UP:1.000000\
--- BASE_SENSOR_PITCH:0.017332\
--- BASE_SENSOR_PITCH_RATE:0.000017\
--- BASE_SENSOR_PROPELLER_PITCH:0.470588\
--- BASE_SENSOR_PROPELLER_RPM:324.002102\
--- BASE_SENSOR_PROPELLER_TILT:0.000000\
--- BASE_SENSOR_RADALT:1.581047\
--- BASE_SENSOR_RELATIVE_TORQUE:0.359208\
--- BASE_SENSOR_RIGHT_ENGINE_FAN_RPM:0.000000\
--- BASE_SENSOR_RIGHT_ENGINE_FUEL_CONSUMPTION:0.000000\
--- BASE_SENSOR_RIGHT_ENGINE_RPM:0.000000\
--- BASE_SENSOR_RIGHT_ENGINE_TEMP_BEFORE_TURBINE:0.000000\
--- BASE_SENSOR_RIGHT_GEAR_DOWN:0.000000\
--- BASE_SENSOR_RIGHT_GEAR_UP:1.000000\
--- BASE_SENSOR_RIGHT_THROTTLE_POS:1.000000\
--- BASE_SENSOR_RIGHT_THROTTLE_RAW_CONTROL:1.000000\
--- BASE_SENSOR_ROLL:-0.002490\
--- BASE_SENSOR_ROLL_RATE:0.000001\
--- BASE_SENSOR_RUDDER_NORMED:0.000000\
--- BASE_SENSOR_RUDDER_POS:-0.000000\
--- BASE_SENSOR_SPEED_BRAKE_POS:0.000000\
--- BASE_SENSOR_STICK_PITCH_NORMED:0.000000\
--- BASE_SENSOR_STICK_PITCH_POS:-0.000000\
--- BASE_SENSOR_STICK_ROLL_NORMED:0.000000\
--- BASE_SENSOR_STICK_ROLL_POS:-0.000000\
--- BASE_SENSOR_TAS:0.000035\
--- BASE_SENSOR_VERTICAL_ACCEL:0.999916\
--- BASE_SENSOR_VERTICAL_SPEED:0.000022\
--- BASE_SENSOR_WOW_LEFT_GEAR:0.000000\
--- BASE_SENSOR_WOW_NOSE_GEAR:0.000000\
--- BASE_SENSOR_WOW_RIGHT_GEAR:0.000000\
--- BASE_SENSOR_YAW_RATE:0.000005\
--- EJECTION_BLOCKED_0:0.000000\
--- EJECTION_BLOCKED_1:0.000000\
--- EJECTION_BLOCKED_2:0.000000\
--- EJECTION_BLOCKED_3:0.000000\
--- EJECTION_INITIATED_0:-1.000000\
--- EJECTION_INITIATED_1:-1.000000\
--- EJECTION_INITIATED_2:-1.000000\
--- EJECTION_INITIATED_3:-1.000000\
--- SEAT:0.000000\
--- UHF_FREQ:251.000000\
--- VHF_AM_FREQ:116.000000\
--- VHF_FM_FREQ:30.000000\
--- WINDSHIELD_WIPER_0:0.000000\
--- WINDSHIELD_WIPER_1:0.000000\
--- Weapon_AutopilotMode:0.000000\
--- Weapon_AutopilotStatus:0.000000\
--- Weapon_IsFlexSightOn:0.000000\
--- Weapon_M60DweapStatus:0.000000\
--- Weapon_NumPairs:0.000000\
--- Weapon_OffSafeArmed:0.000000\
--- Weapon_PilotSightAngle:0.000000\
--- Weapon_SelectedWeapCount:0.000000\
--- Weapon_ShowWeapStatus:0.000000\
--- Weapon_WeapType:0.000000\
-
--- {
---     [1] = "",
---     [2] = "",
---     [3] = "",
---     [4] = "",
---     [5] = "-----------------------------------------\
--- fr\
--- \
--- children are {\
--- -----------------------------------------\
--- render_tv_in_HUD_only_view\
--- \
--- }\
--- -----------------------------------------\
--- Sight\
--- \
--- -----------------------------------------\
--- circle\
--- \
--- -----------------------------------------\
--- scale\
--- \
--- -----------------------------------------\
--- scale2\
--- \
--- ",
---     [6] = "-----------------------------------------\
--- base\
--- \
--- children are {\
--- -----------------------------------------\
--- txt_Status\
--- 		CREW STATUS:\
--- -----------------------------------------\
--- txt_Hints\
--- HEALTH	ROE	  AMMO BURST\
--- -----------------------------------------\
--- mem_base0\
--- \
--- children are {\
--- -----------------------------------------\
--- txt_mem0\
--- PILOT\
--- -----------------------------------------\
--- txt_status0\
--- PLAYER\
--- -----------------------------------------\
--- txt_ammo0\
---  -\
--- -----------------------------------------\
--- txt_burst0\
---   -\
--- }\
--- -----------------------------------------\
--- mem_base1\
--- \
--- children are {\
--- -----------------------------------------\
--- txt_mem1\
--- CO-PILOT\
--- -----------------------------------------\
--- txt_status1\
--- HOLD\
--- -----------------------------------------\
--- txt_ammo1\
---  -\
--- -----------------------------------------\
--- txt_burst1\
--- SHORT\
--- }\
--- }\
--- ",
---     [7] = "-----------------------------------------\
--- SheetTable_MainDummy\
--- \
--- children are {\
--- -----------------------------------------\
--- sheet_bar_mask\
--- \
--- children are {\
--- -----------------------------------------\
--- SheetTable_Channel1\
---  251.0\
--- -----------------------------------------\
--- SheetTable_Channel2\
---  264.0\
--- -----------------------------------------\
--- SheetTable_Channel3\
---  265.0\
--- -----------------------------------------\
--- SheetTable_Channel4\
---  256.0\
--- -----------------------------------------\
--- SheetTable_Channel5\
---  254.0\
--- -----------------------------------------\
--- SheetTable_Channel6\
---  250.0\
--- -----------------------------------------\
--- SheetTable_Channel7\
---  270.0\
--- -----------------------------------------\
--- SheetTable_Channel8\
---  257.0\
--- -----------------------------------------\
--- SheetTable_Channel9\
---  255.0\
--- -----------------------------------------\
--- SheetTable_Channel10\
---  262.0\
--- -----------------------------------------\
--- SheetTable_Channel11\
---  259.0\
--- -----------------------------------------\
--- SheetTable_Channel12\
---  268.0\
--- -----------------------------------------\
--- SheetTable_Channel13\
---  269.0\
--- -----------------------------------------\
--- SheetTable_Channel14\
---  260.0\
--- -----------------------------------------\
--- SheetTable_Channel15\
---  263.0\
--- -----------------------------------------\
--- SheetTable_Channel16\
---  261.0\
--- -----------------------------------------\
--- SheetTable_Channel17\
---  267.0\
--- -----------------------------------------\
--- SheetTable_Channel18\
---  251.0\
--- -----------------------------------------\
--- SheetTable_Channel19\
---  253.0\
--- -----------------------------------------\
--- SheetTable_Channel20\
---  266.0\
--- }\
--- }\
--- ",
---     [8] = "",
---     [9] = "-----------------------------------------\
--- #1#\
--- \
--- -----------------------------------------\
--- #1#\
--- \
--- -----------------------------------------\
--- txt_AutoPilot_txt\
--- AUTOPILOT MODE:\
--- -----------------------------------------\
--- txt_AutoPilot_mode\
--- LEVEL FLIGHT\
--- -----------------------------------------\
--- txt_AutoPilot\
--- OFF\
--- -----------------------------------------\
--- txt_AutoPilot_key\
--- LWIN+A\
--- -----------------------------------------\
--- txt_KEEP_AS_IS\
--- ATTITUDE HOLD\
--- -----------------------------------------\
--- txt_AutoPilot_KEEP_AS_IS_key\
--- LSHIFT+LALT+A\
--- -----------------------------------------\
--- txt_AutoPilot_H_AS_AB\
--- LEVEL FLIGHT\
--- -----------------------------------------\
--- txt_AutoPilot_H_AS_AB_key\
--- LCTRL+A\
--- -----------------------------------------\
--- txt_AutoPilot_TURN_IN\
--- ORBIT\
--- -----------------------------------------\
--- txt_AutoPilot_TURN_IN_key\
--- LALT+A\
--- -----------------------------------------\
--- txt_CARGO\
--- CARGO:\
--- -----------------------------------------\
--- txt_Hook\
--- CARGO HOOK COMBO\
--- -----------------------------------------\
--- txt_Hook_Key\
--- RC+RS+L\
--- -----------------------------------------\
--- txt_AutoUnhook\
--- CARGO AUTOUNHOOK COMBO\
--- -----------------------------------------\
--- txt_AutoUnhook_Key\
--- RC+RS+K\
--- -----------------------------------------\
--- txt_TacUnook\
--- UNHOOK COMBO\
--- -----------------------------------------\
--- txt_TacUnook_Key\
--- RC+RS+:\
--- -----------------------------------------\
--- txt_CargoIndicator\
--- CARGO INDICATOR COMBO\
--- -----------------------------------------\
--- txt_CargoIndicator_Key\
--- RC+RS+P\
--- -----------------------------------------\
--- txt_Cargo_Rope_Length\
--- ROPE LENGTH\
--- -----------------------------------------\
--- txt_Cargo_Rope_Length_Value\
--- 15 M\
--- -----------------------------------------\
--- txt_Cargo_Status\
--- CARGO IS NOT CHOSEN\
--- ",
---     [10] = "-----------------------------------------\
--- #1#\
--- \
--- ",

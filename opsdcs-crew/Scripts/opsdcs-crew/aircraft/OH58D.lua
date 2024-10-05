@@ -1,4 +1,8 @@
 OpsdcsCrew["OH58D"] = {
+    options = {
+        showHighlights = false,
+        playSounds = false,
+    },
     soundpack = {
         plt = "default",
         cp = "default",

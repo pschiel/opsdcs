@@ -1,11 +1,11 @@
 -- Goldeneye - Reconnaissance script
 
-if Goldeneye then return end -- do not load twice
+if Goldeneye or true then return end -- do not load twice
 
 Goldeneye = {
     options = {
         debug = true,    --- @type boolean @debug mode, set true for ingame debug messages
-        timeDelta = 1.0, --- @type number @time delta in seconds for main update loop
+        timeDelta = 1.0, --- @type number @time delta in seconds for recon update interval
     },
 
     --- @type string[] @available aircraft types
@@ -36,7 +36,6 @@ Goldeneye = {
     mainmenu = "Goldeneye",           --- @type string @main menu name
     eventHandlerId = "Goldeneye",     --- @type string @event handler id
     isRunning = false,                --- @type boolean @true while running
-    isSinglePlayer = false,           --- @type boolean @true in singleplayer mode
 }
 
 ------------------------------------------------------------------------------
@@ -74,18 +73,14 @@ end
 --- @param filename string @filename relative to basedir
 function Goldeneye:loadScript(filename)
     self:log("loading " .. filename)
-    if self.basedir == "" then
-        net.dostring_in("mission", "a_do_script_file('" .. filename .. "')")
+    if GoldeneyeBasedir then
+        dofile(GoldeneyeBasedir .. filename)
     else
-        net.dostring_in("mission", "a_do_script('dofile([[" .. self.basedir .. filename .. "]])')")
+        net.dostring_in("mission", "a_do_script_file('" .. filename .. "')")
     end
 end
 
-------------------------------------------------------------------------------
-
---- start script
-function Goldeneye:start()
-    self:log("start")
+function Goldeneye:loadPluginData()
     for _, aircraftType in ipairs(self.aircraftTypes) do
         self:loadScript("aircraft/" .. aircraftType .. ".lua")
     end
@@ -93,21 +88,20 @@ function Goldeneye:start()
         self:loadScript("sensors/" .. sensorType .. ".lua")
     end
     self:loadScript("data/scenery-object-whitelist.lua")
+end
 
+------------------------------------------------------------------------------
+
+--- start script (setup event handler, add player in SP)
+function Goldeneye:start()
+    self:log("start")
+    self:loadPluginData()
     world.addEventHandler(self)
-
     local player = world.getPlayer()
     if player then
-        self:log("singleplayer mode")
-        self.isSinglePlayer = true
         self:addPlayer(player)
-    else
-        self:log("multiplayer mode")
     end
-
     self.isRunning = true
-    self:log("started")
-    --self:update() @TODO after rewriting main loop
 end
 
 --- stop script
@@ -154,7 +148,7 @@ function Goldeneye:genericOnEvent(event)
     self:log("event: " .. self.eventNamesById[event.id])
 end
 
---- main update loop for recording @TODO
+--- main update loop for recording @TODO global or by player?
 function Goldeneye:update()
     if not world.getPlayer() then
         return
@@ -172,7 +166,7 @@ end
 
 ------------------------------------------------------------------------------
 
---- add player or client unit
+--- add player or client unit, check for recon eligibility, adds menu commands
 --- @param unit Unit @unit
 function Goldeneye:addPlayer(unit)
     local unitId = unit:getID()
@@ -208,9 +202,13 @@ function Goldeneye:isReconAllowed(unit)
     local unitType = unit:getTypeName()
     self:log(string.format("player id %d, aircraft type: %s", unitId, unitType))
     -- @TODO check unit type, name, weapons/ammo etc
+    self:log("recon allowed: yes (debug)")
     return true
 end
 
+--- checks if player unit is allowed to select payload / rearm @TODO group/unit?
+--- @param groupId number @group id
+--- @return boolean @true if allowed
 function Goldeneye:isSelectPayloadAllowed(groupId)
     -- @TODO check if player is landed and near airbase
     return true

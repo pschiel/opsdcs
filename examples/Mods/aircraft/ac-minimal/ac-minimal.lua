@@ -1,18 +1,22 @@
+-- aircraft id/name/type, needed by make_view_settings() and make_flyable()
+local aircraft_id = "ac-minimal"
+
+-- aircraft data, needed by add_aircraft()
 local aircraft_data = {
 
-    Name = obj_name,
-    DisplayName = _(obj_name),
-    Picture = "MQ-9_Reaper.png",
-    Rate = 40, -- RewardPoint in Multiplayer
-    Shape = "mq-9_reaper",
+    Name = aircraft_id,           -- aircraft name/id
+    DisplayName = _(aircraft_id), -- localized display name
+    Picture = "MQ-9_Reaper.png",  -- picture for ???
+    Rate = 40,                    -- RewardPoint in Multiplayer
+    Shape = "wc",
     shape_table_data = {
         {
-            file = obj_name,   -- lods file
-            life = 18,         -- lifebar
-            vis = 3,           -- visibility gain
-            desrt = "self",    -- name of destroyed object file name
-            fire = { 300, 2 }, -- fire on the ground after destoyed: 300sec 2m
-            username = obj_name,
+            file = aircraft_id, -- lods file
+            life = 18,          -- lifebar
+            vis = 3,            -- visibility gain
+            desrt = "self",     -- name of destroyed object file name
+            fire = { 300, 2 },  -- fire on the ground after destoyed: 300sec 2m
+            username = aircraft_id, -- might by some display name, possibly localized
             index = WSTYPE_PLACEHOLDER,
             classname = "lLandPlane",
             positioning = "BYNORMAL",
@@ -40,11 +44,11 @@ local aircraft_data = {
             cx_brk = 0.025,
             table_data = {
                 -- M, Cx0, Cya, B, B4, Omxmax, Aldop, Cymax
-                { 0,   0.026, 0.12, 0.0227, 0.0001, 1, 20, 1.4 },
+                { 0, 0.026, 0.12, 0.0227, 0.0001, 1, 20, 1.4 },
                 { 0.4, 0.026, 0.12, 0.0227, 0.0001, 1, 20, 1.4 },
-                { 1,   0.026, 0.12, 0.0227, 0.0001, 1, 20, 1.4 },
+                { 1, 0.026, 0.12, 0.0227, 0.0001, 1, 20, 1.4 },
             },
-        }, 
+        },
         engine = {
             Nmg = 20.5,      -- RPM at idle
             MinRUD = 0,      -- Min state of the throttle
@@ -58,7 +62,7 @@ local aircraft_data = {
             cefor = 0.37,    -- not used for fuel calulation , only for AI routines to check flight time ( fuel calculation algorithm is built in )
             dpdh_m = 1025,   -- altitude coefficient for max thrust
             dpdh_f = 1025,   -- altitude coefficient for AB thrust
-    
+
             k_adiab_1 = 0.037923,
             k_adiab_2 = 0.0562,
             MAX_Manifold_P_1 = 180000,
@@ -123,8 +127,8 @@ local aircraft_data = {
     AOA_take_off = 3 / 57.3,                      -- AoA in take off (for AI)
     bank_angle_max = 30,                          -- Max bank angle (for AI)
 
-    has_afteburner = true,                       -- AFB yes/no
-    has_speedbrake = true,                       -- Speedbrake yes/no
+    has_afteburner = true,                        -- AFB yes/no
+    has_speedbrake = true,                        -- Speedbrake yes/no
     has_differential_stabilizer = false,          -- differential stabilizers
 
     nose_gear_pos = { 2.504, -1.94, 0 },          -- nosegear coord
@@ -204,7 +208,7 @@ local aircraft_data = {
     Pylons = {
         pylon(1, 0, -0.297847, -0.481713, -2.223118, { arg = 308, arg_value = 0, use_full_connector_position = true },
             {
-                { CLSID = "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}", arg_value = 1,connector = "Pylon1_gbu12" },
+                { CLSID = "{DB769D48-67D7-42ED-A2BE-108D566C8B1E}", arg_value = 1, connector = "Pylon1_gbu12" },
                 { CLSID = "{GBU-38}", arg_value = 1, connector = "Pylon1_gbu12" },
                 { CLSID = "AGM114x2_OH_58", arg_value = 0.5, connector = "Pylon1_m272" },
                 { CLSID = "{88D18A5E-99C8-4B04-B40B-1C02F2018B6E}", arg_value = 0.5, connector = "Pylon1_m299" },
@@ -316,4 +320,4 @@ local aircraft_data = {
     Countries = { "USA", "Italy", "UK", "Turkey", "France" },
 }
 
-add_aircraft(aircraft_data)
+return aircraft_id, aircraft_data

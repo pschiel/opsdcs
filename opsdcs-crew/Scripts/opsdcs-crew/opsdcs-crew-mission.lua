@@ -8,7 +8,7 @@ OpsdcsCrew = {
         debug = true,               --- @type boolean @debug mode, set true for ingame debug messages
         timeDelta = 0.1,            --- @type number @seconds between updates
         showChecklist = true,       --- @type boolean @show interactive checklist when true
-        showHighlights = true,      --- @type boolean @shows highlights for next check
+        showHighlights = false,     --- @type boolean @shows highlights for next check
         playSounds = false,         --- @type boolean @play sounds
         autoAdvance = 2,            --- @type number @auto advance to next state if all checked within this time (0 to disable)
         commandAdvance = 0,         --- @type number @advance on user command @todo
@@ -20,30 +20,31 @@ OpsdcsCrew = {
         "CH-47Fbl1",
         "F-16C_50",
         "OH58D",
-        "SA342L",
+        "SA342L", "SA342M", "SA342Minigun",
         "UH-1H",
     },
 
-    basedir = OpsdcsCrewBasedir or "", --- @type string @path to Scripts/opsdcs-crew
-    typeName = nil,                    --- @type string? @player unit type
-    groupId = nil,                     --- @type number? @player group id
-    menu = {},                         --- @type table @stores f10 menu items
-    params = {},                       --- @type table @current params
-    args = {},                         --- @type table @current args
-    indications = {},                  --- @type table @current indications
-    state = nil,                       --- @type string? @current state
-    firstUnchecked = nil,              --- @type number? @first unchecked item
-    numHighlights = 0,                 --- @type number @current number of highlights
-    zones = {},                        --- @type table @opsdcs-crew zones
-    isRunning = false,                 --- @type boolean @true when procedure is running
-    argsDebugMaxId = 4000,             --- @type number @maximum argument id for debug
-    sndPlayUntil = nil,                --- @type number? @sound play until time
-
+    typeName = nil,                --- @type string? @player unit type
+    groupId = nil,                 --- @type number? @player group id
+    menu = {},                     --- @type table @stores f10 menu items
+    params = {},                   --- @type table @current params
+    args = {},                     --- @type table @current args
+    indications = {},              --- @type table @current indications
+    state = nil,                   --- @type string? @current state
+    firstUnchecked = nil,          --- @type number? @first unchecked item
+    numHighlights = 0,             --- @type number @current number of highlights
+    zones = {},                    --- @type table @opsdcs-crew zones
+    isRunning = false,             --- @type boolean @true when procedure is running
+    argsDebugMaxId = 4000,         --- @type number @maximum argument id for debug
+    sndPlayUntil = nil,            --- @type number? @sound play until time
+    sndRepeatAfter = 30,           --- @type number @repeat sound after seconds
+    mainmenu = "Crew",             --- @type string @main menu name
+    eventHandlerId = "OpsdcsCrew", --- @type string @event handler id
 }
 
 ------------------------------------------------------------------------------
 
---- get option (default or from plugin) TODO zone config?
+--- get option (default or from plugin)
 --- @param string name @option name
 --- @return any @option value
 function OpsdcsCrew:getOption(name)
@@ -59,7 +60,7 @@ end
 --- @param duration number @duration
 function OpsdcsCrew:log(msg, duration)
     if self:getOption("debug") then
-        trigger.action.outText("[opsdcs-crew] " .. msg, duration or 10)
+        trigger.action.outText("[opsdcs-crew] " .. msg, duration or 3)
     end
 end
 
@@ -67,38 +68,47 @@ end
 --- @param filename string @filename relative to basedir
 function OpsdcsCrew:loadScript(filename)
     self:log("loading " .. filename)
-    if self.basedir == "" then
-        net.dostring_in("mission", "a_do_script_file('" .. filename .. "')")
+    if OpsdcsCrewBasedir then
+        dofile(OpsdcsCrewBasedir .. filename)
     else
-        net.dostring_in("mission", "a_do_script('dofile([[" .. self.basedir .. filename .. "]])')")
+        net.dostring_in("mission", "a_do_script_file('" .. filename .. "')")
     end
 end
 
 --- loads/resets plugin data and states
 function OpsdcsCrew:loadPluginData()
-    local filename = "aircraft/" .. self.typeName .. ".lua"
-    self:loadScript(filename)
+    for _, aircraft in ipairs(self.aircraftTypes) do
+        self:loadScript("aircraft/" .. aircraft .. ".lua")
+    end
 end
 
 ------------------------------------------------------------------------------
 
 --- start script
 function OpsdcsCrew:start()
-    if world.getPlayer() == nil then return end
-    self.groupId = world.getPlayer():getGroup():getID()
-    self.typeName = world.getPlayer():getTypeName()
+    self:log("start")
+    self:loadPluginData()
+    world.addEventHandler(self)
+    missionCommands.addSubMenu(self.mainmenu, nil)
+    local player = world.getPlayer()
+    if player then
+        self:initPlayer(player)
+    end
+end
 
-    -- check if player unit type is supported
+--- init player
+function OpsdcsCrew:initPlayer(unit)
+    self.groupId = unit:getGroup():getID()
+    self:log("group id: " .. self.groupId)
+    self.typeName = unit:getTypeName()
     local isSupported = false
     for _, typeName in ipairs(self.aircraftTypes) do
         isSupported = isSupported or self.typeName == typeName
     end
     if not isSupported then return end
-
-    self:loadPluginData()
-    self:log("start: " .. self.typeName .. " (" .. (self.basedir == "" and "mission" or "hook") .. ")")
+    self:log("start: " .. self.typeName .. " (" .. (OpsdcsCrewInject and "hook" or "mission") .. ")")
     self:setupWaitForUserFlags()
-    self:showMainMenu()
+    self:refreshMenu()
 end
 
 --- stop script
@@ -106,7 +116,38 @@ function OpsdcsCrew:stop()
     self:log("stop")
     self.isRunning = false
     self:clearHighlights()
-    self:clearMenu()
+    missionCommands.removeItem(self.mainmenu)
+    for index, handler in world.eventHandlers do
+        if handler.eventHandlerId == self.eventHandlerId then
+            world.eventHandlers[index] = nil
+        end
+    end
+end
+
+--- event handler
+--- @param event Event @event
+function OpsdcsCrew:onEvent(event)
+    if event.id == world.event.S_EVENT_PLAYER_ENTER_UNIT then
+        self:initPlayer(event.initiator)
+    elseif event.id == world.event.S_EVENT_PLAYER_LEAVE_UNIT then
+        self.isRunning = false
+        self:clearMenu()
+        trigger.action.outText("", 0, true)
+    else
+        self:genericOnEvent(event)
+    end
+end
+
+--- generic debug event handler
+--- @param event Event @event
+function OpsdcsCrew:genericOnEvent(event)
+    if self.eventNamesById == nil then
+        self.eventNamesById = {}
+        for key, value in pairs(world.event) do
+            self.eventNamesById[value] = key
+        end
+    end
+    self:log("event: " .. self.eventNamesById[event.id])
 end
 
 ------------------------------------------------------------------------------
@@ -115,11 +156,11 @@ end
 --- @param string filename
 --- @param number duration
 function OpsdcsCrew:playSound(filename, duration)
-    if self.basedir == "" then
-        trigger.action.outSound(filename)
-    else
-        local code = "require('sound').playSound('" .. self.basedir .. filename .. "')"
+    if OpsdcsCrewBasedir then
+        local code = "require('sound').playSound('" .. OpsdcsCrewBasedir .. filename .. "')"
         net.dostring_in("gui", code)
+    else
+        trigger.action.outSound(filename)
     end
     self.sndPlayUntil = timer.getTime() + (duration or 1)
     self.sndLastPlayed = timer.getTime()
@@ -159,7 +200,7 @@ function OpsdcsCrew:getCockpitParams()
     return params
 end
 
---- returns cockpit args @todo refactor usage
+--- returns cockpit args
 --- @param number maxId @maximum argument id (if nil, get named arguments from aircraft definition)
 --- @param table idList @optional list of argument ids to get
 function OpsdcsCrew:getCockpitArgs(maxId, idList)
@@ -198,7 +239,7 @@ function OpsdcsCrew:getCockpitArgs(maxId, idList)
     return args
 end
 
---- returns indications from specified devices @todo refactor usage
+--- returns indications from specified devices
 --- @param number maxId @maximum device id (if nil, get only devices from aircraft definition)
 function OpsdcsCrew:getIndications(maxId)
     local code = "return ''"
@@ -355,7 +396,7 @@ function OpsdcsCrew:update()
     local previousWasTrue = true
     local foundUnchecked = nil
 
-    -- play state sound
+    -- play state sound (played only once when state is entered)
     if self:getOption("playSounds") and state.sndPlayed == nil and state.snd ~= nil then
         self:playSoundFromText(state.text, state.snd, state.seat)
         state.sndPlayed = true
@@ -368,10 +409,10 @@ function OpsdcsCrew:update()
         -- needPrevious=true - previous check must be true first
         if condition.needPrevious then condIsTrue = condIsTrue and previousWasTrue end
 
-        -- needAllPrevious=true - all previous checks must be true first @todo
+        -- needAllPrevious=true - all previous checks must be true first (if set as state property, applies to all conditions)
         if state.needAllPrevious or condition.needAllPrevious then condIsTrue = condIsTrue and allCondsAreTrue end
 
-        -- duration=3 - check if condition was true for 3 seconds
+        -- duration=SECONDS - check if condition was true for a certain time
         condition.trueSince = condIsTrue and (condition.trueSince or timer.getTime()) or nil
         if condition.duration then
             condIsTrue = condition.trueSince ~= nil and timer.getTime() - condition.trueSince >= condition.duration
@@ -383,13 +424,13 @@ function OpsdcsCrew:update()
             condIsTrue = condition.wasTrueOnce
         end
 
-        -- condition sound finished playing
-        if condition.sndPlayUntil and timer.getTime() > condition.sndPlayUntil then
-            condition.sndPlayed = true
-        end
-
         -- sounds
         if self:getOption("playSounds") then
+
+            -- check if condition sound finished playing
+            if condition.sndPlayUntil and timer.getTime() > condition.sndPlayUntil then
+                condition.sndPlayed = true
+            end
 
             -- condition sound not played yet - mark false
             if condition.snd and condition.sndPlayed == nil then
@@ -409,8 +450,9 @@ function OpsdcsCrew:update()
             end
 
             -- long pause, repeat
-            if not condIsTrue and condition.snd and self.sndLastPlayed and timer.getTime() - self.sndLastPlayed > 30 then
+            if not condIsTrue and condition.snd and self.sndLastPlayed and timer.getTime() - self.sndLastPlayed > self.sndRepeatAfter then
                 condition.sndPlayed, condition.sndPlayUntil = nil, nil
+                -- play random chatter sound before repeating
                 local n = math.random(1, 5)
                 self:playSound("sounds/" .. self.typeName .. "/cp/" .. self[self.typeName].soundpack.cp .. "/wait" .. n .. ".ogg", 2)
             end
@@ -449,16 +491,16 @@ function OpsdcsCrew:update()
         previousWasTrue = condIsTrue
     end
 
-    -- look for user input
+    -- check for user space/BS input, hacky AF but works
     local code = "return (c_flag_is_true('pressedSpace') and '1' or '0') .. (c_flag_is_true('pressedBS') and '1' or '0')"
     local keys = net.dostring_in("mission", code)
     if keys ~= "00" then self:setupWaitForUserFlags() end
     local pressedSpace, pressedBS = keys:sub(1, 1) == "1", keys:sub(2, 2) == "1"
 
-    -- advance state when all conditions are true (auto or spacebar) TODO: and/or for skip?
+    -- advance state when all conditions are true (auto or spacebar) TODO: and/or for skip? (BS for skip?)
     state.allCondsAreTrueSince = allCondsAreTrue and (state.allCondsAreTrueSince or timer.getTime()) or nil
     if state.allCondsAreTrueSince and timer.getTime() - state.allCondsAreTrueSince >= self:getOption("autoAdvance") then
-        if self:getOPtion("autoAdvance") > 0 then
+        if self:getOption("autoAdvance") > 0 then
             self:transition(state)
         else
             if pressedSpace or state.next_state == nil then
@@ -474,11 +516,6 @@ function OpsdcsCrew:update()
     if self:getOption("showChecklist") then
         local text = lines[1] .. (#lines > 1 and "\n\n" or "")
         text = text .. table.concat(lines, "\n", 2)
-        -- if self.sndPlayUntil then
-        --     text = text .. "\nself sndPlayUntil: " .. (self.sndPlayUntil - timer.getTime())
-        -- else
-        --     text = text .. "\nself sndPlayUntil: nil"
-        -- end
         trigger.action.outText(text, 3, true)
     end
 
@@ -492,7 +529,7 @@ function OpsdcsCrew:transition(state)
     self.firstUnchecked = nil
     if self.state == nil then
         self:stop()
-        self:showMainMenu()
+        self:refreshMenu()
     end
 end
 
@@ -517,17 +554,6 @@ function OpsdcsCrew:clearHighlights()
     net.dostring_in("mission", code)
 end
 
-
---- shows f10 menu entries (one per procedure)
-function OpsdcsCrew:showMainMenu()
-    self:clearMenu()
-    for _, procedure in ipairs(self[self.typeName].procedures) do
-        self.menu[procedure.name] = missionCommands.addCommandForGroup(self.groupId, procedure.name, nil, OpsdcsCrew.onProcedure, self, procedure)
-    end
-    self.menu["whats_this"] = missionCommands.addCommandForGroup(self.groupId, "Cockpit Tutor", nil, OpsdcsCrew.onWhatsThis, self)
-    self.menu["args_debug"] = missionCommands.addCommandForGroup(self.groupId, "Toggle Arguments Debug", nil, OpsdcsCrew.onArgsDebug, self)
-end
-
 ------------------------------------------------------------------------------
 
 --- toggles cockpit argument debug display
@@ -541,9 +567,9 @@ function OpsdcsCrew:onArgsDebug()
     end
 end
 
---- cockpit argument debug display loop
+--- cockpit argument debug display loop, excluding stuff in excludeDebugArgs
 function OpsdcsCrew:argsDebugLoop()
-    local maxDelta = 0.1
+    local maxDelta = 0.02
     if not self.isRunningArgsDebug then return end
     local currentArgs = self:getCockpitArgs(self.argsDebugMaxId)
     for i = 1, self.argsDebugMaxId do
@@ -557,7 +583,7 @@ function OpsdcsCrew:argsDebugLoop()
             trigger.action.outText("arg " .. argName .. " changed: " .. last .. " -> " .. current, 10)
         end
     end
-    timer.scheduleFunction(self.argsDebugLoop, self, timer.getTime() + 0.1)
+    timer.scheduleFunction(self.argsDebugLoop, self, timer.getTime() + 0.2)
 end
 
 --- toggles whats this
@@ -571,9 +597,9 @@ function OpsdcsCrew:onWhatsThis()
     end
 end
 
---- plays sounds on defined cockpit argument changes
+--- plays sounds on cockpit argument changes
 function OpsdcsCrew:whatsThisLoop()
-    local maxDelta = 0.1
+    local maxDelta = 0.08
     if not self.isRunningWhatsThis then return end
     local currentArgs = self:getCockpitArgs()
     for i, _ in pairs(self[self.typeName].args) do
@@ -591,7 +617,18 @@ function OpsdcsCrew:whatsThisLoop()
     timer.scheduleFunction(self.whatsThisLoop, self, timer.getTime() + 0.1)
 end
 
---- clears f10 menu
+--- refresh f10 menu (one item per procedure, debug, options)
+function OpsdcsCrew:refreshMenu()
+    self:clearMenu()
+    for _, procedure in ipairs(self[self.typeName].procedures) do
+        self.menu[procedure.name] = missionCommands.addCommandForGroup(self.groupId, procedure.name, { self.mainmenu }, OpsdcsCrew.onProcedure, self, procedure)
+    end
+    self.menu["whats_this"] = missionCommands.addCommandForGroup(self.groupId, "Cockpit Tutor", { self.mainmenu }, OpsdcsCrew.onWhatsThis, self)
+    self.menu["options"] = missionCommands.addSubMenuForGroup(self.groupId, "Options", { self.mainmenu })
+    self.menu["args_debug"] = missionCommands.addCommandForGroup(self.groupId, "Toggle Arguments Debug", { self.mainmenu, "Options" }, OpsdcsCrew.onArgsDebug, self)
+end
+
+--- clears f10 menu for group
 function OpsdcsCrew:clearMenu()
     for name, item in pairs(self.menu) do
         self.menu[name] = nil
@@ -606,7 +643,7 @@ function OpsdcsCrew:onProcedure(procedure)
     self:clearHighlights()
     self:clearMenu()
     self:loadPluginData()
-    self.menu["abort-" .. procedure.name] = missionCommands.addCommandForGroup(self.groupId, "Abort " .. procedure.name, nil, OpsdcsCrew.onAbort, self)
+    self.menu["abort-" .. procedure.name] = missionCommands.addCommandForGroup(self.groupId, "Abort " .. procedure.name, { self.mainmenu }, OpsdcsCrew.onAbort, self)
     self.state = procedure.start_state
     self.isRunning = true
     self.sndLastPlayed = nil
@@ -615,8 +652,10 @@ end
 
 --- f10 menu abort
 function OpsdcsCrew:onAbort()
-    self:stop()
-    self:showMainMenu()
+    self.isRunning = false
+    self:clearHighlights()
+    self:refreshMenu()
+    trigger.action.outText("", 0, true)
 end
 
 OpsdcsCrew:start()

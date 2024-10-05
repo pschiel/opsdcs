@@ -1,1 +1,1 @@
-return "ac-minimal"
+return _("AC Minimal Pilot")
