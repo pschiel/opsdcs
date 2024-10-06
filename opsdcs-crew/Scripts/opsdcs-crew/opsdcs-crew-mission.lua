@@ -5,7 +5,7 @@
 OpsdcsCrew = {
     --- @type table @default options
     options = {
-        debug = true,               --- @type boolean @debug mode, set true for ingame debug messages
+        debug = false,               --- @type boolean @debug mode, set true for ingame debug messages
         timeDelta = 0.1,            --- @type number @seconds between updates
         showChecklist = true,       --- @type boolean @show interactive checklist when true
         showHighlights = false,     --- @type boolean @shows highlights for next check
@@ -134,7 +134,7 @@ function OpsdcsCrew:onEvent(event)
         self:clearMenu()
         trigger.action.outText("", 0, true)
     else
-        self:genericOnEvent(event)
+        --self:genericOnEvent(event)
     end
 end
 
@@ -528,7 +528,7 @@ function OpsdcsCrew:transition(state)
     self.state = state.next_state
     self.firstUnchecked = nil
     if self.state == nil then
-        self:stop()
+        self.isRunning = false
         self:refreshMenu()
     end
 end

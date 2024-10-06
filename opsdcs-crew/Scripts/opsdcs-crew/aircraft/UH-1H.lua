@@ -1,6 +1,6 @@
 OpsdcsCrew["UH-1H"] = {
     options = {
-        showHighlights = true,
+        showHighlights = false,
         playSounds = false,
     },
     procedures = {
@@ -51,7 +51,7 @@ OpsdcsCrew["UH-1H"] = {
                 { text = "Move Pedals full left", cond = { "arg_lt", "RUDDER", -0.8 }, onlyOnce = true },
                 { text = "Move Pedals full right", cond = { "arg_gt", "RUDDER", 0.8 }, onlyOnce = true },
                 { text = "Move Collective full up", cond = { "arg_gt", "COLLECTIVE", 0.9 }, onlyOnce = true },
-                { text = "Move Collective full down", cond = { "arg_eq", "COLLECTIVE", 0 }, needAllPrevious = true },
+                { text = "Move Collective full down", cond = { "arg_lt", "COLLECTIVE", 0.05 }, needAllPrevious = true },
                 { text = "Center cyclic and pedals", cond = { "arg_between", "ROLL", -0.05, 0.05, "arg_between", "PITCH", -0.05, 0.05, "arg_between", "RUDDER", -0.05, 0.05 }, needAllPrevious = true },
             },
             next_state = "coldstart-starting-engine",
@@ -62,51 +62,39 @@ OpsdcsCrew["UH-1H"] = {
             conditions = {
                 { text = "Roll throttle to FULL OPEN", cond = { "arg_eq", "THROTTLE-1-PTR", -1 }, onlyOnce = true },
                 { text = "Roll throttle back to IDLE STOP", cond = { "arg_eq", "THROTTLE-1-PTR", 0 }, onlyOnce = true },
-                { text = "Engage throttle stop switch", cond = { "arg_eq", "ENGINE-BTN-1-PTR", 1 }, onlyOnce = true },
-                { text = "Roll throttle slightly right of IDLE", cond = { "arg_gt", "THROTTLE-1-PTR", 0 }, onlyOnce = true },
-                { text = "Release throttle stop switch", cond = { "arg_eq", "ENGINE-BTN-1-PTR", 0 }, onlyOnce = true },
-                { text = "Press and hold START switch", cond = {  }, onlyOnce = true },
-                { text = "Wait for N1 reaching 15%", cond = {  } },
-                { text = "Check main rotor is turning", cond = {  } },
-                { text = "Wait for N1 reaching 40%", cond = {  } },
-                { text = "Release START switch", cond = {  } },
-                { text = "Advance throttle to IDLE, check idle stop", cond = {  }, onlyOnce = true },
-                { text = "Wait for N1 reaching 68-72%", cond = {  } },
-                { text = "Check engine and transmission oil pressures", cond = {  } },
-            },
-            next_state = "coldstart-engine-runup",
-        },
-        ["coldstart-starting-engine"] = {
-            text = "Engine Runup",
-            needAllPrevious = true,
-            conditions = {
-                { text = "INVTR switch to MAIN ON", cond = {  } },
-                { text = "STARTER GEN switch to STBY GEN", cond = {  } },
-                { text = "Advance throttle slowly to FULL", cond = {  } },
-                { text = "Systems check - FUEL", cond = {  } },
-                { text = "Systems check - Engine", cond = {  } },
-                { text = "Systems check - Transmission", cond = {  } },
-                { text = "Systems check - AC 112-118 Volts", cond = {  } },
-                { text = "Systems check - DC 27-28.5 Volts", cond = {  } },
-                { text = "Check low RPM warning OFF at 6100-6300 RPM", cond = {  } },
-                { text = "Wait for RPM reach 6600", cond = {  } },
+                { text = "Hold START switch, wait for N1 reaching 15%", cond = { "arg_gt", "GasProduceTachRPM", 0.135 }, onlyOnce = true },
+                { text = "Check main rotor is turning", cond = { "param_gt", "BASE_SENSOR_PROPELLER_RPM", 0 } },
+                { text = "Wait for N1 reaching 40%", cond = { "arg_gt", "GasProduceTachRPM", 0.36 } },
+                { text = "Release START switch", cond = { "skip" } }, -- no arg?
+                { text = "Wait for N1 reaching >60%", cond = { "arg_gt", "GasProduceTachRPM", 0.56 } },
+                { text = "INVTR switch to MAIN ON", cond = { "arg_eq", "INVTR-SWITCHER-PTR", -1 } },
+                { text = "STARTER GEN switch to STBY GEN", cond = { "arg_eq", "STARTER-GEN-SWITCHERr-PTR", 0 } },
+                { text = "Advance throttle slowly to FULL", cond = { "arg_eq", "THROTTLE-1-PTR", -1 } },
+                { text = "Check FUEL PRESS 5-35 PSI", cond = { "arg_between", "FuelPress", 5/50, 35/50 } },
+                { text = "Check ENGINE OIL >60 PSI and temp 0-100 C", cond = { "arg_gt", "EngOilPress", 0.6, "arg_between", "EngOilTemp", 0.38, 0.71 } },
+                { text = "Check TRANS OIL 40-70 PSI and temp 0-100 C", cond = { "arg_between", "TransmOilPress", 0.4, 0.7, "arg_between", "TransmOilTemp", 0.38, 0.71 } },
+                { text = "Check EXH TEMP 400-610 C", cond = { "arg_between", "ExhaustTemp", 0.4, 0.6 } },
+                { text = "Check AC voltage 112-118 V", cond = { "arg_between", "AC_voltage", 112/150, 118/150 } },
+                { text = "Check DC voltage 27-28.5 V", cond = { "arg_between", "DC_voltage", 27/30, 28.5/30 } },
+                { text = "Check RPM warning reset at 6100-6300 RPM", cond = { "arg_gt", "EngineTach", 6100/7200, "arg_eq", "LOW-RPM-PTR", 1 } },
+                { text = "Wait for RPM reach 6600", cond = { "arg_gt", "EngineTach", 6600/7200 } },
             },
             next_state = "coldstart-setup-avionics",
         },
         ["coldstart-setup-avionics"] = {
             text = "Setup Avionics",
             conditions = {
-                { text = "Set baro altimeter to field evelation", cond = {  } },
-                { text = "Sync gyro compass to magnetic heading", cond = {  } },
-                { text = "Radar altimeter power to ON", cond = {  } },
-                { text = "Radar altimeter LO and HIGH as required", cond = {  } },
-                { text = "IFF MASTER to NORM", cond = {  } },
-                { text = "IFF MODE 4 to ON", cond = {  } },
-                { text = "Set NAV COMM as required", cond = {  } },
-                { text = "Set VHF COMM PWR to ON", cond = {  } },
-                { text = "Set FM COMM Mode to T/R", cond = {  } },
-                { text = "Set ADF Mode as required ", cond = {  } },
-                { text = "Set UHF Mode to T/R", cond = {  } },
+                { text = "Set baro altimeter to field elevation", cond = { "skip" } }, -- BASE_SENSOR_BAROALT = terrain height
+                { text = "Sync gyro compass to magnetic heading", cond = { "skip" } },
+                { text = "Radar altimeter power to ON", cond = { "arg_eq", "RADAR-ALT-PTR", 1 } },
+                { text = "Radar altimeter LO and HIGH as required", cond = { "skip" } },
+                { text = "IFF MASTER to NORM", cond = { "arg_eq", "MASTER-CONTROL-PTR", 0.3 } },
+                { text = "IFF MODE 4 to ON", cond = { "arg_eq", "MODE-4-SWITCH-PTR", 1 } },
+                { text = "Set NAV COMM as required", cond = { "skip" } },
+                { text = "Set VHF COMM PWR to ON", cond = { "arg_eq", "MHZ-SELECTOR-PTR", 1 } },
+                { text = "Set FM COMM Mode to T/R", cond = { "arg_eq", "MODE-SWITCH-PTR", 0.1  } },
+                { text = "Set ADF Mode as required ", cond = { "skip" } },
+                { text = "Set UHF Mode to T/R", cond = { "arg_between", "FUNCTION-SELECT-SWITCH-PTR", 0.1, 0.2 } },
             },
             next_state = "coldstart-complete"
         },
@@ -115,8 +103,9 @@ OpsdcsCrew["UH-1H"] = {
         },
     },
     args = {
-        ["MHZ-SELECTOR-PTR"]  = 7,
-        ["KHZ-SELECTOR-PTR"] = 8,
+        ["MHZ-SELECTOR-PTR"]  = 5,
+        ["KHZ-SELECTOR-PTR"] = 9,
+        ["FUNCTION-SELECT-SWITCH-PTR"] = 17,
         ["MODE-SWITCH-PTR"] = 35,
         ["TUNE-CONTROL-PTR"] = 39,
         ["BFO-SWITCH-PTR"] = 41,
@@ -135,9 +124,23 @@ OpsdcsCrew["UH-1H"] = {
         ["FORCE-TRIM-PTR"] = 89,
         ["HYD-CONT-PTR"] = 90,
         ["RESET-TEST-SWITCH-PTR"] = 111,
+        ["EngOilPress"] = 113,
+        ["EngOilTemp"] = 114,
+        ["TransmOilPress"] = 115,
+        ["TransmOilTemp"] = 116,
+        ["IAS_Front"] = 117,
+        ["IAS_Roof"] = 118,
+        ["GasProduceTachRPM"] = 119,
+        ["GasProduceTachRPM_Units"] = 120,
+        ["ExhaustTemp"] = 121,
+        ["EngineTach"] = 122,
+        ["TorquePress"] = 124,
+        ["FuelPress"] = 126,
         ["CAGING-KNOB-ROTATION-PTR"] = 140,
         ["PILOT-ATT-PITCH-ADJ-KNOB-PTR"] = 144,
         ["PILOT-ATT-ROLL-ADJ-KNOB-PTR"] = 145,
+        ["DC_voltage"] = 149,
+        ["AC_voltage"] = 150,
         ["CDI-OBS-PTR"] = 155,
         ["HDG-SYNC-PTR"] = 161,
         ["HDG-SET-PTR"] = 163,
@@ -174,9 +177,9 @@ OpsdcsCrew["UH-1H"] = {
         ["CHAFF-ARM-SWITCH-PTR"] = 456,
         ["PGRM-SWITCH-PTR"] = 459,
         ["FLARE-DISP-PTR"] = 464,
-
     },
     excludeDebugArgs = {
+        [129] = true,
         [132] = true,
         [133] = true,
         [185] = true,
@@ -202,3 +205,87 @@ OpsdcsCrew["UH-1H"] = {
     },
     commands = {},
 }
+
+-- ADF_FREQ:0.000000
+-- BASE_SENSOR_ALTIMETER_ATMO_PRESSURE_HG:757.944141
+-- BASE_SENSOR_AOA:0.038049
+-- BASE_SENSOR_AOS:-0.000045
+-- BASE_SENSOR_BAROALT:22.568833
+-- BASE_SENSOR_CANOPY_POS:0.900000
+-- BASE_SENSOR_CANOPY_STATE:1.000000
+-- BASE_SENSOR_FLAPS_POS:0.000000
+-- BASE_SENSOR_FLAPS_RETRACTED:1.000000
+-- BASE_SENSOR_FUEL_TOTAL:629.000000
+-- BASE_SENSOR_GEAR_HANDLE:0.000000
+-- BASE_SENSOR_HEADING:5.846033
+-- BASE_SENSOR_HELI_COLLECTIVE:0.000000
+-- BASE_SENSOR_HELI_CORRECTION:0.000000
+-- BASE_SENSOR_HORIZONTAL_ACCEL:0.038037
+-- BASE_SENSOR_IAS:0.000002
+-- BASE_SENSOR_LATERAL_ACCEL:0.001174
+-- BASE_SENSOR_LEFT_ENGINE_FAN_RPM:0.000000
+-- BASE_SENSOR_LEFT_ENGINE_FUEL_CONSUPMTION:0.000000
+-- BASE_SENSOR_LEFT_ENGINE_RPM:0.000000
+-- BASE_SENSOR_LEFT_ENGINE_TEMP_BEFORE_TURBINE:20.003303
+-- BASE_SENSOR_LEFT_GEAR_DOWN:0.000000
+-- BASE_SENSOR_LEFT_GEAR_UP:1.000000
+-- BASE_SENSOR_LEFT_THROTTLE_POS:-1.000000
+-- BASE_SENSOR_LEFT_THROTTLE_RAW_CONTROL:-1.000000
+-- BASE_SENSOR_MACH:0.000000
+-- BASE_SENSOR_MAG_HEADING:0.318989
+-- BASE_SENSOR_NOSE_GEAR_DOWN:0.000000
+-- BASE_SENSOR_NOSE_GEAR_UP:1.000000
+-- BASE_SENSOR_PITCH:0.038049
+-- BASE_SENSOR_PITCH_RATE:0.000000
+-- BASE_SENSOR_PROPELLER_PITCH:0.470588
+-- BASE_SENSOR_PROPELLER_RPM:0.000000
+-- BASE_SENSOR_PROPELLER_TILT:0.000000
+-- BASE_SENSOR_RADALT:1.558803
+-- BASE_SENSOR_RELATIVE_TORQUE:-0.010345
+-- BASE_SENSOR_RIGHT_ENGINE_FAN_RPM:0.000000
+-- BASE_SENSOR_RIGHT_ENGINE_FUEL_CONSUMPTION:0.000000
+-- BASE_SENSOR_RIGHT_ENGINE_RPM:0.000000
+-- BASE_SENSOR_RIGHT_ENGINE_TEMP_BEFORE_TURBINE:0.000000
+-- BASE_SENSOR_RIGHT_GEAR_DOWN:0.000000
+-- BASE_SENSOR_RIGHT_GEAR_UP:1.000000
+-- BASE_SENSOR_RIGHT_THROTTLE_POS:-1.000000
+-- BASE_SENSOR_RIGHT_THROTTLE_RAW_CONTROL:-1.000000
+-- BASE_SENSOR_ROLL:-0.001196
+-- BASE_SENSOR_ROLL_RATE:-0.000001
+-- BASE_SENSOR_RUDDER_NORMED:0.000000
+-- BASE_SENSOR_RUDDER_POS:-0.000000
+-- BASE_SENSOR_SPEED_BRAKE_POS:0.000000
+-- BASE_SENSOR_STICK_PITCH_NORMED:0.000000
+-- BASE_SENSOR_STICK_PITCH_POS:-0.000000
+-- BASE_SENSOR_STICK_ROLL_NORMED:0.000000
+-- BASE_SENSOR_STICK_ROLL_POS:-0.000000
+-- BASE_SENSOR_TAS:0.000002
+-- BASE_SENSOR_VERTICAL_ACCEL:0.999277
+-- BASE_SENSOR_VERTICAL_SPEED:0.000002
+-- BASE_SENSOR_WOW_LEFT_GEAR:0.000000
+-- BASE_SENSOR_WOW_NOSE_GEAR:0.000000
+-- BASE_SENSOR_WOW_RIGHT_GEAR:0.000000
+-- BASE_SENSOR_YAW_RATE:0.000000
+-- CDU_PAGE:0.000000
+-- COMM1_FREQ:0.000000
+-- CROSSTALKTEST:0.000000
+-- EJECTION_BLOCKED_0:0.000000
+-- EJECTION_BLOCKED_1:0.000000
+-- EJECTION_BLOCKED_2:0.000000
+-- EJECTION_BLOCKED_3:0.000000
+-- EJECTION_BLOCKED_4:0.000000
+-- EJECTION_BLOCKED_5:0.000000
+-- EJECTION_INITIATED_0:-1.000000
+-- EJECTION_INITIATED_1:-1.000000
+-- EJECTION_INITIATED_2:-1.000000
+-- EJECTION_INITIATED_3:-1.000000
+-- EJECTION_INITIATED_4:0.000000
+-- EJECTION_INITIATED_5:0.000000
+-- MFD_NUM:0.000000
+-- MFD_init_DEFAULT_LEVEL:0.000000
+-- SEAT:0.000000
+-- SFD1_INDICATOR_INDEX:0.000000
+-- SFD2_INDICATOR_INDEX:0.000000
+-- UHF_FREQ:251.000000
+-- VHF_AM_FREQ:116.000000
+-- VHF_FM_FREQ:30.000000
