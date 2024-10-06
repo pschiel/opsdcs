@@ -5,7 +5,7 @@
 OpsdcsCrew = {
     --- @type table @default options
     options = {
-        debug = false,               --- @type boolean @debug mode, set true for ingame debug messages
+        debug = true,               --- @type boolean @debug mode, set true for ingame debug messages
         timeDelta = 0.1,            --- @type number @seconds between updates
         showChecklist = true,       --- @type boolean @show interactive checklist when true
         showHighlights = false,     --- @type boolean @shows highlights for next check
@@ -20,7 +20,9 @@ OpsdcsCrew = {
         "CH-47Fbl1",
         "F-16C_50",
         "OH58D",
-        "SA342L", "SA342M", "SA342Minigun",
+        "SA342L",
+        "SA342M",
+        "SA342Minigun",
         "UH-1H",
     },
 
