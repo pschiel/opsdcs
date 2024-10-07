@@ -215,12 +215,12 @@ function OpsdcsCrew:getCockpitArgs(maxId, idList)
     local code
     local keys = {}
     if maxId == nil and idList == nil then
-        code = "local d=GetDevice(0);return ''"
-        for k, v in pairs(self[self.typeName].args) do
-            code = code .. "..tostring(d:get_argument_value(" .. v .. "))..';'"
-            table.insert(keys, k)
+        idList = {}
+        for _, v in pairs(self[self.typeName].args) do
+            table.insert(idList, v)
         end
-    elseif maxId then
+    end
+    if maxId then
         code = "local d,r=GetDevice(0),'';for i=1," .. maxId .. " do r=r..d:get_argument_value(i)..';' end;return r"
     elseif idList then
         code = "local d,r=GetDevice(0),'';for _,i in ipairs({" .. table.concat(idList, ",") .. "}) do r=r..d:get_argument_value(i)..';' end;return r"
@@ -229,12 +229,11 @@ function OpsdcsCrew:getCockpitArgs(maxId, idList)
     local args = {}
     local i = 1
     for value in csv:gmatch("([^;]+)") do
-        if maxId == nil and idList == nil then
-            args[keys[i]] = tonumber(value)
-        elseif maxId then
+        if maxId then
             args[i] = tonumber(value)
         elseif idList then
-            args[idList[i]] = tonumber(value)
+            local key = self[self.typeName].argsById[idList[i]] or idList[i]
+            args[key] = tonumber(value)
         end
         i = i + 1
     end
@@ -312,6 +311,7 @@ function OpsdcsCrew:evaluateCond(cond)
         arg_neq = { 2, function(a, b) return math.abs(self.args[a] - b) >= delta end },
         arg_gt = { 2, function(a, b) return self.args[a] > b end },
         arg_lt = { 2, function(a, b) return self.args[a] < b end },
+        arg_diff_lt = { 3, function(a, b, c) return math.abs(self.args[a] - self.args[b]) < c end },
         arg_between = { 3, function(a, b, c) return self.args[a] >= b and self.args[a] <= c end },
         param_eq = { 2, function(a, b) return self.params[a] == b end },
         param_neq = { 2, function(a, b) return self.params[a] ~= b end },

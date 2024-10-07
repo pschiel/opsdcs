@@ -66,5 +66,4 @@ for livery and kneeboard folders
     SA342L
     SA342M
     SA342Minigun
-    SA342Mistral
     UH-1H

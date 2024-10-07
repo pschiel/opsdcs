@@ -1,5 +1,3 @@
--- todo: yes
-
 OpsdcsCrew["FW-190A8"] = {
     procedures = {
         ["coldstart"] = {

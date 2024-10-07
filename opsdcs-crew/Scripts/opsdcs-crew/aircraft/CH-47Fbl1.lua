@@ -63,7 +63,7 @@ OpsdcsCrew["CH-47Fbl1"] = {
                 { text = "ANTI ICE switches to OFF", cond = { "arg_eq", "OCAI_CPLT", 0, "arg_eq", "OCAI_CTR", 0, "arg_eq", "OCAI_PLT", 0, "arg_eq", "OCAI_PITOT", 0 }, snd = 2, check = 1 }, --
                 { text = "HOIST Control switches and knob to OFF", cond = { "arg_eq", "OCCH_HOIST_MASTER", 0.1 }, snd = 2.3, check = 1 }, --
                 { text = "CARGO HOOK MSTR to OFF", cond = { "arg_eq", "OCCH_HOOK_MASTER", 0.1 }, snd = 1.8, check = 1 }, --
-                { text = "CARGO HOOK SEL as required", cond = { "arg_ne", "OCCH_HOOK_SELECTOR", -1 }, snd = 3.7 }, --
+                { text = "CARGO HOOK SEL as required", cond = { "arg_neq", "OCCH_HOOK_SELECTOR", -1 }, snd = 3.7 }, --
                 { text = "CARGO HOOK EMERG to OFF and cover down", cond = { "arg_eq", "OCCH_EMER", 0, "arg_eq", "OCCH_EMER_COVER", 0 }, check = 1 }, --
                 { text = "PWR XFER switches to OFF", cond = { "arg_eq", "OCHC_PTU_1", 0, "arg_eq", "OCHC_PTU_2", 0 }, snd = 2, check = 1 }, --
                 { text = "FLT CONTR switch to BOTH", cond = { "arg_eq", "OCHC_FLT_CONTR", 0.1 }, snd = 2, check = 1 }, --
@@ -79,15 +79,15 @@ OpsdcsCrew["CH-47Fbl1"] = {
             conditions = {
                 { text = "Check FIRE PULL handles IN", cond = { "arg_eq", "FIRE_PULL_L", 0, "arg_eq", "FIRE_PULL_R", 0 }, snd = 2.5, check = 1 }, --
                 { text = "Set MFD Power to NORM or NVG", cond = { "arg_gt", "MFD_CL_PWR", 0, "arg_gt", "MFD_CR_PWR", 0, "arg_gt", "MFD_CTR_PWR", 0, "arg_gt", "MFD_PL_PWR", 0, "arg_gt", "MFD_PR_PWR", 0 }, snd = 2, check = 1  }, --
-                { text = "Set Radar Altimeter as required", cond = { "arg_ne", "MAIN_RALT_DIMMER", -1 }, snd = 2, check = 1  }, --
-                { text = "Set CDU 1/2 Brightness as required", cond = { "arg_ne", "CDU_1_DIMMER", -1, "arg_ne", "CDU_2_DIMMER", -1 }, snd = 3, check = 1 }, --
+                { text = "Set Radar Altimeter as required", cond = { "arg_neq", "MAIN_RALT_DIMMER", -1 }, snd = 2, check = 1  }, --
+                { text = "Set CDU 1/2 Brightness as required", cond = { "arg_neq", "CDU_1_DIMMER", -1, "arg_neq", "CDU_2_DIMMER", -1 }, snd = 3, check = 1 }, --
                 { text = "AFCS Cyclic Trim switch to AUTO", cond = { "arg_eq", "AFCS_MODE", 1 }, snd = 2.3, check = 1 }, --
                 { text = "AFCS SYSTEM SEL switch OFF", cond = { "arg_eq", "AFCS_SYSTEM", 0 }, snd = 2.2, check = 1 }, --
                 { text = "Emergency MAN/NORM/GUARD to NORM", cond = { "arg_eq", "EAUX_RADIO_MODE", 0.1 }, snd = 2, check = 1 }, --
                 { text = "Emergency EMER to OFF", cond = { "arg_eq", "EAUX_EMER", 0.1 }, snd = 2, check = 1 }, --
                 { text = "Emergency ZERO to OFF", cond = { "arg_eq", "EAUX_ZERO", 0 }, snd = 1.5, check = 1 }, --
                 { text = "CGI Test switch OFF", cond = { "arg_eq", "MISC_CGI_TEST", 0}, snd = 1.8, check = 1  }, --
-                { text = "BKUP RAD SEL as required", cond = { "arg_ne", "MISC_BKUP_RAD", -1 }, snd = 2, check = 1 }, --
+                { text = "BKUP RAD SEL as required", cond = { "arg_neq", "MISC_BKUP_RAD", -1 }, snd = 2, check = 1 }, --
                 { text = "JETTISON switch to OFF and cover down", cond = { "arg_eq", "ASE_JETT_COVER", 0, "arg_eq", "ASE_JETT", 0 }, snd = 2.5, check = 1 }, --
                 { text = "ARM/SAFE switch to SAFE", cond = { "arg_eq", "ASE_ARM", 0 }, snd = 1.8, check = 1 }, --
                 { text = "BYPASS/NORMAL switch to NORMAL", cond = { "arg_eq", "ASE_BYPASS1", 0 }, snd = 2.2, check = 1 }, --

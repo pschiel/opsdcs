@@ -1,5 +1,3 @@
--- todo: yes
-
 OpsdcsCrew["SpitfireLFMkIX"] = {
     procedures = {
         ["coldstart"] = {

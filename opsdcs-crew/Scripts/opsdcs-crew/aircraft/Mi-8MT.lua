@@ -1,4 +1,4 @@
-OpsdcsCrew["AH-64D_BLK_II"] = {
+OpsdcsCrew["Mi-8MT"] = {
     procedures = {
         ["coldstart"] = {
             text = "Cold Start",

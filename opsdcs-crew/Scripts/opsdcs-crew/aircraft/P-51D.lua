@@ -1,5 +1,3 @@
--- todo: yes
-
 OpsdcsCrew["P-51D"] = {
     procedures = {
         ["coldstart"] = {
