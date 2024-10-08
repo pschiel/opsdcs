@@ -121,6 +121,22 @@ function OpsdcsApi:onSimulationFrame()
                     code, result = self:getDbSensors()
                 elseif method == "GET" and path == "/db-pods" then
                     code, result = self:getDbPods()
+                elseif method == "GET" and path == "/db-launcher" then
+                    code, result = self:getDbLauncher()
+                elseif method == "GET" and path == "/db-bombs" then
+                    code, result = self:getDbBombs()
+                elseif method == "GET" and path == "/db-guns" then
+                    code, result = self:getDbGuns()
+                elseif method == "GET" and path == "/db-torpedoes" then
+                    code, result = self:getDbTorpedoes()
+                elseif method == "GET" and path == "/db-rockets" then
+                    code, result = self:getDbRockets()
+                elseif method == "GET" and path == "/db-pylons" then
+                    code, result = self:getDbPylons()
+                elseif method == "GET" and path == "/db-plugins" then
+                    code, result = self:getDbPlugins()
+                elseif method == "GET" and path == "/db-gtt" then
+                    code, result = self:getDbGTt()
                 elseif method == "GET" and path == "/db-years" then
                     code, result = self:getDbYears()
                 elseif method == "GET" and path == "/db-years-launchers" then
@@ -635,6 +651,54 @@ end
 -- returns db.Pods.Pod
 function OpsdcsApi:getDbPods()
     local result = db.Pods.Pod
+    return 200, result
+end
+
+-- returns launcher
+function OpsdcsApi:getDbLauncher()
+    local result = launcher
+    return 200, result
+end
+
+-- returns bombs
+function OpsdcsApi:getDbBombs()
+    local result = bombs
+    return 200, result
+end
+
+-- returns guns
+function OpsdcsApi:getDbGuns()
+    local result = guns_by_wstype
+    return 200, result
+end
+
+-- returns torpedoes
+function OpsdcsApi:getDbTorpedoes()
+    local result = torpedoes
+    return 200, result
+end
+
+-- returns rockets
+function OpsdcsApi:getDbRockets()
+    local result = rockets
+    return 200, result
+end
+
+-- returns plugins
+function OpsdcsApi:getDbPylons()
+    local result = Pylons
+    return 200, result
+end
+
+-- returns plugins
+function OpsdcsApi:getDbGTt()
+    local result = GT_t
+    return 200, result
+end
+
+-- returns plugins
+function OpsdcsApi:getDbPlugins()
+    local result = plugins
     return 200, result
 end
 
