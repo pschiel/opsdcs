@@ -9,9 +9,7 @@ copy [opsdcs-api.lua](opsdcs-api.lua) into `Saved Games/DCS/Scripts/Hooks`
 API is available once a simulation starts (main menu).
 There is NO sanitizing required.
 
-## Usage
-
-### misc
+## Misc
 
 GET http://127.0.0.1:31481/health - health check
 
@@ -23,7 +21,9 @@ GET http://127.0.0.1:31481/player-unit - returns player unit
 
 GET http://127.0.0.1:31481/coords - coordinate conversion
 
-### dynamic static objects
+GET http://127.0.0.1:31481/db-plugins - returns plugins
+
+## Static objects
 
 GET http://127.0.0.1:31481/static-objects - returns created static objects
 
@@ -33,19 +33,19 @@ DELETE http://127.0.0.1:31481/static-objects - deletes static objects
 
 DELETE http://127.0.0.1:31481/static-objects/all - deletes all static objects
 
-### camera
+## Camera
 
 GET http://127.0.0.1:31481/camera-position - gets camera position
 
 POST http://127.0.0.1:31481/camera-position - sets camera position (smooth lerped)
 
-### export
+## Export
 
 GET http://127.0.0.1:31481/export-world-objects - returns world objects
 
 GET http://127.0.0.1:31481/export-self-data - returns self data
 
-### db
+## DB
 
 GET http://127.0.0.1:31481/db-countries - returns countries
 
@@ -74,8 +74,6 @@ GET http://127.0.0.1:31481/db-torpedoes - returns torpedoes
 GET http://127.0.0.1:31481/db-rockets - returns rockets
 
 GET http://127.0.0.1:31481/db-pylons - returns pylons
-
-GET http://127.0.0.1:31481/db-plugins - returns plugins
 
 GET http://127.0.0.1:31481/db-gtt - returns GT_t templates
 
