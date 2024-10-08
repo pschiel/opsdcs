@@ -61,13 +61,31 @@ GET http://127.0.0.1:31481/db-sensors - returns sensors
 
 GET http://127.0.0.1:31481/db-pods - returns pods
 
-GET http://127.0.0.1:31481/db-farp-objects - returns farp objects
+GET http://127.0.0.1:31481/db-launcher - returns launcher
 
-GET http://127.0.0.1:31481/db-objects - returns objects
+GET http://127.0.0.1:31481/db-pods - returns pods
+
+GET http://127.0.0.1:31481/db-bombs - returns bombs
+
+GET http://127.0.0.1:31481/db-guns - returns guns
+
+GET http://127.0.0.1:31481/db-torpedoes - returns torpedoes
+
+GET http://127.0.0.1:31481/db-rockets - returns rockets
+
+GET http://127.0.0.1:31481/db-pylons - returns pylons
+
+GET http://127.0.0.1:31481/db-plugins - returns plugins
+
+GET http://127.0.0.1:31481/db-gtt - returns GT_t templates
 
 GET http://127.0.0.1:31481/db-years - returns years info
 
 GET http://127.0.0.1:31481/db-years-launchers - returns years/launchers info
+
+GET http://127.0.0.1:31481/db-farp-objects - returns farp objects
+
+GET http://127.0.0.1:31481/db-objects - returns objects
 
 GET http://127.0.0.1:31481/db-theatres - returns installed theatres info
 
