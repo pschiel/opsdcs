@@ -19,6 +19,7 @@ OpsdcsCrew = {
     aircraftTypes = {
         "CH-47Fbl1",
         "F-16C_50",
+        "Ka-50_3",
         "OH58D",
         "SA342L",
         "SA342M",
@@ -318,8 +319,9 @@ function OpsdcsCrew:evaluateCond(cond)
         param_gt = { 2, function(a, b) return self.params[a] > b end },
         param_lt = { 2, function(a, b) return self.params[a] < b end },
         param_between = { 3, function(a, b, c) return self.params[a] >= b and self.params[a] <= c end },
-        ind_eq = { 3, function(a, b, c) return self.indications[a][b] == c end },
-        ind_neq = { 3, function(a, b, c) return self.indications[a][b] ~= c end },
+        ind_eq = { 3, function(a, b, c) return self.indications[a][b] ~= nil and self.indications[a][b] == c end },
+        ind_neq = { 3, function(a, b, c) return self.indications[a][b] ~= nil and self.indications[a][b] ~= c end },
+        ind_match = { 3, function(a, b, c) return self.indications[a][b] ~= nil and self.indications[a][b]:match(c) end },
         ind_gt = { 3, function(a, b, c)
             local x = tonumber(self.indications[a][b])
             if x == nil then return false end
@@ -625,7 +627,7 @@ function OpsdcsCrew:refreshMenu()
     for _, procedure in ipairs(self[self.typeName].procedures) do
         self.menu[procedure.name] = missionCommands.addCommandForGroup(self.groupId, procedure.name, { self.mainmenu }, OpsdcsCrew.onProcedure, self, procedure)
     end
-    self.menu["whats_this"] = missionCommands.addCommandForGroup(self.groupId, "Cockpit Tutor", { self.mainmenu }, OpsdcsCrew.onWhatsThis, self)
+    --self.menu["whats_this"] = missionCommands.addCommandForGroup(self.groupId, "Cockpit Tutor", { self.mainmenu }, OpsdcsCrew.onWhatsThis, self)
     self.menu["options"] = missionCommands.addSubMenuForGroup(self.groupId, "Options", { self.mainmenu })
     self.menu["args_debug"] = missionCommands.addCommandForGroup(self.groupId, "Toggle Arguments Debug", { self.mainmenu, "Options" }, OpsdcsCrew.onArgsDebug, self)
 end

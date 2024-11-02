@@ -1,5 +1,5 @@
-name = "Triple Screen 5760x1080";
-Description = "Triple Screen 5760x1080";
+name = "Triple Screen 5760x1080 1.05";
+Description = "Triple Screen 5760x1080 1.05";
 
 Viewports = {
     Left = {

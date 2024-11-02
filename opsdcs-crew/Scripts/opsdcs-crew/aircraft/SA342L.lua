@@ -1,6 +1,6 @@
 OpsdcsCrew["SA342L"] = {
     options = {
-        showHighlights = true,
+        showHighlights = false,
         playSounds = false,
     },
     procedures = {

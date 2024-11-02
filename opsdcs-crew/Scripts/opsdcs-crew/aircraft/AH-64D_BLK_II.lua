@@ -1,7 +1,11 @@
 OpsdcsCrew["AH-64D_BLK_II"] = {
+    options = {
+        showHighlights = true,
+        playSounds = false,
+    },
     procedures = {
-        ["coldstart"] = {
-            text = "Cold Start",
+        {
+            name = "Cold Start",
             start_state = "coldstart",
         },
     },
@@ -18,6 +22,8 @@ OpsdcsCrew["AH-64D_BLK_II"] = {
         },
     },
     args = {
+    },
+    excludeDebugArgs = {
     },
     params = {
     },

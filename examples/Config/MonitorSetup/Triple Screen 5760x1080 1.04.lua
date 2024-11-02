@@ -1,5 +1,5 @@
-name = "Triple Screen 5760x1080";
-Description = "Triple Screen 5760x1080";
+name = "Triple Screen 5760x1080 1.04";
+Description = "Triple Screen 5760x1080 1.04";
 
 Viewports = {
     Left = {
@@ -8,7 +8,7 @@ Viewports = {
         width = 1920,
         height = 1080,
         aspect = 1920 / 1080,
-        viewDx = -1.05,
+        viewDx = -1.04,
         viewDy = 0,
     },
     Center = {
@@ -26,7 +26,7 @@ Viewports = {
         width = 1920,
         height = 1080,
         aspect = 1920 / 1080,
-        viewDx = 1.05,
+        viewDx = 1.04,
         viewDy = 0,
     }
 }

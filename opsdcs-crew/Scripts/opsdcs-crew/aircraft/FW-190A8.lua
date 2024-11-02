@@ -1,7 +1,11 @@
 OpsdcsCrew["FW-190A8"] = {
+    options = {
+        showHighlights = true,
+        playSounds = false,
+    },
     procedures = {
-        ["coldstart"] = {
-            text = "Cold Start",
+        {
+            name = "Cold Start",
             start_state = "coldstart",
         },
     },
@@ -18,6 +22,8 @@ OpsdcsCrew["FW-190A8"] = {
         },
     },
     args = {
+    },
+    excludeDebugArgs = {
     },
     params = {
     },

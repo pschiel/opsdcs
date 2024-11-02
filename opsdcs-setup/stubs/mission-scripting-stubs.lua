@@ -1558,7 +1558,7 @@ radio.modulation = {}
 --- @field getRandomSort fun(t:table):table @randomly shuffles table
 --- @field getRouteAwayWater fun(thresholdPos:vec3, pos:vec3, a:number, b:number):boolean @checks for water (radius/depth?)
 --- @field getRunwayPerimetr fun(runway:table):table @returns runway perimeter (runway data from airbase:getRunways)
---- @field getSimpleZones fun(pos:vec3, radius:number, posRadius:number, numPositions:number) @find in an area clear positions with a radius for placing units
+--- @field getSimpleZones fun(pos:vec3, radius:number, posRadius:number, numPositions:number, water:boolean) @find in an area clear positions with a radius for placing units
 --- @field getThresholdFourZones fun(numPositions:number, perim:table):table @returns zones along runway edges (perim)
 --- @field setMarkerPoint fun()
 --- @type Disposition

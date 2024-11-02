@@ -1,7 +1,11 @@
 OpsdcsCrew["Bf-109K-4"] = {
+    options = {
+        showHighlights = true,
+        playSounds = false,
+    },
     procedures = {
-        ["coldstart"] = {
-            text = "Cold Start",
+        {
+            name = "Cold Start",
             start_state = "coldstart",
         },
     },
@@ -18,6 +22,8 @@ OpsdcsCrew["Bf-109K-4"] = {
         },
     },
     args = {
+    },
+    excludeDebugArgs = {
     },
     params = {
     },

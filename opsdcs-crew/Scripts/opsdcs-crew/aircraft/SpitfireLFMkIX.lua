@@ -1,7 +1,11 @@
 OpsdcsCrew["SpitfireLFMkIX"] = {
+    options = {
+        showHighlights = true,
+        playSounds = false,
+    },
     procedures = {
-        ["coldstart"] = {
-            text = "Cold Start",
+        {
+            name = "Cold Start",
             start_state = "coldstart",
         },
     },
@@ -18,6 +22,8 @@ OpsdcsCrew["SpitfireLFMkIX"] = {
         },
     },
     args = {
+    },
+    excludeDebugArgs = {
     },
     params = {
     },
