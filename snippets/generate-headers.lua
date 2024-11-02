@@ -13,7 +13,6 @@ local enum = arg[2]
 local input = ""
 while true do
     local line = io.read("*line")
-
     if not line then break end
     input = input .. line .. "\n"
 end
