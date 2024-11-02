@@ -1,18 +1,19 @@
 -- usage: lua generate-headers.lua Keys Commands < /path/to/command_defs.lua > command_defs.h
 --        lua generate-headers.lua devices Devices < /path/to/devices.lua > devices.h
 
-if #arg < 1 then
+if #arg < 2 then
     print("usage: lua generate-headers.lua [LUA_VAR] [HEADER_ENUM] < [LUA_FILE] > [HEADER_FILE]")
     os.exit(1)
 end
 
 local var = arg[1]
+local enum = arg[2]
 
 -- read input from stdin
 local input = ""
 while true do
     local line = io.read("*line")
-    
+
     if not line then break end
     input = input .. line .. "\n"
 end
@@ -27,7 +28,7 @@ end
 
 -- output header
 print("#pragma once")
-print("enum " .. var)
+print("enum " .. enum)
 print("{")
 
 -- output sorted table
