@@ -1,5 +1,5 @@
--- usage: lua generate-headers.lua Keys Commands < /path/to/command_defs.lua > command_defs.h
---        lua generate-headers.lua devices Devices < /path/to/devices.lua > devices.h
+-- usage: lua generate-headers.lua Keys Commands < /path/to/command_defs.lua > /path/to/command_defs.h
+--        lua generate-headers.lua devices Devices < /path/to/devices.lua > /path/to/devices.h
 
 if #arg < 2 then
     print("usage: lua generate-headers.lua [LUA_VAR] [HEADER_ENUM] < [LUA_FILE] > [HEADER_FILE]")
