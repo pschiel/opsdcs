@@ -7,5 +7,5 @@ model = {
         { "sd_kfz_251_lod4.edm", 20000.0 },
 
     },
-    collision_shell = "sd_kfz_251-COLLISION.edm",
+    collision_shell = "bambi_bucket_collision.edm" --"sd_kfz_251-COLLISION.edm",
 }

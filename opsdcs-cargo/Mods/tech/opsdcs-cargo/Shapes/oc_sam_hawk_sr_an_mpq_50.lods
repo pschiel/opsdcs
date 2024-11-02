@@ -3,5 +3,5 @@ model = {
         { "HAWK-RLS.EDM", 10000.000000 },
         { "LD_Tec1.edm", 20000.000000 },
     },
-    collision_shell = "V_lom.edm",
+    collision_shell = "bambi_bucket_collision.edm" --"V_lom.edm",
 }

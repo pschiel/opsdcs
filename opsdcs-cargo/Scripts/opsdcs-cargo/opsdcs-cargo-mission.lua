@@ -117,7 +117,7 @@ end
 --- starts script
 function OpsdcsCargo:start()
     self:log("start")
-    for i = 2, 14 do
+    for i = 2, 13 do
         local name = "c" .. tostring(i)
         self.trackedStatics[name] = {
             id = i,

@@ -6,5 +6,5 @@ model = {
         { "Bedford_MWD_LOD3.edm", 20000.0 },
 
     },
-    collision_shell = "Bedford_MWD-COLLISION.edm",
+    collision_shell = "bambi_bucket_collision.edm" --"Bedford_MWD-COLLISION.edm",
 }

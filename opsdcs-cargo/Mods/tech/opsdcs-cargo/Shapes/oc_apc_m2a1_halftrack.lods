@@ -5,5 +5,5 @@ model = {
         { "M2A1_HalfTrack_LOD2.edm", 1000.0 },
         { "M2A1_HalfTrack_LOD3.edm", 20000.0 },
     },
-    collision_shell = "M2A1_HalfTrack-COLLISION.edm",
+    collision_shell = "bambi_bucket_collision.edm" --"M2A1_HalfTrack-COLLISION.edm",
 }

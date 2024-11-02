@@ -2,5 +2,5 @@ model = {
     lods = {
         { "hq7_ln_lod0.edm", 50000.0 },
     },
-    collision_shell = "hq7_ln_collision.edm",
+    collision_shell = "bambi_bucket_collision.edm" --"hq7_ln_collision.edm",
 }

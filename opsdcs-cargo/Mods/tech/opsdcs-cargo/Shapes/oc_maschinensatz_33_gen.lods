@@ -5,5 +5,5 @@ model = {
         { "Maschinensatz_33_LOD2.edm", 1500.0 },
         { "Maschinensatz_33_LOD3.edm", 20000.0 },
     },
-    collision_shell = "Maschinensatz_33-COLLISION.edm",
+    collision_shell = "bambi_bucket_collision.edm" --"Maschinensatz_33-COLLISION.edm",
 }

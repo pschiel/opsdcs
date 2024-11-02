@@ -6,5 +6,5 @@ model = {
         { "Arleigh_Burke_IIa_LOD_3.edm", 5000.000000 },
         { "Arleigh_Burke_IIa_LOD_4.edm", 70000.000000 },
     },
-    collision_shell = "Arleigh_Burke_IIa-collision.edm",
+    collision_shell = "bambi_bucket_collision.edm" --"Arleigh_Burke_IIa-collision.edm",
 }

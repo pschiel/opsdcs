@@ -7,5 +7,5 @@ model = {
         { "flak18_lod4.edm", 20000.0 },
 
     },
-    collision_shell = "flak36-COLLISION.edm",
+    collision_shell = "bambi_bucket_collision.edm" --"flak36-COLLISION.edm",
 }

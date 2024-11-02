@@ -2,5 +2,5 @@ model = {
     lods = {
         { "Wiesel2_Ozelot.edm", 50000.000000 },
     },
-    collision_shell = "Wiesel2_Ozelot-collision.edm",
+    collision_shell = "bambi_bucket_collision.edm" --"Wiesel2_Ozelot-collision.edm",
 }
