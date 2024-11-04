@@ -1,13 +1,13 @@
-imgui_dll_path = imgui_dll_path or (package.cpath..";"..LockOn_Options.script_path.."LuaImGui\\?.dll")
+lua_imgui_path = lua_imgui_path or (package.cpath..";"..LockOn_Options.script_path.."LuaImGui\\?.dll")
 
 function require_imgui()
-  package.cpath = package.cpath..";"..imgui_dll_path
+  package.cpath = package.cpath..";"..lua_imgui_path
   success,result = pcall(require,'LuaImGui')
   return result
 end
 
 function require_imgui_stubs()
-    package.cpath = package.cpath..";"..imgui_dll_path
+    package.cpath = package.cpath..";"..lua_imgui_path
     return require("ImGuiStubs")
 end
 

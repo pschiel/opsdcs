@@ -1,6 +1,6 @@
 -- @see https://github.com/08jne01/dcs-lua-imgui
 
-_G.imgui_dll_path = lfs.writedir() .. "Scripts/LuaImGui/?.dll"
+_G.lua_imgui_path = lfs.writedir() .. "Scripts/LuaImGui/?.dll"
 _G.imgui_disabled = false
 dofile(lfs.writedir() .. "Scripts/LuaImGui/ImGui.lua")
 
