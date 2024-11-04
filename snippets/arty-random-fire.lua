@@ -5,27 +5,29 @@ local fireInterval = 10
 local targets = {}
 
 -- all groups
-local groups = coalition.getGroups(coalition.side.RED)
-for _, group in pairs(groups) do
-    if not group:isExist() then break end
-    -- all units of group
-    local units = group:getUnits()
-    for _, unit in pairs(units) do
-        if not unit:isExist() then break end
-        local name = unit:getName()
-        -- must match
-        if name:match(targetMatch) then
-            -- add to targets
-            trigger.action.outText("adding target: " .. name, msgDuration)
-            table.insert(targets, unit)
-        else
-            -- else set invisible
-            trigger.action.outText("setting invisible: " .. name, msgDuration)
-            local command = {
-                id = "SetInvisible",
-                params = { value = true }
-            }
-            unit:getController():setCommand(command)
+local function getTargetsAndSetOthersInvisible()
+    local groups = coalition.getGroups(coalition.side.RED)
+    for _, group in pairs(groups) do
+        if not group:isExist() then break end
+        -- all units of group
+        local units = group:getUnits()
+        for _, unit in pairs(units) do
+            if not unit:isExist() then break end
+            local name = unit:getName()
+            -- must match
+            if name:match(targetMatch) then
+                -- add to targets
+                trigger.action.outText("adding target: " .. name, msgDuration)
+                table.insert(targets, unit)
+            else
+                -- else set invisible
+                trigger.action.outText("setting invisible: " .. name, msgDuration)
+                local command = {
+                    id = "SetInvisible",
+                    params = { value = true }
+                }
+                unit:getController():setCommand(command)
+            end
         end
     end
 end
@@ -53,4 +55,5 @@ local function loopArtyFire()
     timer.scheduleFunction(loopArtyFire, {}, timer.getTime() + fireInterval)
 end
 
+getTargetsAndSetOthersInvisible()
 loopArtyFire()
