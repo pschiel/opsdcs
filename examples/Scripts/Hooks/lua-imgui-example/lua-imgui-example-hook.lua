@@ -43,12 +43,12 @@ end
 
 function ImGuiShow()
     ImGuiRunning = true
-    ImGui:MenuBar(true)
+    ImGui.MenuBar(true)
 end
 
 function ImGuiHide()
     ImGuiRunning = false
-    ImGui:MenuBar(false)
+    ImGui.MenuBar(false)
     ImGui:Refresh()
 end
 
