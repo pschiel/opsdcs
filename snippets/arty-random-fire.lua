@@ -4,8 +4,8 @@ local msgDuration = 20
 local fireInterval = 10
 local targets = {}
 
--- all groups
 local function getTargetsAndSetOthersInvisible()
+    -- all groups
     local groups = coalition.getGroups(coalition.side.RED)
     for _, group in pairs(groups) do
         if not group:isExist() then break end
