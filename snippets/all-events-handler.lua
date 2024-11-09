@@ -7,8 +7,17 @@ allEventsHandler = {
                 self.eventNamesById[value] = key
             end
         end
-        local ini = event.initiator and event.initiator:getName() or "-"
-        trigger.action.outText("event: " .. self.eventNamesById[event.id] .. " ini: " .. ini, 5)
+        local iniName
+        if event.initiator == nil then
+            iniName = "nil"
+        else
+            if event.initiator.getName then
+                iniName = event.initiator:getName()
+            else
+                iniName = "unknown"
+            end
+        end
+        trigger.action.outText("event: " .. self.eventNamesById[event.id] .. " ini: " .. iniName, 5)
     end
 }
 world.addEventHandler(allEventsHandler)
