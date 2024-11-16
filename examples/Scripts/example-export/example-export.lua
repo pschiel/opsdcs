@@ -1,6 +1,4 @@
 -- load "MyExample" global class
--- you can reload this during runtime by injecting this snippet with lua runner into GUI env:
--- net.dostring_in("export", "dofile(lfs.writedir() .. 'Scripts/example-export/MyExample.lua')")
 dofile(lfs.writedir() .. 'Scripts/example-export/MyExample.lua')
 
 -- DCS will call these global callback functions on certain events

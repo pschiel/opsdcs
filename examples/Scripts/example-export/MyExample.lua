@@ -6,7 +6,12 @@
 --- UDP test listener (Powershell):
 --- $port = 34567; $udpClient = New-Object System.Net.Sockets.UdpClient $port; $endPoint = New-Object System.Net.IPEndPoint ([System.Net.IPAddress]::Any, 0); while ($true) { $data = $udpClient.Receive([ref]$endPoint); $message = [Text.Encoding]::UTF8.GetString($data); Write-Host "Received: $message" }
 
-local JSON = loadfile("Scripts\\JSON.lua")() -- JSON helper from DCS files. works for basic stuff.
+-- JSON helper from DCS files. works for basic stuff.
+local JSON = loadfile("Scripts\\JSON.lua")()
+
+-- LuaSocket
+package.path = package.path .. ";.\\LuaSocket\\?.lua;"
+package.cpath = package.cpath .. ";.\\LuaSocket\\?.dll;"
 local socket = require("socket")
 
 --- MyExample Export handler object
