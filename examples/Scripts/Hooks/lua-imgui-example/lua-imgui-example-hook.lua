@@ -8,6 +8,40 @@ dofile(lfs.writedir() .. "Scripts/LuaImGui/ImGui.lua")
 
 local ImGuiRunning = false
 
+function recursiveImGuiTree(t, depth, seen)
+    if t == nil then
+        return "nil"
+    end
+
+    seen = seen or {}
+
+    if seen[t] ~= nil then
+        return tostring(t)
+    end
+
+    seen[t] = true
+
+    depth = depth or 0
+
+    if depth > 100 then
+        return "..."
+    end
+
+    local strings = {}
+    for i, v in pairs(t) do
+        if type(v) == 'table' then
+            ImGui:Tree(i, function ()
+                recursiveImGuiTree(v, depth + 1, seen)             
+            end)
+        elseif type(v) == 'string' then
+            table.insert(strings, i..string.format(" = \"%s\"", v))
+        else
+            table.insert(strings, i.." = "..tostring(v))
+        end
+    end
+    ImGui:Text(table.concat(strings, ',\n'))
+end
+
 function ImGuiSetup()
     ImGui.AddItem("World", "Objects", function()
         ImGui:Text("Objects")
@@ -33,6 +67,9 @@ function ImGuiSetup()
             })
         end
         ImGui:Table(units)
+    end)
+    ImgGui.AddItem("DB", "Units", function()
+        recursiveImGuiTree(db.Units)
     end)
 end
 
