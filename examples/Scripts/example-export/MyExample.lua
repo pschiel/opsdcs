@@ -1,8 +1,5 @@
 --- Example UDP Export handler
 ---
---- reload this during runtime by running:
---- net.dostring_in("export", "dofile(lfs.writedir() .. 'Scripts/example-export/MyExample.lua')")
----
 --- UDP test listener (Powershell):
 --- $port = 34567; $udpClient = New-Object System.Net.Sockets.UdpClient $port; $endPoint = New-Object System.Net.IPEndPoint ([System.Net.IPAddress]::Any, 0); while ($true) { $data = $udpClient.Receive([ref]$endPoint); $message = [Text.Encoding]::UTF8.GetString($data); Write-Host "Received: $message" }
 

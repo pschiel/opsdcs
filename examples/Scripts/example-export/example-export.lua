@@ -29,14 +29,3 @@ for _, callback in ipairs(callbacks) do
         end
     end
 end
-
--- provides require("socket")
-package.path = package.path .. ";.\\LuaSocket\\?.lua;"
-package.cpath = package.cpath .. ";.\\LuaSocket\\?.dll;"
-
--- emmylua debug (uncomment if not needed, or edit path to extension)
-pcall(function()
-    package.cpath = package.cpath .. ";C:/Users/ops/.vscode/extensions/tangzx.emmylua-0.6.18/debugger/emmy/windows/x64/?.dll"
-    local dbg = require("emmy_core")
-    dbg.tcpConnect("localhost", 9966)
-end)
