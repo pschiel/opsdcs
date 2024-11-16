@@ -26,7 +26,7 @@ MyExample = {
 function MyExample:sendData(data)
     local jsonData = JSON:encode(data)
     if self.udpsocket then
-        self.udpsocket:send(jsonData)
+        socket.try(self.udpsocket:send(jsonData))
     end
 end
 
