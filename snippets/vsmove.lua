@@ -1,3 +1,5 @@
+-- random mess, not a real script
+
 --syria
 local cy = 904215 -- vaziani
 local cx = -319621

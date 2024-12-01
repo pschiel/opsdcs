@@ -1,4 +1,4 @@
--- Table debugger
+-- table debugger (outdated... better use lua-imgui now)
 
 Tabledebug = {
     timeDelta = 0.1, -- loop interval

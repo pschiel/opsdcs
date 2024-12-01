@@ -1,4 +1,5 @@
--- generic debug output for all events
+-- generic debug output for all events, displaying event names from the world.event table
+
 allEventsHandler = {
     onEvent = function(self, event)
         if self.eventNamesById == nil then

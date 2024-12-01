@@ -1,3 +1,7 @@
+-- alternative way to switch player aircraft in SP
+-- not recommended, just for educational purposes (send stuff to GUI)
+-- (use coalition.addGroup instead)
+
 --- Switches SP player to a unit (can be in late activation)
 --- @param unitName string @unit name
 --- @param unpause boolean @if set to true, automatic unpause on briefing screen

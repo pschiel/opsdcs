@@ -1,4 +1,4 @@
--- Flag debugger
+-- flags debugger (outdated... better use lua-imgui now)
 
 Flagdebug = {
     timeDelta = 1.0, -- loop interval

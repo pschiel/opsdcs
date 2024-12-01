@@ -1,3 +1,5 @@
+-- makes an arty fire at random targets, while ignoring certain others (via setting invisible)
+
 local targetMatch = "Whatever-.*"
 local artyName = "Arty-1-1"
 local msgDuration = 20

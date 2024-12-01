@@ -1,3 +1,5 @@
+-- this script will mark all parkings and runways of the specified airbase with some smoke colors
+
 local a = Airbase.getByName("Beirut-Rafic Hariri")
 
 -- list of: fDistToRW, Term_Index, Term_Index_0, Term_Type, TO_AC (false=available), vTerminalPos (pos)

@@ -1,6 +1,6 @@
 -- Goldeneye - Reconnaissance script
 
-if Goldeneye or true then return end -- do not load twice
+if Goldeneye then return end -- do not load twice
 
 Goldeneye = {
     options = {
@@ -27,12 +27,12 @@ Goldeneye = {
     basedir = GoldeneyeBasedir or "", --- @type string @path to Scripts/goldeneye
     aircraft = {},                    --- @type table<string,Aircraft> @aircraft by type
     sensors = {},                     --- @type table<string,Sensor> @sensors by type
-    players = {},                     --- @type table<number,Unit> @players by id
-    groups = {},                      --- @type table<number,GroupInfo> @group infos by id
+    players = {},                     --- @type table<number,Unit> @current recon players by id
+    groups = {},                      --- @type table<number,GroupInfo> @current recon groups by id
     scannedObjects = {},              --- @type table<number,Object> @scanned objects by id
     sceneryObjectWhitelist = {},      --- @type table<string,string> @scenery object whitelist
     nObjects = 0,                     --- @type number @total number of scanned objects
-    camViewActive = false,            --- @type boolean @true while camera view active
+    activeCamViewMount = 0,           --- @type number @mount index while camera view active
     mainmenu = "Goldeneye",           --- @type string @main menu name
     eventHandlerId = "Goldeneye",     --- @type string @event handler id
     isRunning = false,                --- @type boolean @true while running
@@ -41,8 +41,10 @@ Goldeneye = {
 ------------------------------------------------------------------------------
 
 --- @class GroupInfo
---- @field players Unit[] @list of player units in this group (multicrew)
+--- @field player Unit @the player unit in this group
 --- @field menuitems string[] @list of active menu items for this group
+--- @field unitType string @aircraft type of the group
+--- @field isRecording table<number,bool> @true when sensor is recording (by mount index)
 
 --- @class Sensor
 --- @field name string @sensor type name
@@ -96,9 +98,11 @@ end
 function Goldeneye:start()
     self:log("start")
     self:loadPluginData()
+    missionCommands.addSubMenu(self.mainmenu, nil)
     world.addEventHandler(self)
     local player = world.getPlayer()
     if player then
+        self:log("found world player")
         self:addPlayer(player)
     end
     self.isRunning = true
@@ -124,13 +128,8 @@ function Goldeneye:onEvent(event)
         if event.initiator:getCategory() == Object.Category.UNIT then
             self:addPlayer(event.initiator)
         end
-        -- elseif event.id == world.event.S_EVENT_DEAD then
-        -- elseif event.id == world.event.S_EVENT_TAKEOFF then
-        -- elseif event.id == world.event.S_EVENT_LAND then
-        -- elseif event.id == world.event.S_EVENT_ENGINE_STARTUP then
-        -- elseif event.id == world.event.S_EVENT_ENGINE_SHUTDOWN then
-        
-        -- S_EVENT_PLAYER_LEAVE_UNIT
+    elseif event.id == world.event.S_EVENT_PLAYER_LEAVE_UNIT then
+        self:removePlayer(event.initiator)
     else
         self:genericOnEvent(event)
     end
@@ -170,28 +169,41 @@ end
 --- @param unit Unit @unit
 function Goldeneye:addPlayer(unit)
     local unitId = unit:getID()
+    local unitType = unit:getTypeName()
     local group = unit:getGroup()
     local groupId = group:getID()
-    self:log(string.format("add player: %s (%d), group %s (%d)", unit:getName(), unitId, group:getName(), groupId))
-
+    self:log(string.format("add player: %s (id %d), group %s (id %d)", unit:getName(), unitId, group:getName(), groupId))
     if not self:isReconAllowed(unit) then return end
-
-    if self.players[unitId] then
-        self:log("player already exists")
+    if self.groups[groupId] then
+        self:log("group already has a player, ignoring")
         return
     end
-    self.players[unit:getID()] = unit
-
-    if self.groups[groupId] == nil then
-        self.groups[groupId] = { players = {}, menuitems = {} }
-        missionCommands.addSubMenuForGroup(groupId, self.mainmenu, nil)
-        self:log(string.format("main menu created for group %d", groupId))
-    else
-        self:log("group id already registered")
-    end
-    table.insert(self.groups[groupId].players, unit)
-
+    self.players[unitId] = unit
+    self.groups[groupId] = { 
+        player = unit,
+        menuitems = {},
+        unitType = unitType,
+        isRecording = {},
+    }
     self:refreshMenu(groupId)
+end
+
+--- Remove player and cleanup groups if needed
+--- @param unit Unit @unit to remove
+function Goldeneye:removePlayer(unit)
+    local unitId = unit:getID()
+    if not self.players[unitId] then
+        self:log("player not active, ignoring")
+        return
+    end
+    local group = unit:getGroup()
+    local groupId = group:getID()
+    self:log(string.format("removing player: %s (id %d), group %s (id %d)", unit:getName(), unitId, group:getName(), groupId))
+    self.players[unitId] = nil
+    for _, item in ipairs(self.groups[groupId].menuitems) do
+        missionCommands.removeItemForGroup(groupId, item)
+    end
+    self.groups[groupId] = nil
 end
 
 --- checks if player unit is allowed to do recon
@@ -214,6 +226,14 @@ function Goldeneye:isSelectPayloadAllowed(groupId)
     return true
 end
 
+function Goldeneye:toggleRecord(groupId, index)
+    local group = self.groups[groupId]
+    if not group.payload then self:log("No payload selected") return end
+    group.isRecording[index] = not group.isRecording[index]
+    self:log(string.format("Recording %s for group %d", group.isRecording[index] and "started" or "stopped", groupId))
+    self:refreshMenu(groupId)
+end
+
 --- refresh menu entries for a group
 --- @param groupId number @group id
 function Goldeneye:refreshMenu(groupId)
@@ -222,36 +242,89 @@ function Goldeneye:refreshMenu(groupId)
     end
     self.groups[groupId].menuitems = {}
 
-    if self:isSelectPayloadAllowed(groupId) then
-        local item = missionCommands.addSubMenuForGroup(groupId, "Select payload", { self.mainmenu })
-        table.insert(self.groups[groupId].menuitems, item)
+    -- recording toggles for all mounted sensors
+    if self.groups[groupId].payload then
+        for index, mount in ipairs(self.groups[groupId].payload.mounts) do
+            local text = "START REC - " .. mount.sensor
+            if self.groups[groupId].isRecording[index] then
+                text = "STOP REC - " .. mount.sensor
+            end
+            local menuitem = missionCommands.addCommandForGroup(groupId, text, { self.mainmenu }, self.toggleRecord, self, groupId, index)
+            table.insert(self.groups[groupId].menuitems, menuitem)
+        end
     end
 
-    if self.options.debug then
-        local item1 = missionCommands.addCommandForGroup(groupId, "Toggle Camera", { self.mainmenu }, self.camViewToggle, self)
-        table.insert(self.groups[groupId].menuitems, item1)
-        local item2 = missionCommands.addCommandForGroup(groupId, "Debug Spawn", { self.mainmenu }, self.debugSpawn, self)
-        table.insert(self.groups[groupId].menuitems, item2)
-        local item3 = missionCommands.addCommandForGroup(groupId, "Save Objects", { self.mainmenu }, self.saveObjects, self)
-        table.insert(self.groups[groupId].menuitems, item3)
-        local item4 = missionCommands.addCommandForGroup(groupId, "Load Objects", { self.mainmenu }, self.loadObjects, self)
-        table.insert(self.groups[groupId].menuitems, item4)
-        local item5 = missionCommands.addCommandForGroup(groupId, "Scan Scenery", { self.mainmenu }, self.scanSceneryObjects, self)
-        table.insert(self.groups[groupId].menuitems, item5)
+    -- select payload menu
+    if self:isSelectPayloadAllowed(groupId) then
+        local payloadMenu = missionCommands.addSubMenuForGroup(groupId, "Select payload", { self.mainmenu })
+        table.insert(self.groups[groupId].menuitems, payloadMenu)
+        self:createPayloadMenu(groupId, { self.mainmenu, "Select payload" })
     end
+
+    -- return film
+
+    -- debug menu
+    if self.options.debug then
+        local debugMenu = missionCommands.addSubMenuForGroup(groupId, "Debug", { self.mainmenu })
+        table.insert(self.groups[groupId].menuitems, debugMenu)
+        if self.groups[groupId].payload then
+            for index, mount in ipairs(self.groups[groupId].payload.mounts) do
+                missionCommands.addCommandForGroup(groupId, "Toggle CAM view - " .. mount.sensor, debugMenu, self.camViewToggle, self, groupId, index)
+            end
+        end
+        missionCommands.addCommandForGroup(groupId, "Spawn debug objects", debugMenu, self.debugSpawn, self, groupId)
+        missionCommands.addCommandForGroup(groupId, "Scan scenery", debugMenu, self.scanSceneryObjects, self, groupId)
+        missionCommands.addCommandForGroup(groupId, "Save objects", debugMenu, self.saveObjects, self)
+        missionCommands.addCommandForGroup(groupId, "Load objects", debugMenu, self.loadObjects, self)
+    end
+end
+
+--- Create payload selection menu for a group
+--- @param groupId number @group id
+--- @param parentPath table @parent menu path
+function Goldeneye:createPayloadMenu(groupId, parentPath)
+    local group = self.groups[groupId]
+    if not group then return end
+    
+    local aircraft = self.aircraft[group.unitType]
+    if not aircraft or not aircraft.payloads then return end
+    
+    for _, payload in ipairs(aircraft.payloads) do
+        missionCommands.addCommandForGroup(groupId, payload.name, parentPath, self.selectPayload, self, groupId, payload)
+    end
+end
+
+--- Select a payload for a group
+--- @param groupId number @group id
+--- @param payload table @selected payload
+function Goldeneye:selectPayload(groupId, payload)
+    local group = self.groups[groupId]
+    if not group then return end
+    
+    local aircraft = self.aircraft[group.unitType]
+    if not aircraft or not aircraft.payloads then return end
+    
+    group.payload = payload
+    self:log(string.format("Selected payload '%s' for group %d", payload.name, groupId))
+    
+    -- Refresh the menu to show the current selection
+    self:refreshMenu(groupId)
 end
 
 ------------------------------------------------------------------------------
 
 --- spawns debug statics in a grid around the player
+--- @param groupId number @group id
 --- @param grid_size number @distance between two statics in meters
 --- @param rows number @number of rows
 --- @param cols number @number of columns
-function Goldeneye:debugSpawn(grid_size, rows, cols)
-    grid_size = grid_size or 100
-    rows = rows or 100
-    cols = cols or 100
-    local pos = world.getPlayer():getPoint()
+function Goldeneye:debugSpawn(groupId, grid_size, rows, cols)
+    grid_size = grid_size or 50
+    rows = rows or 10
+    cols = cols or 10
+    local unit = self.groups[groupId].player
+    if not unit then return end
+    local pos = unit:getPoint()
     local start_x = pos.x - (rows * grid_size) / 2
     local start_y = pos.z - (cols * grid_size) / 2
     for i = 1, rows do
@@ -273,38 +346,59 @@ function Goldeneye:debugSpawn(grid_size, rows, cols)
     end
 end
 
+--- scan scenery objects around player
+function Goldeneye:scanSceneryObjects(groupId)
+    local unit = self.groups[groupId].player
+    if not unit then return end
+    local point = unit:getPoint()
+    local objects = {}
+    local volume = {
+        id = world.VolumeType.SPHERE,
+        params = {
+            point = point,
+            radius = 1000
+        }
+    }
+    world.searchObjects(Object.Category.SCENERY, volume, function(sceneryObject)
+        table.insert(objects, sceneryObject)
+        return true
+    end)
+    self:log(string.format("Found %d scenery objects", #objects))
+end
+
 ------------------------------------------------------------------------------
 
 --- cam view toggle
-function Goldeneye:camViewToggle()
-    if self.camViewActive then
+function Goldeneye:camViewToggle(groupId, mountIndex)
+    if self.activeCamViewMount == mountIndex then
         self:camReset()
         return
     end
+    local group = self.groups[groupId]
+    if not group.payload then self:log("No payload selected") return end
+    self.activeCamViewMount = mountIndex
     local code = "Export.LoSetCommand(1708)"
     net.dostring_in("gui", code)
     -- need set position in another frame
-    timer.scheduleFunction(self.camViewPosition, self, timer.getTime() + 0.01)
+    timer.scheduleFunction(function() self:camViewPosition(groupId) end, nil, timer.getTime() + 0.01)
 end
 
 --- resets cam view to cockpit
 function Goldeneye:camReset()
     local code = "Export.LoSetCommand(7);Export.LoSetCommand(36)"
     net.dostring_in("gui", code)
-    self.camViewActive = false
+    self.activeCamViewMount = 0
 end
 
 --- sets cam view position
-function Goldeneye:camViewPosition()
+function Goldeneye:camViewPosition(groupId)
     self:log("Camera view")
+    local group = self.groups[groupId]
+    local mount = group.payload.mounts[self.activeCamViewMount]
+    local sensor = self.sensors[mount.sensor]
 
-    -- @todo replace with currently selected cam
-    local payload = self.aircraft["UH-1H"].payloads["Testpayload"]
-    local sensorMount = payload[1]
-    local sensor = self.sensors[sensorMount.sensor]
-
-    local dx, dy, dz = sensorMount.position.x, sensorMount.position.y, sensorMount.position.z
-    local dyaw, dpitch, droll = sensorMount.orientation.yaw, sensorMount.orientation.pitch, sensorMount.orientation.roll
+    local dx, dy, dz = mount.position.x, mount.position.y, mount.position.z
+    local dyaw, dpitch, droll = mount.orientation.yaw, mount.orientation.pitch, mount.orientation.roll
 
     -- copy player position
     local A = world.getPlayer():getPosition()
@@ -332,19 +426,17 @@ function Goldeneye:camViewPosition()
         .. "z = {x=" .. B.z.x .. ",y=" .. B.z.y .. ",z=" .. B.z.z .. "}"
         .. "});DCS.setCurrentFOV(" .. sensor.horizFOV .. ")"
     net.dostring_in("gui", code)
-    if not self.camViewActive then
-        self.camViewActive = true
-        self:camViewLoop()
-    end
+
+    timer.scheduleFunction(function() self:camViewLoop(groupId) end, nil, timer.getTime() + 0.1)
 end
 
 --- displays camera position offset and angles
-function Goldeneye:camViewLoop()
-    if not self.camViewActive then return end
+function Goldeneye:camViewLoop(groupId)
+    if self.activeCamViewMount == 0 then return end
 
     local code = "return net.lua2json(Export.LoGetCameraPosition())"
     local B = net.json2lua(net.dostring_in("gui", code))
-    local A = world.getPlayer():getPosition()
+    local A = self.groups[groupId].player:getPosition()
 
     -- get world space distances and project onto player local axes
     local wdx, wdy, wdz = B.p.x - A.p.x, B.p.y - A.p.y, B.p.z - A.p.z
@@ -360,12 +452,14 @@ function Goldeneye:camViewLoop()
     local cyaw, cpitch, croll = self:rotationMatrixToEuler(B)
     local pyaw, ppitch, proll = self:rotationMatrixToEuler(A)
     local fov = net.dostring_in("gui", "return DCS.getCurrentFOV()")
-    local msg = string.format("PLAYER\nx: %.6f\ny: %.6f\nz: %.6f\nyaw: %.6f\npitch: %.6f\nroll: %.6f\n\n", A.p.x, A.p.y, A.p.z, pyaw, ppitch, proll)
+    local msg = string.format("SENSOR: %s\n", self.groups[groupId].payload.mounts[self.activeCamViewMount].sensor)
+    msg = msg .. net.lua2json(self.groups[groupId].payload.mounts[self.activeCamViewMount]) .. "\n\n"
+    msg = msg .. string.format("PLAYER\nx: %.6f\ny: %.6f\nz: %.6f\nyaw: %.6f\npitch: %.6f\nroll: %.6f\n\n", A.p.x, A.p.y, A.p.z, pyaw, ppitch, proll)
     msg = msg .. string.format("CAMERA\nx: %.6f\ny: %.6f\nz: %.6f\nyaw: %.6f\npitch: %.6f\nroll: %.6f\nfov: %.1f\n\n", B.p.x, B.p.y, B.p.z, cyaw, cpitch, croll, fov)
     msg = msg .. string.format("DELTA\nx: %.6f\ny: %.6f\nz: %.6f\nyaw: %.6f\npitch: %.6f\nroll: %.6f", dx, dy, dz, dyaw, dpitch, droll)
     trigger.action.outText(msg, 10, true)
 
-    timer.scheduleFunction(self.camViewLoop, self, timer.getTime() + 0.1)
+    timer.scheduleFunction(function() self:camViewLoop(groupId) end, nil, timer.getTime() + 0.1)
 end
 
 ------------------------------------------------------------------------------
@@ -467,13 +561,6 @@ function Goldeneye:loadObjects()
     for _, object in pairs(self.scannedObjects) do
         trigger.action.smoke(object.point, trigger.smokeColor.Red)
     end
-end
-
-------------------------------------------------------------------------------
-
---- debug scenery objects scan
-function Goldeneye:scanSceneryObjects()
-    -- @todo refactor, see scratchpad
 end
 
 ------------------------------------------------------------------------------

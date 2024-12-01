@@ -1,3 +1,5 @@
+-- set up a group radio menu command for spawned units
+
 local function example(groupId)
     trigger.action.outTextForGroup(groupId, "blabla command, sent to group id: " .. groupId, 5)
 end

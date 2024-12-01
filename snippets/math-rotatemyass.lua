@@ -1,3 +1,5 @@
+-- seems inconsistent with actual f2 cam?
+
 -- rotates two vectors a and b around their shared perpendicular axis by the specified angle
 function applyRotation(a, b, angle)
     local cos_angle, sin_angle = math.cos(angle), math.sin(angle)
@@ -8,14 +10,8 @@ end
 
 local results = {}
 
-------------------------------------------------------------------------------------
--- Given: A = { p, x, y, z }
---  p is the position
---  x/y/z are forward/up/right orientation vectors
-
 -- Translate point A by dx/dy/dz along its x/y/z vectors,
 -- then rotate it by dyaw/dpitch/droll
-
 function translateAndRotate(A, dx, dy, dz, dyaw, dpitch, droll)
     local B = {
         p = { x = A.p.x, y = A.p.y, z = A.p.z },
@@ -52,13 +48,9 @@ local expected = {
 local actual = translateAndRotate(A, 10, 20, 30, 45, -30, 60)
 return { expected = expected, actual = actual }
 
-------------------------------------------------------------------------------------
--- Given: A = { p, x, y, z }
--- Given: B = { p, x, y, z }
 
 -- Calculate the relative position of B from A in dx/dy/dz
 -- and the relative rotation of B from A in dyaw/dpitch/droll
-
 function relativePositionAndRotation(A, B)
     -- get world space distances and project onto player local axes
     local wdx, wdy, wdz = B.p.x - A.p.x, B.p.y - A.p.y, B.p.z - A.p.z

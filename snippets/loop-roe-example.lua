@@ -1,3 +1,5 @@
+-- WIP some basic scripting loop
+
 local function distance2D(unit1, unit2)
     local p1 = unit1:getPoint()
     local p2 = unit2:getPoint()

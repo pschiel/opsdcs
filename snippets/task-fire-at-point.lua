@@ -1,3 +1,5 @@
+-- makes a group fire at a point
+
 local grp = Group.getByName("Ground-1")
 local ctrl = grp:getController()
 ctrl:setOption(AI.Option.Ground.id.ALARM_STATE, AI.Option.Ground.val.ALARM_STATE.RED)

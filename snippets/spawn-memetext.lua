@@ -1,3 +1,5 @@
+-- spawns huge text via statics, entirely useless
+
 local font = {
     ["A"] = {
         "  111   ",

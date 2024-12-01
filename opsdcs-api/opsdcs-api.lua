@@ -809,24 +809,36 @@ if DCS ~= nil then
         -- n/i
         onPlayerConnect = function(id) end,
         onPlayerDisconnect = function(id) end,
-        onPlayerStart = function(id) end,
+        onPlayerStart = function(id)
+            OpsdcsApi:log("onPlayerStart: "..id)
+        end,
         onPlayerStop = function(id) end,
-        onPlayerChangeSlot = function(id) end,
+        onPlayerChangeSlot = function(id)
+            OpsdcsApi:log("onPlayerChangeSlot: "..id)
+        end,
         onPlayerTryConnect = function(addr, ucid, name, id) end,
         onPlayerTrySendChat = function(id, message, all) end,
-        onPlayerTryChangeSlot = function(id, side, slot) end,
-        onGameEvent = function(eventName) end,
+        onPlayerTryChangeSlot = function(id, side, slot)
+            OpsdcsApi:log("onPlayerTryChangeSlot: "..id)
+        end,
+        onGameEvent = function(a,b,c,d,e)
+            OpsdcsApi:log("onGameEvent: "..a)
+        end,
         onShowBriefing = function() end,
         onShowGameMenu = function() end,
         onTriggerMessage = function(message, duration, clearView) end,
         onRadioMessage = function(message, duration) end,
-        onChatMessage = function(message, id) end,
+        onChatMessage = function(message, id)
+            OpsdcsApi:log("onChatMessage: "..message)
+        end,
         onShowRadioMenu = function(id) end,
         onNetConnect = function(id) end,
         onNetDisconnect = function() end,
         onNetMissionChanged = function(missionName) end,
 
-        onActivatePlane = function(unitType) end,
+        onActivatePlane = function(a,b,c,d,e)
+            OpsdcsApi:log("onActivatePlane: "..a)
+        end,
         onATCClientStatusUpdated = function() end,
     })
 end

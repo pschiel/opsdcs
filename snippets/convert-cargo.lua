@@ -1,3 +1,5 @@
+-- this converts sling-loaded cargo statics to real ground units, once they fall thru the ground
+
 local lastKnown = {}
 
 local replaceTypes = {

@@ -1,4 +1,4 @@
--- zone color script
+-- zone color script to fiddle around with shape colors (works only with quads)
 
 --- returns detailed zone data
 --- @param zoneName string @name of the zone

@@ -1,3 +1,5 @@
+-- loop that tracks weapons and checks if they are in a zone
+
 local weapons = {}
 
 local eventsHandler = {

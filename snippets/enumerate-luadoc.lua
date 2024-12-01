@@ -1,3 +1,5 @@
+-- luadoc style recursive enumeration (WIP)
+
 local function enumerate(tbl, name, maxLvl, lvl)
     if lvl == nil then lvl = 1 end
     local r = "--- @class " .. name .. "\n"

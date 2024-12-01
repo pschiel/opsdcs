@@ -1,3 +1,7 @@
+-- run this at mission start and capture events,
+-- will adjust warehouse stocks according to occupying coalition
+-- (in order for dynamic spawns to work, otherwise enemy units can spawn))
+
 -- gets available coalitions for all units found in country db
 coalitionsByUnit = {}
 for id, country in pairs(country.by_idx) do
