@@ -24,6 +24,8 @@ Singleplayer only.
   - Shutdown [(Preview)](https://www.youtube.com/watch?v=COZI8mpOZ4w)
 - CH-47Fbl1
   - Coldstart [(Preview)](https://www.youtube.com/watch?v=jiLiqa6Xmrk)
+- SA342
+- UH-1H
 
 ## Todo
 

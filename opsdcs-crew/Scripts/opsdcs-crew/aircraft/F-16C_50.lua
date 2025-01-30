@@ -173,6 +173,10 @@ OpsdcsCrew["F-16C_50"] = {
         ["PTR-TESTCP-TMB-TEST-585"] = 585, -- flcs test
         ["PTR-ANTICE-TMB-ENG-710"] = 710, -- anti ice
     },
+    excludeDebugArgs = {
+        [923] = true,
+        [725] = true,
+    },
     params = {
         "BASE_SENSOR_RADALT",
         "BASE_SENSOR_CANOPY_POS",

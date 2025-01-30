@@ -125,11 +125,23 @@ end
 --- @param event Event @event
 function Goldeneye:onEvent(event)
     if event.id == world.event.S_EVENT_BIRTH then
-        if event.initiator:getCategory() == Object.Category.UNIT then
-            self:addPlayer(event.initiator)
-        end
+        if not event.initiator:getPlayerName() then return end
+        self:addPlayer(event.initiator)
     elseif event.id == world.event.S_EVENT_PLAYER_LEAVE_UNIT then
         self:removePlayer(event.initiator)
+    elseif event.id == world.event.S_EVENT_WEAPON_REARM then
+        if not event.initiator:getPlayerName() then return end
+        if self:isReconAllowed(event.initiator) then
+            if not self.players[event.initiator:getID()] then
+                self:log("recon allowed after rearm, adding player")
+                self:addPlayer(event.initiator)
+            end
+        else
+            if self.players[event.initiator:getID()] then
+                self:log("recon not allowed after rearm, removing player")
+                self:removePlayer(event.initiator)
+            end
+        end
     else
         self:genericOnEvent(event)
     end
@@ -172,7 +184,7 @@ function Goldeneye:addPlayer(unit)
     local unitType = unit:getTypeName()
     local group = unit:getGroup()
     local groupId = group:getID()
-    self:log(string.format("add player: %s (id %d), group %s (id %d)", unit:getName(), unitId, group:getName(), groupId))
+    self:log(string.format("add player: %s (%s) (id %d), group %s (id %d)", unit:getName(), unit:getPlayerName(), unitId, group:getName(), groupId))
     if not self:isReconAllowed(unit) then return end
     if self.groups[groupId] then
         self:log("group already has a player, ignoring")
@@ -206,6 +218,35 @@ function Goldeneye:removePlayer(unit)
     self.groups[groupId] = nil
 end
 
+--- Returns pylon CLSIDs from mission file
+--- @param string unitName @unit name (not player name)
+--- @return table @table with CLSIDs
+function Goldeneye:getPylonsFromMission(unitName)
+    for _, coalition in pairs(env.mission.coalition) do
+        if coalition.country then
+            for _, country in ipairs(coalition.country) do
+                if country.plane and country.plane.group then
+                    for _, group in ipairs(country.plane.group) do
+                        for _, unit in ipairs(group.units) do
+                            if unit.name == unitName then
+                                local clsids = {}
+                                if unit.payload and unit.payload.pylons then
+                                    for _, pylon in pairs(unit.payload.pylons) do
+                                        for _, clsid in pairs(pylon) do
+                                            clsids[clsid] = true
+                                        end
+                                    end
+                                end
+                                return clsids
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
 --- checks if player unit is allowed to do recon
 --- @param unit Unit @player unit
 --- @return boolean @true if allowed
@@ -213,8 +254,14 @@ function Goldeneye:isReconAllowed(unit)
     local unitId = unit:getID()
     local unitType = unit:getTypeName()
     self:log(string.format("player id %d, aircraft type: %s", unitId, unitType))
-    -- @TODO check unit type, name, weapons/ammo etc
-    self:log("recon allowed: yes (debug)")
+    -- @TODO check unit type, name?
+    for _, ammo in ipairs(unit:getAmmo()) do
+        if self.aircraft[unitType].allowedAmmoTypes[ammo.desc.typeName] == nil then
+            self:log("recon allowed: no (due to ammo: " .. ammo.desc.typeName .. ")")
+            return false
+        end
+    end
+    self:log("recon allowed: yes")
     return true
 end
 

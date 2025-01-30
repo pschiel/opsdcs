@@ -319,8 +319,8 @@ function OpsdcsCrew:evaluateCond(cond)
         param_gt = { 2, function(a, b) return self.params[a] > b end },
         param_lt = { 2, function(a, b) return self.params[a] < b end },
         param_between = { 3, function(a, b, c) return self.params[a] >= b and self.params[a] <= c end },
-        ind_eq = { 3, function(a, b, c) return self.indications[a][b] ~= nil and self.indications[a][b] == c end },
-        ind_neq = { 3, function(a, b, c) return self.indications[a][b] ~= nil and self.indications[a][b] ~= c end },
+        ind_eq = { 3, function(a, b, c) return self.indications[a][b] == c end },
+        ind_neq = { 3, function(a, b, c) return self.indications[a][b] ~= c end },
         ind_match = { 3, function(a, b, c) return self.indications[a][b] ~= nil and self.indications[a][b]:match(c) end },
         ind_gt = { 3, function(a, b, c)
             local x = tonumber(self.indications[a][b])
