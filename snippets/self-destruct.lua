@@ -13,5 +13,3 @@ local eventHandler = {
     end
 }
 world.addEventHandler(eventHandler)
-
-missionCommands.addCommand(
