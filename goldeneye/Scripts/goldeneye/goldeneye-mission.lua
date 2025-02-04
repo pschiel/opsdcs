@@ -255,12 +255,12 @@ function Goldeneye:isReconAllowed(unit)
     local unitType = unit:getTypeName()
     self:log(string.format("player id %d, aircraft type: %s", unitId, unitType))
     -- @TODO check unit type, name?
-    for _, ammo in ipairs(unit:getAmmo()) do
-        if self.aircraft[unitType].allowedAmmoTypes[ammo.desc.typeName] == nil then
-            self:log("recon allowed: no (due to ammo: " .. ammo.desc.typeName .. ")")
-            return false
-        end
-    end
+    -- for _, ammo in ipairs(unit:getAmmo()) do
+    --     if self.aircraft[unitType].allowedAmmoTypes[ammo.desc.typeName] == nil then
+    --         self:log("recon allowed: no (due to ammo: " .. ammo.desc.typeName .. ")")
+    --         return false
+    --     end
+    -- end
     self:log("recon allowed: yes")
     return true
 end

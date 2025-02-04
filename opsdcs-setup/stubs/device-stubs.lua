@@ -302,7 +302,7 @@ function c_stop_wait_for_user() end
 --- @field get_light_reference fun(self:Device)
 --- @field listen_command fun(self:Device, command)
 --- @field listen_event fun(self:Device, event) @"setup_HMS", "setup_NVG", "DisableTurboGear", "EnableTurboGear", "GroundPowerOn", "GroundPowerOff", "repair", "WeaponRearmFirstStep", "WeaponRearmComplete", "OnNewNetHelicopter", "initChaffFlarePayload", "switch_datalink", "OnNewNetPlane", "LinkNOPtoNet"
---- @field performClickableAction fun(self:Device, command, value) @used to perform clickable actions
+--- @field performClickableAction fun(self:Device, command:number, value:number, echo:boolean) @used to perform clickable actions (echo=true to ignore the connected SetCommand)
 --- @field set_argument_value fun(self:Device, argument, value)
 --- @field update_arguments fun(self:Device)
 --- weapon system
