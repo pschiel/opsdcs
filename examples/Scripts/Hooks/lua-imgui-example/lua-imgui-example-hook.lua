@@ -1,5 +1,9 @@
 -- @see https://github.com/08jne01/dcs-lua-imgui
 
+-- @todo refactor :]
+
+--if true then return end
+
 _G.lua_imgui_path = lfs.writedir() .. "Scripts/LuaImGui/"
 _G.imgui_disabled = false
 dofile(lua_imgui_path .. "ImGui.lua")
@@ -66,7 +70,7 @@ function ImGuiSetup()
                 unit.PositionAsMatrix.p.x,
                 unit.PositionAsMatrix.p.z,
                 unit.PositionAsMatrix.p.y,
-                tostring(obj:getController():hasTask())
+                obj.getController and tostring(obj:getController():hasTask())
             })
         end
         ImGui:Table(units)
@@ -198,7 +202,10 @@ function ImGuiSetup()
             for flag, _ in pairs(flags) do
                 output = output .. '"' .. flag ..'":' .. tostring(trigger.misc.getUserFlag(flag)) .. ","
             end
-            output = string.sub(output, 1, -2) .. "}"
+            if #output > 1 then
+                output = string.sub(output, 1, -2)
+            end
+            output = output .. "}"
             return output
         ]]
         local flags = net.json2lua(net.dostring_in("server", code))
@@ -235,7 +242,7 @@ end
 DCS.setUserCallbacks({
     onSimulationStart = ImGuiShow,
     onSimulationStop = ImGuiHide,
-    --onSimulationFrame = ImGuiUpdate
+    onSimulationFrame = ImGuiUpdate
 })
 
 ImGuiSetup()
