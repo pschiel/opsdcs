@@ -4,4 +4,4 @@ package.cpath = package.cpath .. ';C:/Users/ops/.vscode/extensions/tangzx.emmylu
 local dbg = require('emmy_core')
 dbg.tcpConnect('localhost', 9966)
 
-dofile([[E:\Work\dcs\opsdcs\scratch\todebug.lua]])
+dofile([[E:\Work\dcs\opsdcs\snippets\self-destruct.lua]])
