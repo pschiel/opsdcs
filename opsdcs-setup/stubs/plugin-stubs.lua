@@ -109,6 +109,7 @@ function make_view_settings(obj_name, viewSettings, snapViews) return end
 --- @field moment_of_inertia table @{ Ix, Iy, Iz, Ixy }
 --- @field suspension table
 --- @field config_path string @path to FM config file (for ed_fm_configure)
+--- @field user_options string @flyable ID
 --- @field old any @true (F-15C), 3 (Su-27), 4 (Su-33), 6 (F-15 SFM), 54 (Su-25T)
 
 ---------------------------------------------------------------------------

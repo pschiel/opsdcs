@@ -358,7 +358,7 @@ world.VolumeType = {}
 --- @field checkChooseCargo fun(unitId:number):boolean
 --- @field checkDescent fun()
 --- @field getAirbases fun(coalitionId:number|nil):table @Returns a table of airbase objects for the specified coalition or all airbases if no coalition is specified. (coalition.side)
---- @field getAllDescents fun()
+--- @field getAllDescents fun(unitId:number, foo:boolean)
 --- @field getCountryCoalition fun(countryId:number):number @Returns the coalition ID that a specified country belongs to. (country.id)
 --- @field getDescentsOnBoard fun()
 --- @field getGroups fun(coalitionId:number, groupCategory:number|nil):table @Returns a table of group objects within the specified coalition and optionally filtered by group category. (coalition.side)
@@ -728,7 +728,7 @@ CoalitionObject = {}
 --- @field getController fun(self:Unit):Controller @Returns the controller of the unit.
 --- @field getDescByName fun(typename:string):Unit.Desc @Return a description table of the specified Object type. Object does not need to be in the mission in order to query its data.
 --- @field getDescentCapacity fun(self:Unit):number|nil @Returns the descent capacity, nil if not applicable.
---- @field getDescentOnBoard fun()
+--- @field getDescentOnBoard fun(self:Unit):number,number @Returns count, reserve
 --- @field getDrawArgumentValue fun(self:Unit, arg:number):number @Returns the value of an animation argument.
 --- @field getFuel fun(self:Unit):number @Returns the current fuel level as a percentage.
 --- @field getGroup fun(self:Unit):Group @Returns the group the unit belongs to.
