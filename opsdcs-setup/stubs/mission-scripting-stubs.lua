@@ -712,11 +712,14 @@ CoalitionObject = {}
 --- @field Category Unit.Category
 --- @field Desc Unit.Desc
 --- @field LoadOnBoard fun()
+--- @field OldCarrierMenuShow fun()
 --- @field OpticType Unit.OpticType
 --- @field RadarType Unit.RadarType
 --- @field RefuelingSystem Unit.RefuelingSystem
 --- @field SensorType Unit.SensorType
 --- @field UnloadCargo fun()
+--- @field canShipLanding fun()
+--- @field checkOpenRamp fun()
 --- @field disembarking fun()
 --- @field enableEmission fun(self:Unit, setting:boolean) @Sets radar emissions on or off.
 --- @field getAirbase fun()
@@ -731,6 +734,7 @@ CoalitionObject = {}
 --- @field getDescentOnBoard fun(self:Unit):number,number @Returns count, reserve
 --- @field getDrawArgumentValue fun(self:Unit, arg:number):number @Returns the value of an animation argument.
 --- @field getFuel fun(self:Unit):number @Returns the current fuel level as a percentage.
+--- @field getFuelLowState fun()
 --- @field getGroup fun(self:Unit):Group @Returns the group the unit belongs to.
 --- @field getID fun(self:Unit):number @Returns the unique mission id of the unit.
 --- @field getLife fun(self:Unit):number @Returns the current life of the unit.
@@ -815,6 +819,7 @@ Unit.RadarType = {}
 --- @field getTechObjectPos fun(self:Airbase, objectType:number|string):table @Returns a table of vec3 positions for technical objects, typically only "Tower".
 --- @field getUnit fun(self:Airbase, unitIndex:number):Unit|nil @Returns the unit or static object associated with the airbase at the specified index.
 --- @field getWarehouse fun(self:Airbase):Warehouse @Returns the warehouse associated with the airbase.
+--- @field getWorldID fun()
 --- @field setCoalition fun(self:Airbase, coalition:number) @Sets the coalition of the airbase.
 --- @field setRadioSilentMode fun(self:Airbase, silent:boolean) @Sets the ATC to radio silent mode.
 --- @type Airbase
