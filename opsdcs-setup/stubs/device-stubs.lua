@@ -539,3 +539,14 @@ h_clip_relations = {}
 --- @field [2] number @params index
 --- @field [3] number? @formats index (text), min (range), x (move, position)
 --- @field [4] number? @max (range), y (move, position)
+
+function copy_to_mission_and_dofile() end
+function copy_to_mission_and_get_buffer() end
+
+show_element_boxes = true
+show_element_parent_boxes = true
+show_indicator_borders = true
+show_other_pointers = true
+show_tree_boxes = false
+enable_commands_log = true
+use_click_and_pan_mode = true

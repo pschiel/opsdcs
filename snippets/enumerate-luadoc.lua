@@ -55,13 +55,21 @@ local function enumerate(tbl, name, maxLvl, lvl, visited)
 end
 
 local output = enumerate(_G, "_G", 2)
+--local output = enumerate(DCS, "DCS", 2)
 
+-- output to file
 if io and io.open then
     local file = io.open("annotations.lua", "w")
     if file then
         file:write(output)
         file:close()
+        return
     end
 end
 
-return output
+-- output via error (for plugin env)
+if declare_plugin then
+    for line in output:gmatch("([^\n]+)") do
+        dofile(line)
+    end
+end
