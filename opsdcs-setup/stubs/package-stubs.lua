@@ -465,3 +465,20 @@ db = {}
 
 --- @class dxgui
 --- Gui.AddFontSearchPathes({'dxgui/skins/fonts/', base.tostring(base.os.getenv('windir')) .. '/Fonts/'})
+
+------------------------------------------------------------------------------
+--- debug
+------------------------------------------------------------------------------
+
+--- @class debug
+--- @field debug fun()
+--- @field getfenv fun()
+--- @field gethook fun()
+--- @field getinfo fun()
+--- @field getlocal fun()
+--- @field getmetatable fun()
+--- @field setfenv fun()
+--- @field sethook fun()
+--- @field setlocal fun()
+--- @field setmetatable fun()
+--- @field traceback fun()

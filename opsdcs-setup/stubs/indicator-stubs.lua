@@ -1,46 +1,37 @@
 ---------------------------------------------------------------------------
---- DEVICE ENV
---- used by device_init/sounds_init/clickabledata, mainpanel_init, devices
+--- INDICATOR ENV
+--- used by indicators
 ---
 --- also available:
----  io, lfs, log, LockOn_Options, math, os
+---  coroutine, io, lfs, log, LockOn_Options, math, os, require
 ---------------------------------------------------------------------------
 
---- when set to true in device init, close lua state after initialization
-need_to_be_closed = true
-
 ------------------------------------------------------------------------------
---- Device functions
+--- Indicator functions
 ------------------------------------------------------------------------------
 
---- Creates a sound
---- @param sdef string @refers to sdef file, and sdef file content refers to sound file, see DCSWorld/Sounds/sdef/_example.sdef
---- @return table
-function create_sound(sdef) end
+--- Adds an element
+--- @param element Element
+function Add(element) end
 
---- Creates a sound host
---- @param name string
---- @param type string @"2D", "3D", "HEADPHONES"
---- @param x number
---- @param y number
---- @param z number
---- @return table
-function create_sound_host(name, type, x, y, z) end
+function Copy() end
 
---- Returns a device
---- @param id number
---- @return Device
-function GetDevice(id) end
+--- Creates an element
+--- @param type ElementType @element type
+--- @return Element
+function CreateElement(type) end
 
---- Returns the current device
---- @return Device
+function GetAspect() end
+function GetAssignedViewport() end
+function GetHalfHeight() end
+function GetHalfWidth() end
+function GetRenderTarget() end
+function GetScale() end
 function GetSelf() end
-    
---- Calls update() function within device with given time step
---- @param time_step number
-function make_default_activity(time_step) end
+function SetCustomScale() end
+function SetScale() end
 
-function SetGlobalCommand() end
+function create_guid_string() end
 
 ------------------------------------------------------------------------------
 --- Functions available in device and indicator env
@@ -284,128 +275,121 @@ function UTF8_strlen() end
 function UTF8_substring() end
 
 ------------------------------------------------------------------------------
---- Device class
+--- Elements
 ------------------------------------------------------------------------------
 
---- @class Device
---- @description functions for devices (some devices have additional functions)
---- @field get_argument_value fun(self:Device, argument)
---- @field get_light_reference fun(self:Device)
---- @field listen_command fun(self:Device, command)
---- @field listen_event fun(self:Device, event) @"setup_HMS", "setup_NVG", "DisableTurboGear", "EnableTurboGear", "GroundPowerOn", "GroundPowerOff", "repair", "WeaponRearmFirstStep", "WeaponRearmComplete", "OnNewNetHelicopter", "initChaffFlarePayload", "switch_datalink", "OnNewNetPlane", "LinkNOPtoNet"
---- @field performClickableAction fun(self:Device, command:number, value:number, echo:boolean) @used to perform clickable actions (echo=true to ignore the connected SetCommand)
---- @field set_argument_value fun(self:Device, argument, value)
---- @field update_arguments fun(self:Device)
---- weapon system
---- @field drop_chaff fun()
---- @field drop_flare fun()
---- @field emergency_jettison fun()
---- @field emergency_jettison_rack fun()
---- @field get_ECM_status fun()
---- @field get_chaff_count fun()
---- @field get_flare_count fun()
---- @field get_station_info fun()
---- @field get_target_range fun()
---- @field get_target_span fun()
---- @field launch_station fun(self:Device, station:number) @launch station (weapon system device)
---- @field select_station fun(self:Device, station:number) @select station (weapon system device)
---- @field set_ECM_status fun()
---- @field set_target_range fun()
---- @field set_target_span fun()
+--- @class Element
+--- @field name string @element name
+--- @field parent_element string @parent element name
+--- @field element_params string[] @list of shared element parameters
+--- @field material string @material name, see MakeMaterial()
+--- @field init_pos vec2 @initial position
+--- @field init_rot vec3 @initial rotation (degrees)
+--- @field h_clip_relation h_clip_relations @hardware clipping relations (pixel test/modify)
+--- @field level number @element level (starting from 1)
+--- @field collimated boolean @if true, element is collimated (HUD)
+--- @field isvisible boolean @when false, not visible and rendered only to stencil buffer
+--- @field z_enabled boolean @enable z
+--- @field use_mipfilter boolean @
+--- @field additive_alpha boolean @???
+--- @field change_opacity boolean @???
+--- @field isdraw boolean @if false, element is not drawn
+--- @field primitivetype PrimitiveType @"triangles", "lines"
+--- @field vertices vec3[] @list of vertices
+--- @field indices number[] @list of vertex indices (3 per triangle, 1 per point on line)
+--- @field width number @line width
+--- @field UseBackground boolean @if true, use background material
+--- @field BackgroundMaterial string @background material name
+--- @field controllers ElementController[] @list of controllers: opacity_using_parameter, text_using_parameter, parameter_in_range, move_left_right_using_parameter, move_up_down_using_parameter, rotate_using_parameter, screenspace_position, change_color_when_parameter_equal_to_number
+--- @field alignment ElementAlignment @string alignment "LeftTop", "CenterTop", "RightTop", "LeftCenter", "CenterCenter", "RightCenter", "LeftBottom", "CenterBottom", "RightBottom"
+--- @field value string @string value (only for string???)
+--- @field stringdefs table @string font vertical_size, horizontal_size, horizontal_spacing, vertical_spacing
+--- @field formats table @string format(s?), e.g. {"%s"} or {"%03.0f"}
+--- @field tex_params table @center x, center y, scale x, scale y
+--- @field blend_mode blend_mode @blend mode 0-5, see Scripts\Aircrafts\_Common\Cockpit\elements_defs.lua
+--- @field geometry_hosts table @list of geometry hosts (bounding box elements)
 
-------------------------------------------------------------------------------
---- Param handle
-------------------------------------------------------------------------------
+--- @alias ElementType string
+---| '"ceBoundingMeshBox"'
+---| '"ceBoundingTexBox"'
+---| '"ceCircle"'
+---| '"ceHWLine"'
+---| '"ceHWSector"'
+---| '"ceHint"'
+---| '"ceMeshPoly"'
+---| '"ceSCircle"'
+---| '"ceSMultiLine"'
+---| '"ceSVarLenLine"'
+---| '"ceSimple"'
+---| '"ceSimpleLineObject"'
+---| '"ceStringPoly"'
+---| '"ceTMultiLine"'
+---| '"ceTexPoly"'
 
---- @class ParamHandle
---- @field get fun(self:ParamHandle):number
---- @field set fun(self:ParamHandle, value:number)
+--- @alias ElementAlignment string
+---| '"LeftTop"'
+---| '"CenterTop"'
+---| '"RightTop"'
+---| '"LeftCenter"'
+---| '"CenterCenter"'
+---| '"RightCenter"'
+---| '"LeftBottom"'
+---| '"CenterBottom"'
+---| '"RightBottom"'
 
-------------------------------------------------------------------------------
---- Base data
-------------------------------------------------------------------------------
+--- @alias PrimitiveType string
+---| '"triangles"'
+---| '"lines"'
 
---- @class BaseData
---- @description device base data
---- @field getAngleOfAttack fun():number Gets the current angle of attack
---- @field getAngleOfSlide fun():number Gets the current angle of slide
---- @field getBarometricAltitude fun()
---- @field getCanopyPos fun()
---- @field getCanopyState fun()
---- @field getEngineLeftFuelConsumption fun()
---- @field getEngineLeftRPM fun()
---- @field getEngineLeftTemperatureBeforeTurbine fun()
---- @field getEngineRightFuelConsumption fun()
---- @field getEngineRightRPM fun()
---- @field getEngineRightTemperatureBeforeTurbine fun()
---- @field getFlapsPos fun()
---- @field getFlapsRetracted fun()
---- @field getHeading fun()
---- @field getHelicopterCollective fun()
---- @field getHelicopterCorrection fun()
---- @field getHorizontalAcceleration fun()
---- @field getIndicatedAirSpeed fun()
---- @field getLandingGearHandlePos fun()
---- @field getLateralAcceleration fun()
---- @field getLeftMainLandingGearDown fun()
---- @field getLeftMainLandingGearUp fun()
---- @field getMachNumber fun()
---- @field getMagneticHeading fun()
---- @field getNoseLandingGearDown fun()
---- @field getNoseLandingGearUp fun()
---- @field getPitch fun()
---- @field getRadarAltitude fun()
---- @field getRateOfPitch fun()
---- @field getRateOfRoll fun()
---- @field getRateOfYaw fun()
---- @field getRightMainLandingGearDown fun()
---- @field getRightMainLandingGearUp fun()
---- @field getRoll fun()
---- @field getRudderPosition fun()
---- @field getSelfAirspeed fun()
---- @field getSelfCoordinates fun()
---- @field getSelfVelocity fun()
---- @field getSpeedBrakePos fun()
---- @field getStickPitchPosition fun()
---- @field getStickRollPosition fun()
---- @field getThrottleLeftPosition fun()
---- @field getThrottleRightPosition fun()
---- @field getTotalFuelWeight fun()
---- @field getTrueAirSpeed fun()
---- @field getVerticalAcceleration fun()
---- @field getVerticalVelocity fun()
---- @field getWOW_LeftMainLandingGear fun()
---- @field getWOW_NoseLandingGear fun()
---- @field getWOW_RightMainLandingGear fun()
+--- @alias ElementControllerType string
+---| '"opacity_using_parameter"'
+---| '"text_using_parameter"'
+---| '"parameter_in_range"'
+---| '"move_left_right_using_parameter"'
+---| '"move_up_down_using_parameter"'
+---| '"rotate_using_parameter"'
+---| '"screenspace_position"'
+---| '"change_color_when_parameter_equal_to_number"'
+--[[
 
-------------------------------------------------------------------------------
---- Callbacks
-------------------------------------------------------------------------------
+{"change_color_when_parameter_equal_to_number", param_nr, number, red, green, blue}
+{"text_using_parameter", param_nr, format_nr}
+{"move_left_right_using_parameter", param_nr, gain}
+{"move_up_down_using_parameter", param_nr, gain}
+{"opacity_using_parameter", param_nr}
+{"rotate_using_parameter", param_nr, gain}
+{"compare_parameters", param1_nr, param2_nr} -- if param1 == param2 then visible
+{"parameter_in_range", param_nr, greaterthanvalue, lessthanvalue} -- if greaterthanvalue < param < lessthanvalue then visible
+{"parameter_compare_with_number", param_nr, number} -- if param == number then visible
+{"line_object_set_point_using_parameters", point_nr, param_x, param_y, gain_x, gain_y}
 
---- function called by DCS on cockpit event (Device event, listen_event)
---- @param command number
---- @param value table
-function CockpitEvent(command, value) end
+{"change_texture_state_using_parameter",???} -- exists but crashed DCS when used with one argument.
+{"line_object_set_point_using_parameters", ???}
+{"change_color_using_parameter", ???} -- exists but crashed DCS when used with one to five arguments.
+{"fov_control", ???}
+{"increase_render_target_counter", ???}
 
---- function called by DCS when a command is triggered
-function SetCommand(command, value) end
+--]]
+--- @class h_clip_relations
+--- @field NULL number @0 - No clipping
+--- @field COMPARE number @1 - Test of equality of element level value with the already existing level (set by previously rendered elements). If the level at the given pixel is the same as of the element, the pixel is drawn.
+--- @field REWRITE_LEVEL number @2 - Rewrite the level at all pixels affected by the element render.
+--- @field INCREASE_LEVEL number @3 - Increment the level (existing value + 1) at all pixels affected by the element render.
+--- @field INCREASE_IF_LEVEL number @4 - Increment the level (existing value + 1) at all pixels affected by the element render, but only if the existing level at the pixel is the same as the level of the element.
+--- @field DECREASE_LEVEL number @5 - Decrement the level (existing value - 1) at all pixels affected by the element render.
+--- @field DECREASE_IF_LEVEL number @6 - Decrement the level (existing value - 1) at all pixels affected by the element render, but only ifthe existing level at the pixel is the same as the level of the element.
+h_clip_relations = {}
 
---- function called by DCS when damage is triggered (not working)
-function SetDamage(command, value) end
+--- @class blend_mode
+--- @field IBM_NO_WRITECOLOR number @0 - element will be rendered only to stencil buffer
+--- @field IBM_REGULAR number @1 - regular work with write mask set to RGBA
+--- @field IBM_REGULAR_ADDITIVE_ALPHA number @2 - regular work with write mask set to RGBA , additive alpha for HUD
+--- @field IBM_REGULAR_RGB_ONLY number @3 - regular work with write mask set to RGB (without alpha)
+--- @field IBM_REGULAR_RGB_ONLY_ADDITIVE_ALPHA number @4 - regular work with write mask set to RGB (without alpha) , additive alpha for HUD
+--- @field IBM_ONLY_ALPHA number @5 - write mask set only for alpha
 
---- function called by DCS when a failure is triggered (not working)
-function SetFailure(command, value) end
-
---- function called by DCS post initialize
-function post_initialize() end
-
---- update function (used with make_default_activity)
-function update() end
-
-show_element_boxes = true
-show_element_parent_boxes = true
-show_indicator_borders = true
-show_other_pointers = true
-show_tree_boxes = false
-enable_commands_log = true
-use_click_and_pan_mode = true
+--- @class ElementController
+--- @field [1] ElementControllerType @controller type/name
+--- @field [2] number @params index
+--- @field [3] number? @formats index (text), min (range), x (move, position)
+--- @field [4] number? @max (range), y (move, position)
