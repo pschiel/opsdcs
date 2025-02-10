@@ -2,7 +2,8 @@
 --- PLUGIN ENV
 --- used by entry.lua in plugins
 ---
---- available: dofile, loadfile
+--- also available:
+---  dofile, loadfile
 ---------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------

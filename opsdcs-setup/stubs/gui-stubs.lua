@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --- GUI ENV
---- used by scripts in Scripts/Hooks
+--- used by scripts in Scripts/Hooks (and scripts running in "gui" env)
 ------------------------------------------------------------------------------
 
 --- @type table

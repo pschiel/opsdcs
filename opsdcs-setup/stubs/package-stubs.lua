@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --- PACKAGES
---- used with require()
+--- various packages/modules
 ---------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
@@ -482,3 +482,39 @@ db = {}
 --- @field setlocal fun()
 --- @field setmetatable fun()
 --- @field traceback fun()
+
+------------------------------------------------------------------------------
+--- math
+------------------------------------------------------------------------------
+--- @class math
+--- @field abs fun()
+--- @field acos fun()
+--- @field asin fun()
+--- @field atan fun()
+--- @field atan2 fun()
+--- @field ceil fun()
+--- @field cos fun()
+--- @field cosh fun()
+--- @field deg fun()
+--- @field exp fun()
+--- @field floor fun()
+--- @field fmod fun()
+--- @field frexp fun()
+--- @field huge number @inf
+--- @field ldexp fun()
+--- @field log fun()
+--- @field log10 fun()
+--- @field max fun()
+--- @field min fun()
+--- @field mod fun()
+--- @field modf fun()
+--- @field pi number @3.1415926535898
+--- @field pow fun()
+--- @field rad fun()
+--- @field random fun()
+--- @field randomseed fun()
+--- @field sin fun()
+--- @field sinh fun()
+--- @field sqrt fun()
+--- @field tan fun()
+--- @field tanh fun()

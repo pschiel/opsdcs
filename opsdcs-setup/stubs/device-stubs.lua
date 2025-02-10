@@ -10,7 +10,7 @@
 need_to_be_closed = true
 
 ------------------------------------------------------------------------------
---- Device functions
+--- Device functions (only available in devices)
 ------------------------------------------------------------------------------
 
 --- Creates a sound

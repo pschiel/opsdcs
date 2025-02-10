@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --- MISSION ENV
---- used by internal mission engine
+--- used by internal mission engine (and scripts running in "mission" env)
 ---------------------------------------------------------------------------
 
 --- @type env.mission
