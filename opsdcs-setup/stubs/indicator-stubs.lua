@@ -14,23 +14,57 @@
 --- @param element Element
 function Add(element) end
 
-function Copy() end
+--- Copies an element
+--- @param element Element
+--- @return Element
+function Copy(element) end
 
 --- Creates an element
 --- @param type ElementType @element type
 --- @return Element
 function CreateElement(type) end
 
+--- Returns aspect (height/width)
+--- @return number
 function GetAspect() end
-function GetAssignedViewport() end
-function GetHalfHeight() end
-function GetHalfWidth() end
-function GetRenderTarget() end
-function GetScale() end
-function GetSelf() end
-function SetCustomScale() end
-function SetScale() end
 
+--- Returns assigned viewport
+--- @return number @ULX
+--- @return number @ULY
+--- @return number @SZX
+--- @return number @SZY
+function GetAssignedViewport() end
+
+--- Returns half the height
+--- @return number
+function GetHalfHeight() end
+
+--- Returns half the height
+--- @return number
+function GetHalfWidth() end
+
+--- Returns render target id
+--- @return number
+function GetRenderTarget() end
+
+--- Returns scale
+--- @return number
+function GetScale() end
+
+--- Returns device
+--- @return Device
+function GetSelf() end
+
+--- Sets custom scale
+--- @param scale number @default 1.0
+function SetCustomScale(scale) end
+
+--- Sets scale
+--- @param scale number @FOV, MILLYRADIANS, METERS (see element_defs)
+function SetScale(scale) end
+
+--- Returns a guid string
+--- @return string
 function create_guid_string() end
 
 ------------------------------------------------------------------------------
@@ -219,7 +253,7 @@ function MakeFont(font_data, rgba) end
 --- @param rgba table @{0, 255, 0, 255}
 --- @return table
 function MakeMaterial(texture_path, rgba) end
-    
+
 --- Mounts a model path.
 --- @param path string The path.
 function mount_vfs_model_path(path) return end
