@@ -409,3 +409,17 @@ show_other_pointers = true
 show_tree_boxes = false
 enable_commands_log = true
 use_click_and_pan_mode = true
+
+--- @return table @controllers
+function LoRegisterPanelControls() end
+
+--- @param type string @aicraft type
+--- @param name string @livery name or "default"
+function find_custom_livery(type, name) end
+
+-- creators[DEVICE_ID] = {"NAME_OF_CONTROLLER_CLASS",
+--						  <"CONTROLLER_SCRIPT_FILE",>
+--						  <{{"varname1", devices.LINKED_DEVICE1}, {"varname2", devices.LINKED_DEVICE2}, ...},>
+--						  <"INPUT_COMMANDS_SCRIPT_FILE",>
+--						  <{{"NAME_OF_INDICATOR_CLASS", "INDICATOR_SCRIPT_FILE"}, ...}>
+--						 }

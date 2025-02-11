@@ -38,8 +38,12 @@ function add_launcher(ws_data, data) return end
 --- ??
 function add_navpoint() return end
 
---- ??
-function add_plugin_systems() return end
+--- Adds a plugin system
+--- @param plugin_id string @plugin system name
+--- @param match string @unsure if it's a match, "*" can be used
+--- @param cockpit_path string @path to cockpit scripts dir
+--- @param aircraft_options table @key: typename, value: options
+function add_plugin_systems(plugin_id, match, cockpit_path, aircraft_options) return end
 
 --- Adds a surface unit
 --- @param gt_data GTData
@@ -368,22 +372,28 @@ function Get_RFGU_GUISettings_Preset(name) return end
 
 --- @class PluginProperties
 --- @description plugin properties
---- @field installed boolean @can the player can interact with the plugin? (e.g. settings, mission editor)
---- @field dirName string @name of the directory containing the plugin
---- @field displayName string @name of the plugin shown within UI elements. (exc. module viewer)
---- @field fileMenuName string @name of the file containing the flyable declaration
+--- @field binaries table<string> @strings representing names of binary executable files (.dll) to inject
 --- @field developerName string @name of developer
 --- @field developerLink string @link to developer
---- @field update_id string @id to check for in DCS updates
---- @field state string @string representing plugin accessibility state. (“installed” or “uninstalled”)
---- @field info string @description of the plugin, shown in the main menu
+--- @field dirName string @name of the directory containing the plugin
+--- @field displayName string @name of the plugin shown within UI elements. (exc. module viewer)
 --- @field encyclopedia_path string @file path pointing towards an Encyclopedia folder containing Plane/plugin_name.txt
---- @field binaries table<string> @strings representing names of binary executable files (.dll) to inject
---- @field Skins PluginSkinsTable @defines the path and representation of UI elements
---- @field Missions PluginMissionsTable @defines the path and UI representation for flyable missions
---- @field LogBook PluginLogBookTable @defines the path and UI representation for the pilot logbook
+--- @field fileMenuName string @name of the file containing the flyable declaration
+--- @field info string @description of the plugin, shown in the main menu
+--- @field installed boolean @can the player can interact with the plugin? (e.g. settings, mission editor)
+--- @field load_immediately boolean
+--- @field registryPath string @e.g. "Eagle Dynamics\\NS430"
+--- @field rules table @e.g. { ["jsAvionics"] = {required = true} }
+--- @field shortName string @short name
+--- @field state string @string representing plugin accessibility state. (“installed” or “uninstalled”)
+--- @field update_id string @id to check for in DCS updates
+--- @field version string @__DCS_VERSION__
 --- @field InputProfiles table<string,string> @array with input profiles (["input_id"] = "path/to/inputdir")
+--- @field LogBook PluginLogBookTable @defines the path and UI representation for the pilot logbook
+--- @field MAC_ignore boolean
+--- @field Missions PluginMissionsTable @defines the path and UI representation for flyable missions
 --- @field Options PluginOptionsTable @option properties
+--- @field Skins PluginSkinsTable @defines the path and representation of UI elements
 
 --- @class PluginSkinsTable
 --- @description Skins table
