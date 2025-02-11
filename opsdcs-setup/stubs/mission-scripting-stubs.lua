@@ -3,25 +3,6 @@
 --- used by mission scripts (and scripts running in "server" env)
 ------------------------------------------------------------------------------
 
-------------------------------------------------------------------------------
---- These are only available when MissionScripting.lua is desanitized
-------------------------------------------------------------------------------
-
---- @type table
-package = {}
-
---- @param module string
-function require(module) end
-
---- @type lfs
-lfs = {}
-
---- @type os
-os = {}
-
---- @type io
-io = {}
-
 --- @type log
 log = {}
 
