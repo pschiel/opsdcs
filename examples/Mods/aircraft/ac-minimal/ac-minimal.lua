@@ -1,3 +1,5 @@
+-- @TODO replace copy+paste with working code
+
 -- aircraft id/name/type, needed by make_view_settings() and make_flyable()
 local aircraft_id = "ac-minimal"
 
@@ -6,7 +8,7 @@ local aircraft_data = {
 
     Name = aircraft_id,           -- aircraft name/id
     DisplayName = _(aircraft_id), -- localized display name
-    Picture = "MQ-9_Reaper.png",  -- picture for ???
+    Picture = "MQ-9_Reaper.png",  -- picture
     Rate = 40,                    -- RewardPoint in Multiplayer
     Shape = "wc",
     shape_table_data = {

@@ -65,7 +65,7 @@ env = {}
 --- @field descriptionBlueTask string @Blue coalition task defined on the briefing panel.
 --- @field descriptionNeutralsTask string @Neutral coalition task defined on the briefing panel.
 --- @field descriptionRedTask string @Red coalition task defined on the briefing panel.
---- @field drawings table @able containing information on any drawing placed in the editor.
+--- @field drawings env.mission.drawings @able containing information on any drawing placed in the editor.
 --- @field failures table @Only valid for single player missions. Lists failure parameters for whichever aircraft is set to player. If none are set to player it still populates.
 --- @field forcedOptions table @Options that are forced by the mission and their corresponding settings.
 --- @field groundControl table @Data on the number of Combined Arms slots and their respective coalitions is found here.
@@ -86,6 +86,11 @@ env = {}
 --- @field weather table @Table with weather data.
 --- @type env.mission
 env.mission = {}
+
+--- @class env.mission.drawings
+---
+--- @type env.mission.drawings
+env.mission.drawings = {}
 
 --- @class env.mission.triggers
 --- @description contains table of trigger zones

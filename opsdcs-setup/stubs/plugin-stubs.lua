@@ -376,10 +376,10 @@ function Get_RFGU_GUISettings_Preset(name) return end
 --- @field developerName string @name of developer
 --- @field developerLink string @link to developer
 --- @field dirName string @name of the directory containing the plugin
---- @field displayName string @name of the plugin shown within UI elements. (exc. module viewer)
+--- @field displayName string @localized name of the plugin shown within UI elements. (exc. module viewer)
 --- @field encyclopedia_path string @file path pointing towards an Encyclopedia folder containing Plane/plugin_name.txt
---- @field fileMenuName string @name of the file containing the flyable declaration
---- @field info string @description of the plugin, shown in the main menu
+--- @field fileMenuName string @localized name of the file containing the flyable declaration
+--- @field info string @localized description of the plugin, shown in the main menu
 --- @field installed boolean @can the player can interact with the plugin? (e.g. settings, mission editor)
 --- @field load_immediately boolean
 --- @field registryPath string @e.g. "Eagle Dynamics\\NS430"

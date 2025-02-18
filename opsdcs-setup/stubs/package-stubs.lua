@@ -113,13 +113,13 @@ log = {}
 --- @field get_vec_length fun(vec:vec3):number
 --- @field hasbit fun(x:number, p:number):boolean
 --- @field invertColor fun(color:number):number
---- @field loadfileIn fun(filename:string, env:table):function,errmsg @loads a file in an environment.
+--- @field loadfileIn fun(filename:string, env:table):function,errmsg @loads file into compiled chunk with given env (current env: getfenv()). parameters passed when calling the chunk are accessible with "..." in the script
 --- @field makeColor fun(r:number, g:number, b:number):number
 --- @field parseCordinates fun(str:string):number,number,number @returns latitude, longitude, course
 --- @field round fun(value:number, accuracy:number):number
 --- @field round_qty fun(qty:number):number
 --- @field units table @units of measurement
---- @field verifyChunk fun(chunk:function, errmsg:string) @returns fun(mainMenuPos:number, parameters:table) with params set
+--- @field verifyChunk fun(chunk:function, errmsg:string) @verifies a chunk (nil check, else error)
 --- @type utils
 utils = {}
 

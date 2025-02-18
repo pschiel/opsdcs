@@ -289,28 +289,28 @@ function UTF8_substring() end
 
 --- @class Device
 --- @description functions for devices (some devices have additional functions)
---- @field get_argument_value fun(self:Device, argument)
+--- @field get_argument_value fun(self:Device, argument) @gets argument value
 --- @field get_light_reference fun(self:Device)
---- @field listen_command fun(self:Device, command)
+--- @field listen_command fun(self:Device, command) @listens to command
 --- @field listen_event fun(self:Device, event) @"setup_HMS", "setup_NVG", "DisableTurboGear", "EnableTurboGear", "GroundPowerOn", "GroundPowerOff", "repair", "WeaponRearmFirstStep", "WeaponRearmComplete", "OnNewNetHelicopter", "initChaffFlarePayload", "switch_datalink", "OnNewNetPlane", "LinkNOPtoNet"
 --- @field performClickableAction fun(self:Device, command:number, value:number, echo:boolean) @used to perform clickable actions (echo=true to ignore the connected SetCommand)
---- @field set_argument_value fun(self:Device, argument, value)
+--- @field set_argument_value fun(self:Device, argument, value) @sets argument value
 --- @field update_arguments fun(self:Device)
 --- weapon system
---- @field drop_chaff fun()
---- @field drop_flare fun()
---- @field emergency_jettison fun()
---- @field emergency_jettison_rack fun()
+--- @field drop_chaff fun(count:number, dispenser:number) @see chaff_flare_dispenser in aircraft definition
+--- @field drop_flare fun(count:number, dispenser:number) @see chaff_flare_dispenser in aircraft definition
+--- @field emergency_jettison fun(station:number)
+--- @field emergency_jettison_rack fun(station:number)
 --- @field get_ECM_status fun()
---- @field get_chaff_count fun()
---- @field get_flare_count fun()
---- @field get_station_info fun()
---- @field get_target_range fun()
+--- @field get_chaff_count fun():number @get chaff count
+--- @field get_flare_count fun():number @get flare count
+--- @field get_station_info fun(station:number):table
+--- @field get_target_range fun():number
 --- @field get_target_span fun()
 --- @field launch_station fun(self:Device, station:number) @launch station (weapon system device)
 --- @field select_station fun(self:Device, station:number) @select station (weapon system device)
---- @field set_ECM_status fun()
---- @field set_target_range fun()
+--- @field set_ECM_status fun(status:boolean)
+--- @field set_target_range fun(range:number)
 --- @field set_target_span fun()
 
 ------------------------------------------------------------------------------
@@ -416,10 +416,3 @@ function LoRegisterPanelControls() end
 --- @param type string @aicraft type
 --- @param name string @livery name or "default"
 function find_custom_livery(type, name) end
-
--- creators[DEVICE_ID] = {"NAME_OF_CONTROLLER_CLASS",
---						  <"CONTROLLER_SCRIPT_FILE",>
---						  <{{"varname1", devices.LINKED_DEVICE1}, {"varname2", devices.LINKED_DEVICE2}, ...},>
---						  <"INPUT_COMMANDS_SCRIPT_FILE",>
---						  <{{"NAME_OF_INDICATOR_CLASS", "INDICATOR_SCRIPT_FILE"}, ...}>
---						 }
