@@ -387,6 +387,7 @@ function UTF8_substring() end
 ---| '"parameter_compare_with_number"'
 ---| '"line_object_set_point_using_parameters"'
 ---| '"screenspace_position"'
+---| '"show"'
 --[[
 {"change_color_when_parameter_equal_to_number", param_nr, number, red, green, blue}
 {"text_using_parameter", param_nr, format_nr}
@@ -398,12 +399,8 @@ function UTF8_substring() end
 {"parameter_in_range", param_nr, greaterthanvalue, lessthanvalue} -- if greaterthanvalue < param < lessthanvalue then visible
 {"parameter_compare_with_number", param_nr, number} -- if param == number then visible
 {"line_object_set_point_using_parameters", point_nr, param_x, param_y, gain_x, gain_y}
-
-{"change_texture_state_using_parameter",???} -- exists but crashed DCS when used with one argument.
-{"line_object_set_point_using_parameters", ???}
-{"change_color_using_parameter", ???} -- exists but crashed DCS when used with one to five arguments.
-{"fov_control", ???}
-{"increase_render_target_counter", ???}
+{"screenspace_position", a, b, c} -- ??? e.g.: {"screenspace_position", 2, -(aspect - 2 * size), 0}
+{"show"} -- ???
 --]]
 --- @class h_clip_relations
 --- @field NULL number @0 - No clipping
