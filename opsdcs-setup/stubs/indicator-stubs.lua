@@ -376,16 +376,18 @@ function UTF8_substring() end
 ---| '"lines"'
 
 --- @alias ElementControllerType string
----| '"opacity_using_parameter"'
+---| '"change_color_when_parameter_equal_to_number"'
 ---| '"text_using_parameter"'
----| '"parameter_in_range"'
 ---| '"move_left_right_using_parameter"'
 ---| '"move_up_down_using_parameter"'
+---| '"opacity_using_parameter"'
 ---| '"rotate_using_parameter"'
+---| '"compare_parameters"'
+---| '"parameter_in_range"'
+---| '"parameter_compare_with_number"'
+---| '"line_object_set_point_using_parameters"'
 ---| '"screenspace_position"'
----| '"change_color_when_parameter_equal_to_number"'
 --[[
-
 {"change_color_when_parameter_equal_to_number", param_nr, number, red, green, blue}
 {"text_using_parameter", param_nr, format_nr}
 {"move_left_right_using_parameter", param_nr, gain}
@@ -402,7 +404,6 @@ function UTF8_substring() end
 {"change_color_using_parameter", ???} -- exists but crashed DCS when used with one to five arguments.
 {"fov_control", ???}
 {"increase_render_target_counter", ???}
-
 --]]
 --- @class h_clip_relations
 --- @field NULL number @0 - No clipping

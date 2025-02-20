@@ -284,11 +284,12 @@ function UTF8_strlen() end
 function UTF8_substring() end
 
 ------------------------------------------------------------------------------
---- Device class
+--- Device classes
 ------------------------------------------------------------------------------
 
 --- @class Device
---- @description functions for devices (some devices have additional functions)
+
+--- @class avLuaDevice:Device
 --- @field get_argument_value fun(self:Device, argument) @gets argument value
 --- @field get_light_reference fun(self:Device)
 --- @field listen_command fun(self:Device, command) @listens to command
@@ -296,7 +297,8 @@ function UTF8_substring() end
 --- @field performClickableAction fun(self:Device, command:number, value:number, echo:boolean) @used to perform clickable actions (echo=true to ignore the connected SetCommand)
 --- @field set_argument_value fun(self:Device, argument, value) @sets argument value
 --- @field update_arguments fun(self:Device)
---- weapon system
+
+--- @class avSimpleWeaponSystem:avLuaDevice
 --- @field drop_chaff fun(count:number, dispenser:number) @see chaff_flare_dispenser in aircraft definition
 --- @field drop_flare fun(count:number, dispenser:number) @see chaff_flare_dispenser in aircraft definition
 --- @field emergency_jettison fun(station:number)
