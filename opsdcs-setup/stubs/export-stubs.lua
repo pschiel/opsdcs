@@ -24,7 +24,7 @@ os = {}
 
 --- @class Export
 --- @description Export functions (available in Export.lua)
---- @field GetClickableElemnts fun():table @Gets clickable elements (Misc)
+--- @field GetClickableElements fun():table @Gets clickable elements (Misc)
 --- @field GetDevice fun(id:number):table @Gets device (Misc)
 --- @field GetIndicator fun(id:number):table @Gets indicator (Misc)
 --- @field LoGeoCoordinatesToLoCoordinates fun(longitude_degrees:number, latitude_degrees:number):Vec3 @geo to ll (Always)
