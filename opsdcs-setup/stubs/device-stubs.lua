@@ -300,7 +300,7 @@ function UTF8_strlen() end
 function UTF8_substring() end
 
 ------------------------------------------------------------------------------
---- Device base functions
+--- Device functions
 ------------------------------------------------------------------------------
 
 --- @class Device
