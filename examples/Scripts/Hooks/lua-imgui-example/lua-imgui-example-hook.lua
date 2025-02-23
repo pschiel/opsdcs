@@ -1,5 +1,6 @@
 -- LuaImGui example hook
 -- @see https://github.com/08jne01/dcs-lua-imgui
+-- (needs small patch so initial window sizes work)
 -- 
 -- Installation:
 -- 1. Copy this file to Scripts/Hooks folder
