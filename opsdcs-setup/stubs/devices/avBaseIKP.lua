@@ -1,0 +1,11 @@
+--- @class avBaseIKP:Device
+--- @field get_airspeed_deviation string @function
+--- @field get_attitude_warn_flag_val string @function
+--- @field get_bank string @function
+--- @field get_bank_steering string @function
+--- @field get_height_deviation string @function
+--- @field get_pitch string @function
+--- @field get_pitch_steering string @function
+--- @field get_sideslip string @function
+--- @field get_steering_warn_flag_val string @function
+--- @field get_track_deviation string @function

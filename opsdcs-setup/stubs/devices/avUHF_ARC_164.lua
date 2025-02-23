@@ -1,0 +1,8 @@
+--- @class avUHF_ARC_164:Device
+--- @field get_frequency string @function
+--- @field get_modulation string @function
+--- @field is_frequency_in_range string @function
+--- @field is_on string @function
+--- @field set_channel string @function
+--- @field set_frequency string @function
+--- @field set_modulation string @function

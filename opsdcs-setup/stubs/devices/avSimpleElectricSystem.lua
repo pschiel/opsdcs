@@ -1,0 +1,9 @@
+--- @class avSimpleElectricSystem:Device
+--- @field AC_Generator_1_on string @function
+--- @field AC_Generator_2_on string @function
+--- @field DC_Battery_on string @function
+--- @field SetDamage string @function
+--- @field get_AC_Bus_1_voltage string @function
+--- @field get_AC_Bus_2_voltage string @function
+--- @field get_DC_Bus_1_voltage string @function
+--- @field get_DC_Bus_2_voltage string @function
