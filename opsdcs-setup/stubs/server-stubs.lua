@@ -1,0 +1,10 @@
+---------------------------------------------------------------------------
+--- SERVER ENV
+--- used by ? and net.dostring_in("server", ..)
+---
+--- available:
+---  io, lfs, log, math, os, package, require (no net! or only in sp? to test...)
+---  device env functions
+---  mission scripting env functions
+---  gui env functions
+---------------------------------------------------------------------------

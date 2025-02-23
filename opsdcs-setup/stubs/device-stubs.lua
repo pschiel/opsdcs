@@ -50,10 +50,80 @@ function SetGlobalCommand() end
 ------------------------------------------------------------------------------
 
 --- Creates a gauge
-function CreateGauge() end
+--- type "parameter": parameter_name / arg_number / input e.g. {0,1} / output e.g. {0,1}
+--- @param type string @nil uses controller, otherwise "parameter"
+--- @return Gauge
+function CreateGauge(type) end
+
+--- @class Gauge
+--- @field arg_number number
+--- @field input table @input range from controller or parameter, e.g. {0,1}
+--- @field output table @output range for argument, e.g. {0,1}
+--- @field controller any @controller from LoRegisterPanelControls (for type=nil)
+--- @field parameter_name string @parameter name (for type="parameter")
 
 --- Returns controllers
+--- @return MainPanelControls
 function LoRegisterPanelControls() end
+
+--- @class MainPanelControls
+--- @field Panel_Rot_X
+--- @field Panel_Shake_Y
+--- @field Panel_Shake_Z
+--- @field base_gauge_AngleOfAttack
+--- @field base_gauge_AngleOfSlide
+--- @field base_gauge_BarometricAltitude
+--- @field base_gauge_CanopyPos
+--- @field base_gauge_CanopyState
+--- @field base_gauge_EngineLeftFuelConsumption
+--- @field base_gauge_EngineLeftRPM
+--- @field base_gauge_EngineLeftTemperatureBeforeTurbine
+--- @field base_gauge_EngineRightFuelConsumption
+--- @field base_gauge_EngineRightRPM
+--- @field base_gauge_EngineRightTemperatureBeforeTurbine
+--- @field base_gauge_FlapsPos
+--- @field base_gauge_FlapsRetracted
+--- @field base_gauge_Heading
+--- @field base_gauge_HelicopterCollective
+--- @field base_gauge_HelicopterCorrection
+--- @field base_gauge_HorizontalAcceleration
+--- @field base_gauge_IndicatedAirSpeed
+--- @field base_gauge_LandingGearHandlePos
+--- @field base_gauge_LateralAcceleration
+--- @field base_gauge_LeftMainLandingGearDown
+--- @field base_gauge_LeftMainLandingGearUp
+--- @field base_gauge_MachNumber
+--- @field base_gauge_MagneticHeading
+--- @field base_gauge_NoseLandingGearDown
+--- @field base_gauge_NoseLandingGearUp
+--- @field base_gauge_Pitch
+--- @field base_gauge_RadarAltitude
+--- @field base_gauge_RateOfPitch
+--- @field base_gauge_RateOfRoll
+--- @field base_gauge_RateOfYaw
+--- @field base_gauge_RightMainLandingGearDown
+--- @field base_gauge_RightMainLandingGearUp
+--- @field base_gauge_Roll
+--- @field base_gauge_RudderPosition
+--- @field base_gauge_SpeedBrakePos
+--- @field base_gauge_StickPitchPosition
+--- @field base_gauge_StickRollPosition
+--- @field base_gauge_ThrottleLeftPosition
+--- @field base_gauge_ThrottleRightPosition
+--- @field base_gauge_TotalFuelWeight
+--- @field base_gauge_TrueAirSpeed
+--- @field base_gauge_VerticalAcceleration
+--- @field base_gauge_VerticalVelocity
+--- @field base_gauge_WOW_LeftMainLandingGear
+--- @field base_gauge_WOW_NoseLandingGear
+--- @field base_gauge_WOW_RightMainLandingGear
+--- @field canopy
+--- @field day_night_texture_switcher
+--- @field head_shift_X
+--- @field head_shift_Y
+--- @field head_shift_Z
+--- @field mirrors_draw
+--- @field pilot_draw
 
 --- ?
 gaugemeta = {}
@@ -392,6 +462,13 @@ function UTF8_substring() end
 --- @field set_argument_value fun(self:Device, argument, value) @sets argument value
 --- @field update_arguments fun(self:Device)
 
+--- @class ccIndicator
+--- @field add_purpose string @function
+--- @field assign_dedicated_viewport string @function
+--- @field get_dedicated_viewport string @function
+--- @field remove_purpose string @function
+--- @field set_page string @function
+
 ------------------------------------------------------------------------------
 --- Param handle
 ------------------------------------------------------------------------------
@@ -489,9 +566,42 @@ show_tree_boxes = false
 enable_commands_log = true
 use_click_and_pan_mode = true
 
---- @return table @controllers
-function LoRegisterPanelControls() end
-
 --- @param type string @aicraft type
 --- @param name string @livery name or "default"
 function find_custom_livery(type, name) end
+
+-- Device classes:
+-- avABU11Clock
+-- avAChS_1
+-- avAdjustableVariometer
+-- avAFN2
+-- avAirDrivenTurnIndicator
+-- avArtificialHorizont_AN5736
+-- avAutostartDevice
+-- avBaseIKP
+-- avBasicHearingSensitivityInterface
+-- avBasicLightSystem
+-- avBasicOxygenSystemInterface
+-- avDirectionalGyro_AN5735
+-- avExternalCargoSpeech
+-- avGH3000
+-- avIntercom
+-- avIntercomWWII
+-- avK14GunSight
+-- avKneeboard
+-- avLuaDevice
+-- avM800
+-- avMechCompass
+-- avNightVisionGoggles
+-- avNightVisionGogglesV2
+-- avPadlock
+-- avRemoteCompass_AN5730
+-- avSimpleAirspeedIndicator
+-- avSimpleAltimeter
+-- avSimpleElectricSystem
+-- avSimpleVariometer
+-- avSimpleRWR
+-- avSimpleWeaponSystem
+-- avTACAN_ARN118
+-- avTACAN_ARN118_CtrlPanel
+-- avUHF_ARC_164

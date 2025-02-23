@@ -55,7 +55,7 @@ function add_unit_to_country() return end
 --- ??
 function declare_callbackME() return end
 
---- Declares a gun mount
+--- Declares a gun mount. Looks like obsolete and use declare_weapon instead?
 --- @param name string
 --- @param gun_data table
 function declare_gun_mount(name, gun_data) return end

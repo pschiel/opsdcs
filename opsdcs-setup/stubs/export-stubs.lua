@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --- EXPORT ENV
---- used by Export.lua (and scripts running in "export" env)
+--- used by Export.lua scripts and net.dostring_in("export", ..)
 ------------------------------------------------------------------------------
 
 --- @type table

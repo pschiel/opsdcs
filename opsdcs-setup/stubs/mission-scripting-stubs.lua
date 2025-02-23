@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --- MISSION SCRIPTING ENV
---- used by mission scripts (and scripts running in "server" env)
+--- used by DO SCRIPT in ME and a_do_script() in mission env
 ------------------------------------------------------------------------------
 
 --- @type log
@@ -236,6 +236,7 @@ atmosphere = {}
 --- @field getAirbases fun(coalitionId:number|nil):table @Returns a table of airbase objects for a specified coalition or all airbases if no coalition is specified. (coalition.side)
 --- @field getMarkPanels fun():table @Returns a table of mark panels and shapes drawn within the mission.
 --- @field getPlayer fun():Unit @Returns a table representing the single unit object in the game set as "Player".
+--- @field onEvent fun(event:table) @Calls all world event handlers onEvent() with given event
 --- @field removeEventHandler fun(handler:EventHandler) @Removes the specified event handler from handling events.
 --- @field removeJunk fun(searchVolume:table):number @Searches a defined area to remove craters, wreckage, and debris within the volume, excluding scenery objects. (world.VolumeType)
 --- @field searchObjects fun(category:table|number, searchVolume:number, handler:function, data:any):table @Searches a defined volume for specified objects and can execute a function on each found object. (Object.Category, world.VolumeType)

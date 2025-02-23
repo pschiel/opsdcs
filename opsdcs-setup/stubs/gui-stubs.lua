@@ -1,6 +1,6 @@
 ------------------------------------------------------------------------------
 --- GUI ENV
---- used by scripts in Scripts/Hooks (and scripts running in "gui" env)
+--- used by scripts in Scripts/Hooks and net.dostring_in("gui", ..)
 ------------------------------------------------------------------------------
 
 --- @type table

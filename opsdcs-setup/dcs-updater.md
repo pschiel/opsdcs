@@ -1,4 +1,6 @@
-# terrain names
+# dcs_updater.exe
+
+## terrains
 
     dcs_updater.exe install AFGHANISTAN_terrain
     dcs_updater.exe install CAUCASUS_terrain
@@ -11,3 +13,11 @@
     dcs_updater.exe install SINAIMAP_terrain
     dcs_updater.exe install SYRIA_terrain
     dcs_updater.exe install THECHANNEL_terrain
+
+## repair
+
+    dcs_updater.exe repair
+
+## clean
+
+    dcs_updater.exe clean

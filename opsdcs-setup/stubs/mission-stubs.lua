@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --- MISSION ENV
---- used by internal mission engine (and scripts running in "mission" env)
+--- used by internal mission engine and net.dostring_in("mission", ..)
 ---------------------------------------------------------------------------
 
 --- @type env.mission

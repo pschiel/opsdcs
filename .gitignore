@@ -8,6 +8,8 @@
 /opsdcs-pmca
 /opsdcs-samsites
 /opsdcs-setup/stubs/fm-stubs.cpp
+/opsdcs-setup/stubs/mist-stubs.lua
+/opsdcs-setup/commands-wip
 /opsdcs-tacview
 /scratch
 *.png

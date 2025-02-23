@@ -1,4 +1,4 @@
-# modding resources
+# Modding Links
 
 [DCS Modding Forum](https://forum.dcs.world/forum/69-dcs-modding)
 

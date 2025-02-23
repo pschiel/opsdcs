@@ -7,7 +7,7 @@
 ---------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
---- Indicator functions
+--- Indicator page functions
 ------------------------------------------------------------------------------
 
 --- Adds an element
@@ -425,3 +425,23 @@ h_clip_relations = {}
 --- @field [2] number @params index
 --- @field [3] number? @formats index (text), min (range), x (move, position)
 --- @field [4] number? @max (range), y (move, position)
+
+-- Indicator classes
+-- ccAIHelperBase
+-- ccCargoIndicatorBase
+-- ccChart
+-- ccControlsIndicatorBase
+-- ccCrewIndicatorBase
+-- ccEkranIndicator
+-- ccGC_AimHelper
+-- ccGC_Info
+-- ccGC_MainHelper
+-- ccGC_SightCorrector
+-- ccGC_Target
+-- ccGenericGC
+-- ccIndicator
+-- ccK14GunSight
+-- ccKneeboard
+-- ccMainPanel
+-- ccPadlock
+-- ccUV_26
