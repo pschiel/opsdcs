@@ -14,11 +14,13 @@ need_to_be_closed = true
 ------------------------------------------------------------------------------
 
 --- Creates a sound
+--- not in mainpanel
 --- @param sdef string @refers to sdef file, and sdef file content refers to sound file, see DCSWorld/Sounds/sdef/_example.sdef
 --- @return table
 function create_sound(sdef) end
 
 --- Creates a sound host
+--- not in mainpanel
 --- @param name string
 --- @param type string @"2D", "3D", "HEADPHONES"
 --- @param x number
@@ -35,12 +37,26 @@ function GetDevice(id) end
 --- Returns the current device
 --- @return Device
 function GetSelf() end
-    
+
 --- Calls update() function within device with given time step
+--- not in mainpanel
 --- @param time_step number
 function make_default_activity(time_step) end
 
 function SetGlobalCommand() end
+
+------------------------------------------------------------------------------
+--- MainPanel specific
+------------------------------------------------------------------------------
+
+--- Creates a gauge
+function CreateGauge() end
+
+--- Returns controllers
+function LoRegisterPanelControls() end
+
+--- ?
+gaugemeta = {}
 
 ------------------------------------------------------------------------------
 --- Functions available in device and indicator env
@@ -228,7 +244,7 @@ function MakeFont(font_data, rgba) end
 --- @param rgba table @{0, 255, 0, 255}
 --- @return table
 function MakeMaterial(texture_path, rgba) end
-    
+
 --- Mounts a model path.
 --- @param path string The path.
 function mount_vfs_model_path(path) return end
@@ -284,36 +300,15 @@ function UTF8_strlen() end
 function UTF8_substring() end
 
 ------------------------------------------------------------------------------
---- Device classes
+--- Device base functions
 ------------------------------------------------------------------------------
 
 --- @class Device
-
---- @class avLuaDevice:Device
---- @field get_argument_value fun(self:Device, argument) @gets argument value
---- @field get_light_reference fun(self:Device)
+--- @field SetCommand string @function
+--- @field link string @userdata
 --- @field listen_command fun(self:Device, command) @listens to command
 --- @field listen_event fun(self:Device, event) @"setup_HMS", "setup_NVG", "DisableTurboGear", "EnableTurboGear", "GroundPowerOn", "GroundPowerOff", "repair", "WeaponRearmFirstStep", "WeaponRearmComplete", "OnNewNetHelicopter", "initChaffFlarePayload", "switch_datalink", "OnNewNetPlane", "LinkNOPtoNet"
 --- @field performClickableAction fun(self:Device, command:number, value:number, echo:boolean) @used to perform clickable actions (echo=true to ignore the connected SetCommand)
---- @field set_argument_value fun(self:Device, argument, value) @sets argument value
---- @field update_arguments fun(self:Device)
-
---- @class avSimpleWeaponSystem:avLuaDevice
---- @field drop_chaff fun(count:number, dispenser:number) @see chaff_flare_dispenser in aircraft definition
---- @field drop_flare fun(count:number, dispenser:number) @see chaff_flare_dispenser in aircraft definition
---- @field emergency_jettison fun(station:number)
---- @field emergency_jettison_rack fun(station:number)
---- @field get_ECM_status fun()
---- @field get_chaff_count fun():number @get chaff count
---- @field get_flare_count fun():number @get flare count
---- @field get_station_info fun(station:number):table
---- @field get_target_range fun():number
---- @field get_target_span fun()
---- @field launch_station fun(self:Device, station:number) @launch station (weapon system device)
---- @field select_station fun(self:Device, station:number) @select station (weapon system device)
---- @field set_ECM_status fun(status:boolean)
---- @field set_target_range fun(range:number)
---- @field set_target_span fun()
 
 ------------------------------------------------------------------------------
 --- Param handle

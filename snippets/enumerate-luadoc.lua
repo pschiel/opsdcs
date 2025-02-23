@@ -4,7 +4,7 @@
 --- @param number maxLvl @maximum recursive depth level
 --- @param number lvl @current depth level
 --- @param table visited @visited tables to avoid infinite recursion
-local function enumerate(tbl, name, maxLvl, lvl, visited)
+function enumerate(tbl, name, maxLvl, lvl, visited)
     lvl = lvl or 1
     visited = visited or {}
     if visited[tbl] then return "" end
@@ -54,22 +54,20 @@ local function enumerate(tbl, name, maxLvl, lvl, visited)
     return result
 end
 
-local output = enumerate(_G, "_G", 2)
---local output = enumerate(DCS, "DCS", 2)
-
--- output to file
-if io and io.open then
-    local file = io.open("annotations.lua", "w")
+function saveToFile(filename, content)
+    local file = io.open(filename, "w")
     if file then
-        file:write(output)
+        file:write(content)
         file:close()
-        return
     end
 end
 
 -- output via error (for plugin env)
-if declare_plugin then
-    for line in output:gmatch("([^\n]+)") do
-        dofile(line)
-    end
-end
+-- if declare_plugin then
+--     for line in output:gmatch("([^\n]+)") do
+--         dofile(line)
+--     end
+-- end
+
+-- local output = enumerate(_G, "_G", 2)
+--local output = enumerate(DCS, "DCS", 2)
