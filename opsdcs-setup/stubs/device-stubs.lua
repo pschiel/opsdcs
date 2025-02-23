@@ -348,6 +348,11 @@ function UTF8_substring() end
 --- @field get_DC_Bus_1_voltage string @function
 --- @field get_DC_Bus_2_voltage string @function
 
+--- @class avSimpleRadar:Device
+--- @field SetDamage string @function
+--- @field get_power string @function
+--- @field set_power string @function
+
 --- @class avSimpleRWR:Device
 --- @field SetDamage string @function
 --- @field get_power string @function
