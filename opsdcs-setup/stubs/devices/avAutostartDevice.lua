@@ -1,2 +1,0 @@
---- @class avAutostartDevice:Device
---- @field check_autostart_condition string @function

@@ -1,5 +1,0 @@
---- @class ccMainPanel:Device
---- @field get_argument_value fun(self:Device, argument) @gets argument value
---- @field get_light_reference fun(self:Device)
---- @field set_argument_value fun(self:Device, argument, value) @sets argument value
---- @field update_arguments fun(self:Device)

@@ -1,5 +1,0 @@
---- @class avSimpleRWR:Device
---- @field SetDamage string @function
---- @field get_power string @function
---- @field reset string @function
---- @field set_power string @function

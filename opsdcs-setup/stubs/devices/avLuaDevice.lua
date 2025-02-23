@@ -1,2 +1,0 @@
---- @class avLuaDevice:Device
---- @field SetDamage string @function
