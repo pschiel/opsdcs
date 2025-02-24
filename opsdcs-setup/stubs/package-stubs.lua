@@ -518,3 +518,22 @@ db = {}
 --- @field sqrt fun()
 --- @field tan fun()
 --- @field tanh fun()
+
+------------------------------------------------------------------------------
+--- minizip
+------------------------------------------------------------------------------
+
+--- @class minizip
+--- @description miz module. use with require("minizip")
+--- @field unzClose fun() @closes miz file
+--- @field unzGetCurrentFileName fun():string @returns current file name when iterating
+--- @field unzGoToFirstFile fun() @set iterator to first file in the miz
+--- @field unzGoToNextFile fun():boolean @set iterator to next file in the miz. returns false when there's no more files
+--- @field unzLocateFile fun(filename:string):boolean @locates a file in the miz and sets iterator to it. returns false if not found
+--- @field unzOpen fun(filename, mode) @opens a miz. mode "rb", unclear if "w" works too
+--- @field unzReadAllCurrentFile fun():any @returns the content of the current file
+--- @field unzUnpackCurrentFile fun(path:string):boolean @unpacks the current file to a path. returns true on success
+--- @field zipAddFile fun(fileInMiz:string, path:string):boolean @adds a file from disk to the miz. returns true on success
+--- @field zipAppend fun()
+--- @field zipClose fun() @closes miz file
+--- @field zipCreate fun(filename:string):minizip @creates a miz
