@@ -12,32 +12,18 @@
     #define LUA_API
 #endif
 
-static int python_initialized = 0;
-static PyObject *plt = NULL;
-
 static int l_init(lua_State *L) {
-    if (!python_initialized) {
-        Py_Initialize();
-        python_initialized = 1;
-    }
+    Py_Initialize();
     return 0;
 }
 
 static int l_close(lua_State *L) {
-    if (python_initialized) {
-        Py_XDECREF(plt);
-        plt = NULL;
-        Py_FinalizeEx();
-        python_initialized = 0;
-    }
+    Py_FinalizeEx();
     return 0;
 }
 
 static int l_run(lua_State *L) {
     const char *code = luaL_checkstring(L, 1);
-    if (!python_initialized) {
-        return luaL_error(L, "call init() first");
-    }
     PyRun_SimpleString(code);
     return 0;
 }
