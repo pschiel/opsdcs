@@ -10,14 +10,16 @@ lpb.init()
 idx = idx and idx + 1 or 1
 
 local x = {1, 2, 3, 4, 5, 6, 7, 8}
-local y = {5, 5, 6, 3, 3, 5, 6, 1}
+local y = {1, 5, 6, 3, 3, 5, 6, 10}
 
-lpb.run([[
+-- set return value in "ret"
+local code = [[
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import linregress
-x = np.array([]] .. table.concat(x, ",") .. [[])
-y = np.array([]] .. table.concat(y, ",") .. [[])
+x = np.array(args[0])
+y = np.array(args[1])
+idx = int(args[2])
 slope, intercept, _, _, _ = linregress(x, y)
 y_fit = slope * x + intercept
 plt.clf()
@@ -25,6 +27,11 @@ plt.plot(x, y, 'bo-', label="Data")
 plt.plot(x, y_fit, 'r-', label="Linear Fit")
 plt.title("blabla")
 plt.legend()
-plt.savefig("E:\\plot_]] .. idx .. [[.png")
-]])
-net.dostring_in("mission", 'a_out_picture("E:/plot_' .. idx .. '", 20, false, 0, "0", "0", 100, "0")')
+file_path = f"E:/plot_{idx}.png"
+plt.savefig(file_path)
+ret = file_path
+]]
+local ret = lpb.run(code, { x, y, idx })
+
+net.dostring_in("mission", [[a_out_text_delay("]] .. ret ..  [[", 10, 0, 0)]])
+net.dostring_in("mission", [[a_out_picture("]] .. ret .. [[", 20, false, 0, "0", "0", 100, "0")]])
