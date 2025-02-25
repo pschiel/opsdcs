@@ -13,28 +13,29 @@ Singleplayer only.
 - Support for sounds/voices
 - Explain cockpit switches by clicking on them
 
-## Done
+## Procedures
 
-- Interactive checklist functionality
-- Cockpit args/params debug tool (click on any switch to see arg and value)
-- Hook functionality
-- Explain all args
 - OH58D
   - Coldstart [(Preview)](https://www.youtube.com/watch?v=wwbpFXVOp2M)
   - Shutdown [(Preview)](https://www.youtube.com/watch?v=COZI8mpOZ4w)
 - CH-47Fbl1
   - Coldstart [(Preview)](https://www.youtube.com/watch?v=jiLiqa6Xmrk)
 - SA342
+  - Coldstart
 - UH-1H
+  - Coldstart
 
 ## Todo
 
-- Find army dudes for voices
-- F16 Ground Chief start procedure
-- F16 Hotpit procedure
-- Coldstarts: A-10C_2, AH-64D, AJS37, Bf-109K-4, FA-18C, FW-190A8, Ka-50_3, Mi-24P, P-51D, SA342, SpitfireLFMkIX, UH-1H
-- Guide procedure Heli (see guide.lua)
-- Landing procedure Heli POC
-- Landing procedure Jet POC
-- Non-procedure behaviours
-- 
+- KA-50_3
+  - Coldstart (WIP)
+- AH-64D_BLK_II
+- MI-8MT
+- MI-24P
+
+- Bf-109K-4
+- FW-190A8
+- P-51D
+- SpitfireLFMkIX
+
+- F-16C_50 (WIP)
