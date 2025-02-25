@@ -9,8 +9,10 @@ lpb.init()
 -- a_out_picture caches images, so we need a new filename everytime
 idx = idx and idx + 1 or 1
 
-local x = {1, 2, 3, 4, 5, 6, 7, 8}
-local y = {1, 5, 6, 3, 3, 5, 6, 10}
+local x = {}
+for i = 1, 100 do x[i] = i end
+local y = {}
+for i = 1, 100 do y[i] = math.random(50) end
 
 -- set return value in "ret"
 local code = [[
@@ -33,5 +35,5 @@ ret = file_path
 ]]
 local ret = lpb.run(code, { x, y, idx })
 
-net.dostring_in("mission", [[a_out_text_delay("]] .. ret ..  [[", 10, 0, 0)]])
+net.dostring_in("mission", [[a_out_text_delay("saved to: ]] .. ret ..  [[", 10, 0, 0)]])
 net.dostring_in("mission", [[a_out_picture("]] .. ret .. [[", 20, false, 0, "0", "0", 100, "0")]])
