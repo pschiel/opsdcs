@@ -107,8 +107,8 @@ SFM_Data = {
         N_fr_0 = 0.072,              -- some friction coefficient?
         N_fr_1 = 0.02,               --
         Init_Mom = 220,              -- initial moment of inertia/torque?
-        D_prop = 3.66,               -- diameter of propeller (m)
-        MOI_prop = 65,               -- moment of inertia of propeller?
+        D_prop = 3.66,               -- diameter of propeller (m) / can be a table (multi prop)
+        MOI_prop = 65,               -- moment of inertia of propeller? / can be a table (multi prop)
         k_gearbox = 2.381,           -- gearbox ratio
         P_oil = 495438,              -- oil pressure
         k_boost = 3,                 -- boost coefficient (super charger?)
@@ -117,13 +117,12 @@ SFM_Data = {
         k_piston = 3000,             --
         k_reg = 0.003,               --
         k_vel = 0.017,               -- velocity related coefficient (drag?)
-        prop_pitch_min = 26.0,       -- prop pitch min, degrees
-        prop_pitch_max = 82.0,       -- prop pitch max, degrees
-        prop_pitch_feather = 90.0,   -- prop pitch feather position, degrees if feather < prop_pitch_max no feathering available
-        prop_blades_count = 3,       -- propeller blades count
+        prop_pitch_min = 26.0,       -- prop pitch min, degrees / can be a table (multi prop)
+        prop_pitch_max = 82.0,       -- prop pitch max, degrees / can be a table (multi prop)
+        prop_pitch_feather = 90.0,   -- prop pitch feather position / can be a table (multi prop)
+        prop_blades_count = 3,       -- propeller blades count / can be a table (multi prop)
         prop_direction = 1,          -- 1 or -1 (clockwise or counter-clockwise)
-        prop_locations = {           -- propeller locations
-            { 0.0, 0.0, -2.0 },
+        prop_locations = {           -- propeller locations/orientations
             { 2.363, 0.104, -2.491 }, { math.pi, 0.0, 0.0 },
             { 2.363, 0.104, 2.491 }, { math.pi, 0.0, 0.0 },
         },
