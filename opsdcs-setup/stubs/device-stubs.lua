@@ -378,37 +378,37 @@ function UTF8_substring() end
 ------------------------------------------------------------------------------
 
 --- @class avDevice
---- @field SetCommand string @function
---- @field link string @userdata
+--- @field SetCommand fun()
+--- @field link any @userdata
 --- @field listen_command fun(self:avDevice, command) @listens to command
 --- @field listen_event fun(self:avDevice, event) @"setup_HMS", "setup_NVG", "DisableTurboGear", "EnableTurboGear", "GroundPowerOn", "GroundPowerOff", "repair", "WeaponRearmFirstStep", "WeaponRearmComplete", "OnNewNetHelicopter", "initChaffFlarePayload", "switch_datalink", "OnNewNetPlane", "LinkNOPtoNet"
 --- @field performClickableAction fun(self:avDevice, command:number, value:number, echo:boolean) @used to perform clickable actions (echo=true to ignore the connected SetCommand)
 
 --- @class avLuaDevice:avDevice
---- @field SetDamage string @function
+--- @field SetDamage fun()
 
 --- @class avAutostartDevice:avDevice
---- @field check_autostart_condition string @function
+--- @field check_autostart_condition fun()
 
 --- @class avBaseIKP:avDevice
---- @field get_airspeed_deviation string @function
---- @field get_attitude_warn_flag_val string @function
---- @field get_bank string @function
---- @field get_bank_steering string @function
---- @field get_height_deviation string @function
---- @field get_pitch string @function
---- @field get_pitch_steering string @function
---- @field get_sideslip string @function
---- @field get_steering_warn_flag_val string @function
---- @field get_track_deviation string @function
+--- @field get_airspeed_deviation fun()
+--- @field get_attitude_warn_flag_val fun()
+--- @field get_bank fun()
+--- @field get_bank_steering fun()
+--- @field get_height_deviation fun()
+--- @field get_pitch fun()
+--- @field get_pitch_steering fun()
+--- @field get_sideslip fun()
+--- @field get_steering_warn_flag_val fun()
+--- @field get_track_deviation fun()
 
 --- @class avIntercom:avDevice
---- @field easy_comm_override string @function
---- @field get_noise_level string @function
---- @field get_signal_level string @function
---- @field is_communicator_available string @function
---- @field make_setup_for_communicator string @function
---- @field set_communicator string @function
+--- @field easy_comm_override fun()
+--- @field get_noise_level fun()
+--- @field get_signal_level fun()
+--- @field is_communicator_available fun()
+--- @field make_setup_for_communicator fun()
+--- @field set_communicator fun()
 
 --- @class avIntercomWWII:avIntercom
 
@@ -423,42 +423,42 @@ function UTF8_substring() end
 --- @field get_DC_Bus_2_voltage fun():number
 
 --- @class avSimpleRadar:avDevice
---- @field SetDamage string @function
---- @field get_power string @function
---- @field set_power string @function
+--- @field SetDamage fun()
+--- @field get_power fun()
+--- @field set_power fun()
 
 --- @class avSimpleRWR:avDevice
---- @field SetDamage string @function
---- @field get_power string @function
---- @field reset string @function
---- @field set_power string @function
+--- @field SetDamage fun()
+--- @field get_power fun()
+--- @field reset fun()
+--- @field set_power fun()
 
 --- @class avSimpleWeaponSystem:avDevice
---- @field SetDamage string @function
+--- @field SetDamage fun()
 --- @field drop_chaff fun(count:number, dispenser:number) @see chaff_flare_dispenser in aircraft definition
 --- @field drop_flare fun(count:number, dispenser:number) @see chaff_flare_dispenser in aircraft definition
---- @field emergency_jettison string @function
---- @field emergency_jettison_rack string @function
---- @field get_ECM_status string @function
+--- @field emergency_jettison fun()
+--- @field emergency_jettison_rack fun()
+--- @field get_ECM_status @fun()
 --- @field get_chaff_count fun():number @get chaff count
 --- @field get_flare_count fun():number @get flare count
---- @field get_station_info string @function
---- @field get_target_range string @function
---- @field get_target_span string @function
+--- @field get_station_info @fun()
+--- @field get_target_range @fun()
+--- @field get_target_span @fun()
 --- @field launch_station fun(self:avDevice, station:number) @launch station (weapon system device)
 --- @field select_station fun(self:avDevice, station:number) @select station (weapon system device)
---- @field set_ECM_status string @function
---- @field set_target_range string @function
---- @field set_target_span string @function
+--- @field set_ECM_status @fun()
+--- @field set_target_range @fun()
+--- @field set_target_span @fun()
 
 --- @class avUHF_ARC_164:avDevice
---- @field get_frequency string @function
---- @field get_modulation string @function
---- @field is_frequency_in_range string @function
---- @field is_on string @function
---- @field set_channel string @function
---- @field set_frequency string @function
---- @field set_modulation string @function
+--- @field get_frequency @fun()
+--- @field get_modulation @fun()
+--- @field is_frequency_in_range @fun()
+--- @field is_on @fun()
+--- @field set_channel @fun()
+--- @field set_frequency @fun()
+--- @field set_modulation @fun()
 
 --- @class ccMainPanel:avDevice
 --- @field get_argument_value fun(self:avDevice, argument) @gets argument value
@@ -467,11 +467,11 @@ function UTF8_substring() end
 --- @field update_arguments fun(self:avDevice)
 
 --- @class ccIndicator
---- @field add_purpose string @function
---- @field assign_dedicated_viewport string @function
---- @field get_dedicated_viewport string @function
---- @field remove_purpose string @function
---- @field set_page string @function
+--- @field add_purpose @fun()
+--- @field assign_dedicated_viewport @fun()
+--- @field get_dedicated_viewport @fun()
+--- @field remove_purpose @fun()
+--- @field set_page @fun()
 
 ------------------------------------------------------------------------------
 --- Param handle
