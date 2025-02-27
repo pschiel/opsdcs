@@ -35,11 +35,11 @@ function create_sound_host(name, type, x, y, z) end
 
 --- Returns a device
 --- @param id number
---- @return Device
+--- @return avDevice
 function GetDevice(id) end
 
 --- Returns the current device
---- @return Device
+--- @return avDevice
 function GetSelf() end
 
 --- Calls update() function within device with given time step
@@ -160,7 +160,7 @@ function copy_to_mission_and_dofile() end
 function copy_to_mission_and_get_buffer() end
 function dbg_print() end
 
---- Triggers command with value. Similar to Device:performClickableAction() but doesn't move the switch
+--- Triggers command with value. Similar to avDevice:performClickableAction() but doesn't move the switch
 --- @param device_id number @or nil
 --- @param command number
 --- @param value number
@@ -374,23 +374,23 @@ function UTF8_strlen() end
 function UTF8_substring() end
 
 ------------------------------------------------------------------------------
---- Device functions
+--- avDevice functions
 ------------------------------------------------------------------------------
 
---- @class Device
+--- @class avDevice
 --- @field SetCommand string @function
 --- @field link string @userdata
---- @field listen_command fun(self:Device, command) @listens to command
---- @field listen_event fun(self:Device, event) @"setup_HMS", "setup_NVG", "DisableTurboGear", "EnableTurboGear", "GroundPowerOn", "GroundPowerOff", "repair", "WeaponRearmFirstStep", "WeaponRearmComplete", "OnNewNetHelicopter", "initChaffFlarePayload", "switch_datalink", "OnNewNetPlane", "LinkNOPtoNet"
---- @field performClickableAction fun(self:Device, command:number, value:number, echo:boolean) @used to perform clickable actions (echo=true to ignore the connected SetCommand)
+--- @field listen_command fun(self:avDevice, command) @listens to command
+--- @field listen_event fun(self:avDevice, event) @"setup_HMS", "setup_NVG", "DisableTurboGear", "EnableTurboGear", "GroundPowerOn", "GroundPowerOff", "repair", "WeaponRearmFirstStep", "WeaponRearmComplete", "OnNewNetHelicopter", "initChaffFlarePayload", "switch_datalink", "OnNewNetPlane", "LinkNOPtoNet"
+--- @field performClickableAction fun(self:avDevice, command:number, value:number, echo:boolean) @used to perform clickable actions (echo=true to ignore the connected SetCommand)
 
---- @class avLuaDevice:Device
+--- @class avLuaDevice:avDevice
 --- @field SetDamage string @function
 
---- @class avAutostartDevice:Device
+--- @class avAutostartDevice:avDevice
 --- @field check_autostart_condition string @function
 
---- @class avBaseIKP:Device
+--- @class avBaseIKP:avDevice
 --- @field get_airspeed_deviation string @function
 --- @field get_attitude_warn_flag_val string @function
 --- @field get_bank string @function
@@ -402,7 +402,7 @@ function UTF8_substring() end
 --- @field get_steering_warn_flag_val string @function
 --- @field get_track_deviation string @function
 
---- @class avIntercom:Device
+--- @class avIntercom:avDevice
 --- @field easy_comm_override string @function
 --- @field get_noise_level string @function
 --- @field get_signal_level string @function
@@ -412,28 +412,28 @@ function UTF8_substring() end
 
 --- @class avIntercomWWII:avIntercom
 
---- @class avSimpleElectricSystem:Device
---- @field AC_Generator_1_on string @function
---- @field AC_Generator_2_on string @function
---- @field DC_Battery_on string @function
---- @field SetDamage string @function
---- @field get_AC_Bus_1_voltage string @function
---- @field get_AC_Bus_2_voltage string @function
---- @field get_DC_Bus_1_voltage string @function
---- @field get_DC_Bus_2_voltage string @function
+--- @class avSimpleElectricSystem:avDevice
+--- @field AC_Generator_1_on fun(onoff:boolean)
+--- @field AC_Generator_2_on fun(onoff:boolean)
+--- @field DC_Battery_on fun(onoff:boolean)
+--- @field SetDamage fun()
+--- @field get_AC_Bus_1_voltage fun():number
+--- @field get_AC_Bus_2_voltage fun():number
+--- @field get_DC_Bus_1_voltage fun():number
+--- @field get_DC_Bus_2_voltage fun():number
 
---- @class avSimpleRadar:Device
+--- @class avSimpleRadar:avDevice
 --- @field SetDamage string @function
 --- @field get_power string @function
 --- @field set_power string @function
 
---- @class avSimpleRWR:Device
+--- @class avSimpleRWR:avDevice
 --- @field SetDamage string @function
 --- @field get_power string @function
 --- @field reset string @function
 --- @field set_power string @function
 
---- @class avSimpleWeaponSystem:Device
+--- @class avSimpleWeaponSystem:avDevice
 --- @field SetDamage string @function
 --- @field drop_chaff fun(count:number, dispenser:number) @see chaff_flare_dispenser in aircraft definition
 --- @field drop_flare fun(count:number, dispenser:number) @see chaff_flare_dispenser in aircraft definition
@@ -445,13 +445,13 @@ function UTF8_substring() end
 --- @field get_station_info string @function
 --- @field get_target_range string @function
 --- @field get_target_span string @function
---- @field launch_station fun(self:Device, station:number) @launch station (weapon system device)
---- @field select_station fun(self:Device, station:number) @select station (weapon system device)
+--- @field launch_station fun(self:avDevice, station:number) @launch station (weapon system device)
+--- @field select_station fun(self:avDevice, station:number) @select station (weapon system device)
 --- @field set_ECM_status string @function
 --- @field set_target_range string @function
 --- @field set_target_span string @function
 
---- @class avUHF_ARC_164:Device
+--- @class avUHF_ARC_164:avDevice
 --- @field get_frequency string @function
 --- @field get_modulation string @function
 --- @field is_frequency_in_range string @function
@@ -460,11 +460,11 @@ function UTF8_substring() end
 --- @field set_frequency string @function
 --- @field set_modulation string @function
 
---- @class ccMainPanel:Device
---- @field get_argument_value fun(self:Device, argument) @gets argument value
---- @field get_light_reference fun(self:Device)
---- @field set_argument_value fun(self:Device, argument, value) @sets argument value
---- @field update_arguments fun(self:Device)
+--- @class ccMainPanel:avDevice
+--- @field get_argument_value fun(self:avDevice, argument) @gets argument value
+--- @field get_light_reference fun(self:avDevice)
+--- @field set_argument_value fun(self:avDevice, argument, value) @sets argument value
+--- @field update_arguments fun(self:avDevice)
 
 --- @class ccIndicator
 --- @field add_purpose string @function
@@ -542,7 +542,7 @@ function UTF8_substring() end
 --- Callbacks
 ------------------------------------------------------------------------------
 
---- function called by DCS on cockpit event (Device event, listen_event)
+--- function called by DCS on cockpit event (avDevice event, listen_event)
 --- @param command number
 --- @param value table
 function CockpitEvent(command, value) end
@@ -574,7 +574,7 @@ use_click_and_pan_mode = true
 --- @param name string @livery name or "default"
 function find_custom_livery(type, name) end
 
--- Device classes:
+-- avDevice classes:
 -- avABU11Clock
 -- avAChS_1
 -- avAdjustableVariometer
