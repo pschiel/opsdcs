@@ -6,8 +6,12 @@
 ---  io, lfs, log, LockOn_Options, math, os
 ---------------------------------------------------------------------------
 
---- when set to true in device init, close lua state after initialization
+--- when set to true in device init, close lua state after initialization in post_initialize
+--- set to false for scripts that keep running (e.g. with update)
 need_to_be_closed = true
+
+--- parameter for power bus (without use of avSimpleElectricSystem, set to 1 to power)
+power_bus_handle = ""
 
 ------------------------------------------------------------------------------
 --- Device functions (only available in devices)
