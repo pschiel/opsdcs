@@ -126,5 +126,8 @@ SFM_Data = {
             { 2.363, 0.104, -2.491 }, { math.pi, 0.0, 0.0 },
             { 2.363, 0.104, 2.491 }, { math.pi, 0.0, 0.0 },
         },
+        cylinder_firing_order = {    -- cylinder firing order
+            1, 3, 5, 7, 9, 2, 4, 6, 8
+        },
     }
 }
