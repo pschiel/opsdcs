@@ -52,7 +52,7 @@ function GetRenderTarget() end
 function GetScale() end
 
 --- Returns device
---- @return Device
+--- @return avDevice
 function GetSelf() end
 
 --- Sets custom scale
@@ -95,7 +95,7 @@ function copy_to_mission_and_dofile() end
 function copy_to_mission_and_get_buffer() end
 function dbg_print() end
 
---- Triggers command with value. Similar to Device:performClickableAction() but doesn't move the switch
+--- Triggers command with value. Similar to avDevice:performClickableAction() but doesn't move the switch
 --- @param device_id number @or nil
 --- @param command number
 --- @param value number
