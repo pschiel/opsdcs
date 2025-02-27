@@ -1,5 +1,5 @@
--- SFM (Simple Flight Model) configuration template
--- 
+-- SFM (Simple Flight Model) data
+-- see also: https://github.com/Community-A-4E/community-a4e-c/blob/master/A-4E-C/A-4E-C.lua#L1049
 
 SFM_Data = {
     -- Aerodynamics config
