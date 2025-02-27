@@ -16,7 +16,7 @@ SFM_Data = {
         cx_brk      = 0.12,     -- drag coefficient for speedbrakes/spoilers          higher value = more drag when speedbrakes/spoilers deployed
 
         -- M        mach number                                            line from table below is picked according to current aircraft mach speed (interpolated)
-        -- Cx0      general airplane drag coefficient                      higher value = more drag
+        -- Cx0      drag coefficient in forward direction                  higher value = more drag
         -- Cya      normal (lift) force coefficient per degree of AoA      higher value = more lift at AoA increase, lower value = maintain higher g-loads
         -- B2       lift-induced drag coefficient                          higher value = more drag at higher lift
         -- B4       higher-order lift-induced drag coefficient             higher value = more drag at higher lift (rapid increase at high lift) 
