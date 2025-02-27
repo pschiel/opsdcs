@@ -3,18 +3,18 @@
 
 SFM_Data = {
     -- Aerodynamics config
-    aerodynamics = {            -- Cx = Cx_0 + Cy^2*B2 +Cy^4*B4                       more lift = more drag, B2 and B4 for exponential drag increase with lift
-        Cy0         = 0.0,      -- zero AoA lift coefficient                          higher value = more lift at zero AoA
-        Mzalfa      = 6.2,      -- pitch agility coefficient                          higher value = more agile in pitch
-        Mzalfadt    = 0.7,      -- pitch agility damping coefficient                  higher value = more stable in pitch
-        kjx         = 4.5,      -- inertia parameter x-axis (roll)                    higher value = more inertia, rolls more slowly
-        kjz         = 0.00125,  -- inertia parameter z-axis (yaw)                     higher value = more inertia, yaws more slowly
-        Czbe        = -0.016,   -- yaw stability coefficient (z-axis)                 negative value = counteracting force to yaw is generated
-        cx_gear     = 0.07,     -- drag coefficient for landing gear                  higher value = more drag when gear deployed
-        cx_flap     = 0.08,     -- drag coefficient for flaps                         higher value = more drag when flaps deployed
-        cy_flap     = 0.21,     -- lift coefficient for flaps                         higher value = more lift when flaps deployed
-        cx_brk      = 0.12,     -- drag coefficient for speedbrakes/spoilers          higher value = more drag when speedbrakes/spoilers deployed
-
+    aerodynamics = {           -- Cx = Cx_0 + Cy^2*B2 +Cy^4*B4                       more lift = more drag, B2 and B4 for exponential drag increase with lift
+        Cy0 = 0.0,             -- zero AoA lift coefficient                          higher value = more lift at zero AoA
+        Mzalfa = 6.2,          -- pitch agility coefficient                          higher value = more agile in pitch
+        Mzalfadt = 0.7,        -- pitch agility damping coefficient                  higher value = more stable in pitch
+        kjx = 4.5,             -- inertia parameter x-axis (roll)                    higher value = more inertia, rolls more slowly
+        kjz = 0.00125,         -- inertia parameter z-axis (yaw)                     higher value = more inertia, yaws more slowly
+        Czbe = -0.016,         -- yaw stability coefficient (z-axis)                 negative value = counteracting force to yaw is generated
+        cx_gear = 0.07,        -- drag coefficient for landing gear                  higher value = more drag when gear deployed
+        cx_flap = 0.08,        -- drag coefficient for flaps                         higher value = more drag when flaps deployed
+        cy_flap = 0.21,        -- lift coefficient for flaps                         higher value = more lift when flaps deployed
+        cx_brk = 0.12,         -- drag coefficient for speedbrakes/spoilers          higher value = more drag when speedbrakes/spoilers deployed
+        
         -- M        mach number                                            line from table below is picked according to current aircraft mach speed (interpolated)
         -- Cx0      drag coefficient in forward direction                  higher value = more drag
         -- Cya      normal (lift) force coefficient per degree of AoA      higher value = more lift at AoA increase, lower value = maintain higher g-loads
