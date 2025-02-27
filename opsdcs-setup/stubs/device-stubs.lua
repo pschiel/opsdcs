@@ -439,26 +439,26 @@ function UTF8_substring() end
 --- @field drop_flare fun(count:number, dispenser:number) @see chaff_flare_dispenser in aircraft definition
 --- @field emergency_jettison fun()
 --- @field emergency_jettison_rack fun()
---- @field get_ECM_status @fun()
+--- @field get_ECM_status fun()
 --- @field get_chaff_count fun():number @get chaff count
 --- @field get_flare_count fun():number @get flare count
---- @field get_station_info @fun()
---- @field get_target_range @fun()
---- @field get_target_span @fun()
+--- @field get_station_info fun()
+--- @field get_target_range fun()
+--- @field get_target_span fun()
 --- @field launch_station fun(self:avDevice, station:number) @launch station (weapon system device)
 --- @field select_station fun(self:avDevice, station:number) @select station (weapon system device)
---- @field set_ECM_status @fun()
---- @field set_target_range @fun()
---- @field set_target_span @fun()
+--- @field set_ECM_status fun()
+--- @field set_target_range fun()
+--- @field set_target_span fun()
 
 --- @class avUHF_ARC_164:avDevice
---- @field get_frequency @fun()
---- @field get_modulation @fun()
---- @field is_frequency_in_range @fun()
---- @field is_on @fun()
---- @field set_channel @fun()
---- @field set_frequency @fun()
---- @field set_modulation @fun()
+--- @field get_frequency fun()
+--- @field get_modulation fun()
+--- @field is_frequency_in_range fun()
+--- @field is_on fun()
+--- @field set_channel fun()
+--- @field set_frequency fun()
+--- @field set_modulation fun()
 
 --- @class ccMainPanel:avDevice
 --- @field get_argument_value fun(self:avDevice, argument) @gets argument value
@@ -467,11 +467,11 @@ function UTF8_substring() end
 --- @field update_arguments fun(self:avDevice)
 
 --- @class ccIndicator
---- @field add_purpose @fun()
---- @field assign_dedicated_viewport @fun()
---- @field get_dedicated_viewport @fun()
---- @field remove_purpose @fun()
---- @field set_page @fun()
+--- @field add_purpose fun()
+--- @field assign_dedicated_viewport fun()
+--- @field get_dedicated_viewport fun()
+--- @field remove_purpose fun()
+--- @field set_page fun()
 
 ------------------------------------------------------------------------------
 --- Param handle
