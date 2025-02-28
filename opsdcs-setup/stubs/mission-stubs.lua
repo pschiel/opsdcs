@@ -26,7 +26,7 @@ function a_ai_task(aiAction) end
 function a_aircraft_ctf_color_tag(unit, color) end
 function a_circle_to_all() end
 function a_clear_flag(flag) end
-function a_cockpit_highlight(id, name, size, plugin) end
+function a_cockpit_highlight(element, name, size, plugin) end
 function a_cockpit_highlight_indication(id, indicator, name, size, plugin) end
 function a_cockpit_highlight_position(id, x, y, z, dimX, dimY, dimZ) end
 function a_cockpit_lock_player_seat(number) end

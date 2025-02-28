@@ -149,6 +149,8 @@ function OpsdcsApi:onSimulationFrame()
                     code, result = self:getDbTheatres()
                 elseif method == "GET" and path == "/db-terrains" then
                     code, result = self:getDbTerrains()
+                elseif method == "GET" and path == "/db-warheards" then
+                    code, result = self:getDbWarheads()
                 elseif method == "GET" and path == "/coords" then
                     code, result = self:getCoords(query)
                 end
@@ -767,6 +769,11 @@ function OpsdcsApi:getDbTerrains()
         if hasTowns then terrains[theatre].towns = towns end
     end
     return 200, terrains
+end
+
+function OpsdcsApi:getDbWarheads()
+    local result = warheads
+    return 200, result
 end
 
 -- converts any coordinate format
