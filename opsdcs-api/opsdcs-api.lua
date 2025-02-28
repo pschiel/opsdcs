@@ -149,7 +149,7 @@ function OpsdcsApi:onSimulationFrame()
                     code, result = self:getDbTheatres()
                 elseif method == "GET" and path == "/db-terrains" then
                     code, result = self:getDbTerrains()
-                elseif method == "GET" and path == "/db-warheards" then
+                elseif method == "GET" and path == "/db-warheads" then
                     code, result = self:getDbWarheads()
                 elseif method == "GET" and path == "/coords" then
                     code, result = self:getCoords(query)
