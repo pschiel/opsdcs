@@ -1541,14 +1541,14 @@ radio.modulation = {}
 
 --- @class Disposition
 --- @description position functions
---- @field DriftRoute fun(pos1:vec3, pos2:vec3, coalitionId:number):table
+--- @field DriftRoute fun(pos1:vec3, pos2:vec3, coalitionId:number):table @creates safe route avoiding e.g. SAMs
 --- @field getElipsSideZones fun(numAreas:number, numPositions:number, perim:table, degrees:number, radiusRatio:number):table @returns zones around runway strips
 --- @field getPointHeight fun(pos:vec3):number @returns terrain height
 --- @field getPointWater fun(pos:vec3, a:number, b:number):boolean @checks for water (radius/depth?)
 --- @field getRandom fun(isFloat:boolean, min:number, max:number):number @get a random number
 --- @field getRandomIn fun()
 --- @field getRandomSort fun(t:table):table @randomly shuffles table
---- @field getRouteAwayWater fun(thresholdPos:vec3, pos:vec3, a:number, b:number):boolean @checks for water (radius/depth?)
+--- @field getRouteAwayWater fun(thresholdPos:vec3, pos:vec3, radius:number, step:number):boolean @checks if a route or area between two positions crosses water, returning true if water is present.
 --- @field getRunwayPerimetr fun(runway:table):table @returns runway perimeter (runway data from airbase:getRunways)
 --- @field getSimpleZones fun(pos:vec3, radius:number, posRadius:number, numPositions:number, water:boolean) @find in an area clear positions with a radius for placing units
 --- @field getThresholdFourZones fun(numPositions:number, perim:table):table @returns zones along runway edges (perim)
