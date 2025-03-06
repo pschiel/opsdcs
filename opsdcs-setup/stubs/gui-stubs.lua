@@ -1,6 +1,7 @@
 ------------------------------------------------------------------------------
 --- GUI ENV
 --- used by scripts in Scripts/Hooks and net.dostring_in("gui", ..)
+--- see also: DCS World\API\DCS_ControlAPI.md
 ------------------------------------------------------------------------------
 
 --- @type table
@@ -135,19 +136,19 @@ net = {}
 --- @field dispatchAnalogAction fun()
 --- @field dispatchDigitalAction fun()
 --- @field enter_with_dyngroup fun()
---- @field exitProcess fun() Commands to close the DCS application.
+--- @field exitProcess fun() @Commands to close the DCS application.
 --- @field getATCradiosData fun()
 --- @field getAchievementsUiInfo fun()
 --- @field getAirTankerID fun()
 --- @field getAircraftAmountInAirportWarehouse fun(type, id, isAirdrome)
 --- @field getAirdromesCoalition fun()
 --- @field getAirdromesState fun()
---- @field getAvailableCoalitions fun():table Returns a list of coalitions with client slots available.
---- @field getAvailableSlots fun(coaId:number|string):table Returns a table of slots available to a given coalition.
---- @field getConfigValue fun()
+--- @field getAvailableCoalitions fun():table @Returns a list of coalitions with client slots available.
+--- @field getAvailableSlots fun(coaId:number|string):table @Returns a table of slots available to a given coalition. array of {unitId, type, role, callsign, groupName, country}. the returned unitID is actually a slotID, which for multi-seat units is 'unitID_seatID'
+--- @field getConfigValue fun(cfg_path_string) @Reads a value from config state.
 --- @field getConquestAirbaseState fun()
 --- @field getCurrentFOV fun()
---- @field getCurrentMission fun():table Returns the table of the mission as stored in the mission file.
+--- @field getCurrentMission fun():table @Returns the table of the mission as stored in the mission file.
 --- @field getDefaultFOV fun()
 --- @field getDynamicSpawnSettings fun(id, isAirdrome)
 --- @field getFarpsAndCarriersMissionData fun()
@@ -158,23 +159,23 @@ net = {}
 --- @field getInputNameByUnitType fun()
 --- @field getInputProfiles fun()
 --- @field getInstalledTheatres fun()
---- @field getLogHistory fun()
+--- @field getLogHistory fun(from) @Returns last log messages starting from a given index. logHistory, logIndex = DCS.getLogHistory(logIndex)
 --- @field getMainPilot fun()
 --- @field getManualPath fun():string
 --- @field getMaxFPS fun()
 --- @field getMissionDescription fun():string
---- @field getMissionFilename fun():string Returns the file name of the current mission file.
+--- @field getMissionFilename fun():string @Returns the file name of the current mission file.
 --- @field getMissionLoaded fun()
---- @field getMissionName fun():string Returns the name of the current mission.
---- @field getMissionOptions fun():table Returns the table of options for the current mission.
+--- @field getMissionName fun():string @Returns the name of the current mission.
+--- @field getMissionOptions fun():table @Returns the table of options for the current mission.
 --- @field getMissionResourcesDialogData fun()
---- @field getMissionResult fun(side:string):number Returns the current result for a given coalition as defined by mission goals.
+--- @field getMissionResult fun(side:string):number @Returns the current result for a given coalition as defined by mission goals.
 --- @field getMissionTheatre fun()
 --- @field getModelNameByShapeTableIndex fun()
---- @field getModelTime fun():number Returns the DCS simulation time in seconds since the game started.
+--- @field getModelTime fun():number @Returns the DCS simulation time in seconds since the game started.
 --- @field getMoonAzimuthElevationPhase fun()
 --- @field getObjectLiveriesNames fun()
---- @field getPause fun():boolean Returns the pause state of the server. True if paused, false otherwise.
+--- @field getPause fun():boolean @Returns the pause state of the server. True if paused, false otherwise.
 --- @field getPilotAchievements fun()
 --- @field getPilotStatistics fun()
 --- @field getPilotsSummaryStatistics fun()
@@ -182,7 +183,7 @@ net = {}
 --- @field getPlayerCoalition fun():string
 --- @field getPlayerUnit fun():string
 --- @field getPlayerUnitType fun():string
---- @field getRealTime fun():number Returns the current time in a mission relative to the DCS start time.
+--- @field getRealTime fun():number @Returns the current time in a mission relative to the DCS start time.
 --- @field getServerStartTime fun()
 --- @field getServerStartTimeRemain fun()
 --- @field getSimulatorMode fun()
@@ -190,16 +191,16 @@ net = {}
 --- @field getTaintedCategories fun()
 --- @field getTaintedFiles fun()
 --- @field getTheatreID fun()
---- @field getUnitProperty fun(unitId:number, propertyId:string):string Returns the specified property for the given unit.
---- @field getUnitType fun(missionId:number):string Returns the type of the unit identified by missionId.
---- @field getUnitTypeAttribute fun(typeName:string, attribute:string):string, number, table Returns the attribute of the specified type for the specified unit type.
+--- @field getUnitProperty fun(unitId:number, propertyId:string):string @Returns the specified property for the given unit. (see UNIT_ properties above)
+--- @field getUnitType fun(missionId:number):string @Returns the type of the unit identified by missionId. a shortcut for DCS.getUnitProperty(missionId, DCS.UNIT_TYPE)
+--- @field getUnitTypeAttribute fun(typeId:string, attribute:string):string, number, table Returns the attribute of the specified type for the specified unit type. Returns a value from Database: Objects[typeId][attr]. e.g: DCS.getUnitTypeAttribute("Ural", "DisplayName")
 --- @field getUserOptions fun()
 --- @field hasMultipleSlots fun():boolean
 --- @field isHumanSeatAvailable fun()
 --- @field isMetricSystem fun()
---- @field isMultiplayer fun():boolean Returns whether the game is in multiplayer mode.
+--- @field isMultiplayer fun():boolean @Returns whether the game is in multiplayer mode.
 --- @field isRoleAvailable fun()
---- @field isServer fun():boolean Returns whether the game is running as a server or in single-player mode.
+--- @field isServer fun():boolean @Returns whether the game is running as a server or in single-player mode.
 --- @field isSlotFlyable fun()
 --- @field isSteamVersion fun()
 --- @field isSupercarrierRoleAvailable fun()
@@ -230,23 +231,23 @@ net = {}
 --- @field setMaxFPS fun()
 --- @field setMissionResourcesDialogData fun()
 --- @field setNeedRestartApplication fun()
---- @field setPause fun(action:boolean) Pauses or resumes the simulation. Server-side only.
+--- @field setPause fun(paused:boolean) @Pauses or resumes the simulation. Server-side only.
 --- @field setPlayerCoalition fun(coalition_id:number)
 --- @field setPlayerUnit fun(misId:number)
 --- @field setScreenShotExt fun()
---- @field setUserCallbacks fun(hook:Hook) Adds functions to be run for specified GameGUI events.
+--- @field setUserCallbacks fun(hook:Hook) @Adds functions to be run for specified GameGUI events.
 --- @field setViewPause fun(toggle:boolean)
 --- @field setViewRearm fun()
 --- @field setViewRearmAnimationTime fun()
 --- @field setViewRearmPositionType fun()
 --- @field spawnPlayer fun()
---- @field stopMission fun() Commands to stop the mission.
+--- @field stopMission fun() @Commands to stop the mission.
 --- @field takeTrackControl fun()
 --- @field unlockKeyboardInput fun()
 --- @field unlockMouseInput fun()
 --- @field unsetViewRearm fun()
 --- @field updaterOperation fun()
---- @field writeDebriefing fun()
+--- @field writeDebriefing fun(str) @Writes a custom string to the debriefing file
 --- @type DCS
 DCS = {}
 

@@ -21,7 +21,7 @@
 --- @field normpath fun(path:string):string @returns the normalized path.
 --- @field realpath fun(path:string):string @returns the absolute path of a file.
 --- @field rmdir fun(path:string) @removes a directory.
---- @field tempdir fun():string @returns the temporary directory.
+--- @field tempdir fun():string @returns the temporary directory (AppData\Local\Temp\DCS).
 --- @field writedir fun():string @returns the path to the saved games directory.
 --- @type lfs
 lfs = {}
@@ -62,14 +62,15 @@ io = {}
 ------------------------------------------------------------------------------
 
 --- @class log
+--- @description log module. also available in autoexec.cfg
 --- @field alert fun(message:string) @Logs an alert message.
 --- @field debug fun(message:string) @Logs a debug message.
 --- @field error fun(message:string) @Logs an error message.
 --- @field info fun(message:string) @Logs an info message.
---- @field set_output fun()
+--- @field set_output fun(filename, subsystem, level_mask, output_mode) @level_mask = sum of loglevels, output_mode = sum of output flags
 --- @field set_output_rules fun()
 --- @field warning fun(message:string) @Logs a warning message.
---- @field write fun()
+--- @field write fun(subsystem, loglevel, message, ...) @Sends the message to the logger. If there are any arguments after _message_, the actual string is formed as _string.format(message, ...)_
 --- @field ALERT number
 --- @field ALL number
 --- @field ASYNC number
@@ -259,6 +260,7 @@ db = {}
 
 ------------------------------------------------------------------------------
 --- net
+--- see also: DCS World\API\DCS_ControlAPI.md
 ------------------------------------------------------------------------------
 
 --- @class net

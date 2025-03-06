@@ -29,9 +29,9 @@ Singleplayer only.
 
 - KA-50_3
   - Coldstart (WIP)
-- AH-64D_BLK_II
 - MI-8MT
 - MI-24P
+- AH-64D_BLK_II
 
 - Bf-109K-4
 - FW-190A8
