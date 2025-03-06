@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>logviewer</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.16/css/bootstrap-multiselect.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.16/js/bootstrap-multiselect.min.js"></script>
+
+    <style>
+        body { padding: 20px; font-family: monospace; }
+        table { width: 100%; }
+        th, td { white-space: pre-wrap; }
+        td:nth-child(1) { white-space: nowrap; }
+        .form-control, .btn { margin-bottom: 10px; }
+        .container { max-width: 100%; }
+        .btn-group { display: block; text-align: left; }
+        .custom-select { text-align: left; }
+        #resetButton { display: block; }
+        #analysis { display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <small>for full debug log, add in autoexec.cfg: log.set_output("dcs", "", log.ALL, log.FULL)</p>
+        <input type="file" id="fileInput" class="d-none">
+        <button id="uploadButton" class="btn btn-primary">Load dcs.log</button>
+        <div class="alert alert-warning" role="alert" id="analysis">
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-2">
+                <label for="levelFilter">Log level</label>
+                <select id="levelFilter" multiple="multiple"></select>
+            </div>
+            <div class="col-md-2">
+                <label for="moduleFilter">Module</label>
+                <select id="moduleFilter" class="custom-select"><option value="">All modules</option></select>
+            </div>
+            <div class="col-md-2">
+                <label for="exclude">Exclusions</label>
+                <select id="exclude" multiple="multiple">
+                    <option value="negative drag of payload">negative drag of payload</option>
+                    <option value="negative weight of payload">negative weight of payload</option>
+                    <option value="No property record">No property record</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label for="searchBox">Search</label>
+                <input type="text" id="searchBox" class="form-control" placeholder="enter 1 or more keywords">
+            </div>
+            <div class="col-md-2">
+                <label>&nbsp;</label>
+                <button id="resetButton" class="btn btn-secondary">Reset</button>
+            </div>
+        </div>
+        
+        <div class="table-responsive mt-3">
+            <table id="logTable" class="table table-striped table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Time</th>
+                        <th>Level</th>
+                        <th>Module</th>
+                        <th>Thread</th>
+                        <th>Message</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $("#uploadButton").click(() => $("#fileInput").click());
+            $("#resetButton").click(() => {
+                $("#levelFilter, #moduleFilter, #searchBox, #exclude").val("");
+                $('#levelFilter, #exclude').multiselect('refresh');
+                filterLogs();
+            });
+            $("#fileInput").change(handleFile);
+            $("#moduleFilter, #searchBox").on("input change", filterLogs);
+            $('#levelFilter').multiselect({
+                buttonWidth: '100%',
+                nonSelectedText: 'All selected',
+                includeSelectAllOption: true,
+                selectAllText: 'All selected',
+                onChange: filterLogs,
+                onSelectAll: filterLogs,
+                onDeselectAll: filterLogs
+            });
+            $('#exclude').multiselect({
+                buttonWidth: '100%',
+                nonSelectedText: 'None selected',
+                includeSelectAllOption: true,
+                selectAllText: 'All selected',
+                onChange: filterLogs,
+                onSelectAll: filterLogs,
+                onDeselectAll: filterLogs
+            });
+        });
+
+        function handleFile(event) {
+            let file = event.target.files[0];
+            if (!file) return;
+            
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                parseLog(e.target.result);
+            };
+            reader.readAsText(file);
+        }
+
+        function analysis() {
+            let logEntries = $("#logTable tbody tr");
+            let luaErrors = [];
+
+            logEntries.each(function () {
+                let message = $(this).find("td:nth-child(5)").text();
+                let match = message.match(/^(.*?)\s*\[string\s+"([^"]+\.lua)"\]:(\d+):\s(.+)/);
+
+                if (match) {
+                    let [, errorPrefix, luaFile, lineNumber, errorMessage] = match;
+                    luaErrors.push(`${luaFile}:${lineNumber} - ${errorMessage}`);
+                }
+            });
+
+            if (luaErrors.length) {
+                let errorList = `<p><b>LUA errors:</b></p><ul class="pl-3 py-0 my-0"><li>${luaErrors.join("</li><li>")}</li></ul>`;
+                $("#analysis").html(errorList).show();
+            } else {
+                $("#analysis").html("No Lua errors found.").show();
+            }
+        }
+
+
+        function parseLog(logText) {
+            let lines = logText.split("\n");
+            let levels = new Set(), modules = new Set();
+            let tbody = $("#logTable tbody");
+            tbody.empty();
+            
+            let currentEntry = null;
+            
+            lines.forEach(line => {
+                if (line.startsWith("===")) return;
+                
+                let match = line.match(/^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3})\s+(\S+)\s+(\S+)\s+\(([^)]+)\):\s+(.+)$/);
+                if (match) {
+                    if (currentEntry) tbody.append(currentEntry);
+                    let [_, time, level, module, thread, message] = match;
+                    levels.add(level);
+                    modules.add(module);
+                    currentEntry = $(`<tr data-level="${level}" data-module="${module}">
+                        <td>${time}</td>
+                        <td>${level}</td>
+                        <td>${module}</td>
+                        <td>${thread}</td>
+                        <td>${message}</td>
+                        <td contenteditable="true"></td>
+                    </tr>`);
+                } else if (currentEntry) {
+                    currentEntry.find("td:nth-child(5)").append("<br>" + line);
+                }
+            });
+            
+            if (currentEntry) tbody.append(currentEntry);
+            populateFilters(levels, modules);
+            filterLogs();
+            analysis();
+        }
+
+        function populateFilters(levels, modules) {
+            let levelSelect = $("#levelFilter").empty();
+            levels.forEach(l => levelSelect.append(`<option value="${l}">${l}</option>`));
+            
+            let moduleSelect = $("#moduleFilter").empty().append('<option value="">All modules</option>');
+            modules.forEach(m => moduleSelect.append(`<option value="${m}">${m}</option>`));
+            
+            $('#levelFilter').multiselect('rebuild');
+        }
+
+        function filterLogs() {
+            let selectedLevels = $("#levelFilter").val() || [];
+            let selectedModule = $("#moduleFilter").val();
+            let search = $("#searchBox").val().toLowerCase().trim();
+            let exclude = $("#exclude").val() || [];
+            
+            $("#logTable tbody tr").each(function() {
+                let rowLevel = $(this).data("level");
+                let rowModule = $(this).data("module");
+                let message = $(this).find("td:nth-child(5)").text().toLowerCase();
+                let visible = true;
+                
+                if (selectedLevels.length && !selectedLevels.includes(rowLevel)) visible = false;
+                if (selectedModule && rowModule !== selectedModule) visible = false;
+                if (search && !search.split(/\s+/).every(term => message.includes(term))) visible = false;
+                if (exclude.some(term => message.includes(term.toLowerCase()))) visible = false;
+                
+                $(this).toggle(visible);
+            });
+        }
+    </script>
+</body>
+</html>
