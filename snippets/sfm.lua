@@ -5,7 +5,7 @@ SFM_Data = {
     -- Aerodynamics config
     aerodynamics = {    -- Cx = Cx_0 + Cy^2*B2 +Cy^4*B4                more lift = more drag, B2 and B4 for exponential drag increase with lift
         Cy0 = 0.0,      -- lift coefficient at 0 AoA                   higher value = more lift at zero AoA
-        Mzalfa = 6.2,   -- pitch moment vs AoA                         higher value = more agile in pitch
+        Mzalfa = 6.2,   -- pitch moment vs AoA                         higher value = stronger pitch response
         Mzalfadt = 0.7, -- pitch damping vs AoA rate                   higher value = more stable, resists pitch oscillations
         kjx = 4.5,      -- roll damping coefficient                    higher value = more inertia, slower roll
         kjz = 0.00125,  -- yaw damping coefficient                     higher value = more inertia, slower yaw
