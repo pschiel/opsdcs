@@ -27,12 +27,13 @@
         "overrideHint": false
     },
     "runtime": {
-        "version": "Lua5.2",
+        "version": "Lua5.1",
         "requireLikeFunction": [],
         "frameworkVersions": [],
         "extensions": [
             ".lua",
-            ".lods"
+            ".lods",
+            ".dlg"
         ],
         "requirePattern": []
     },
