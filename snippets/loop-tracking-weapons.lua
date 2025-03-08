@@ -1,39 +1,59 @@
--- loop that tracks weapons and checks if they are in a zone
+-- weapon tracking script
+--
+-- usage:
+--  put script in mission start trigger
+--  add zones to check in zones table
+--  when weapon is in zone, flags get set e.g. "weapon_in_zone1"
 
+-- holds all weapons that are currently being tracked (by id)
 local weapons = {}
 
+-- zones to check
+local zones = { "zone1", "zone2" }
+
+-- time step in seconds for update loop
+local dt = 0.1
+
+-- for debugging
+local dbg = true
+
+-- event handler that listens for weapon shots
 local eventsHandler = {
     onEvent = function(self, event)
         if event.id == world.event.S_EVENT_SHOT then
             local weapon = event.weapon
-            trigger.action.outText("start tracking weapon " .. weapon.id_, 5)
+            if dbg then trigger.action.outText("start tracking weapon " .. weapon.id_, 5) end
             weapons[weapon.id_] = weapon
         end
     end
 }
 world.addEventHandler(eventsHandler)
 
-local function getDistance(pos1, pos2)
+-- distance check (3d distance, not like zone trigger)
+local function checkDistance(pos1, pos2, radius)
     local dx, dy, dz = pos1.x - pos2.x, pos1.y - pos2.y, pos1.z - pos2.z
-    return math.sqrt(dx * dx + dy * dy + dz * dz)
+    return dx * dx + dy * dy + dz * dz < radius * radius
 end
 
-local function trackWeapons()
+-- update loop
+local function loop()
+    -- check all weapons currently being tracked
     for id, weapon in pairs(weapons) do
         if weapon:isExist() then
-            local zone = trigger.misc.getZone("zone1")
-            local distance = getDistance(weapon:getPoint(), zone.point)
-            trigger.action.outText("distance to zone1: " .. distance, 5)
-            if distance < zone.radius then
-                trigger.action.outText("weapon " .. id .. " is in zone1", 5)
-                trigger.action.setUserFlag("weapon_in_zone1", 1)
+            -- check all zones
+            for _, zoneName in ipairs(zones) do
+                local zone = trigger.misc.getZone(zoneName)
+                if zone and checkDistance(weapon:getPoint(), zone.point, zone.radius) then
+                    trigger.action.setUserFlag("weapon_in_" .. zoneName, 1)
+                end
             end
         else
-            trigger.action.outText("stop tracking weapon " ..id, 5)
+            -- weapon gone, stop tracking
+            if dbg then trigger.action.outText("stop tracking weapon " ..id, 5) end
             weapons[id] = nil
         end
     end
-    timer.scheduleFunction(trackWeapons, nil, timer.getTime() + 0.1)
+    timer.scheduleFunction(loop, nil, timer.getTime() + dt)
 end
 
-timer.scheduleFunction(trackWeapons, nil, timer.getTime() + 0.1)
+timer.scheduleFunction(loop, nil, timer.getTime() + dt)
