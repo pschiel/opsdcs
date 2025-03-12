@@ -318,7 +318,7 @@ db = {}
 --- @field get_default_server_settings fun()
 --- @field get_my_player_id fun():number @Returns the playerID of the local player; returns 1 for server.
 --- @field get_name fun(playerID:number):string @Returns the name of a given player.
---- @field get_player_info fun(playerID:number, attribute:string|nil):table @Returns player attributes; specific attribute if provided.
+--- @field get_player_info fun(playerID:number, attribute:string|nil):net.playerinfo @Returns player attributes; specific attribute if provided.
 --- @field get_player_list fun():table @Returns a list of players currently connected to the server.
 --- @field get_server_host fun()
 --- @field get_server_id fun():number @Returns the playerID of the server; currently always 1.
@@ -367,6 +367,17 @@ db = {}
 --- @field stop_game fun()
 --- @field stop_network fun()
 --- @field trace fun() @Functionality unknown.
+
+--- @class net.playerinfo
+--- @field id number
+--- @field ipaddr string @ip:port
+--- @field lang string @en
+--- @field name string @playername, "Server" for dedicated server player id 1
+--- @field ping number
+--- @field side number @coalition.side
+--- @field slot string @slot (unitID, for multiseat: unitID_seatID), empty for "Server"
+--- @field started boolean
+--- @field ucid string @unique client id
 
 ------------------------------------------------------------------------------
 --- socket
