@@ -17,14 +17,26 @@ OpsdcsCrew = {
 
     --- @type string[] @supported types (@todo: autocheck, variants)
     aircraftTypes = {
+        -- heli
+        "AH-64D_BLK_II",
         "CH-47Fbl1",
-        "F-16C_50",
         "Ka-50_3",
+        "Mi-8MT",
+        "Mi-24P",
+        "OH-6A",
         "OH58D",
         "SA342L",
         "SA342M",
         "SA342Minigun",
         "UH-1H",
+        -- jet
+        "F-16C_50",
+        -- piston
+        "Bf-109K-4",
+        "FW-190A8",
+        "MosquitoFBMkVI",
+        "P-51D",
+        "SpitfireLFMkIX",
     },
 
     typeName = nil,                --- @type string? @player unit type
