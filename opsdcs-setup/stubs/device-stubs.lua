@@ -62,7 +62,7 @@ function CreateGauge(type) end
 --- @field arg_number number @argument number to be animated
 --- @field input table @input range from controller or parameter, e.g. {0,1}
 --- @field output table @output range for argument, e.g. {0,1}
---- @field controller userdata|nil @controller from LoRegisterPanelControls (for type=nil)
+--- @field controller userdata|nil @controller from LoRegisterPanelControls (for type=nil and type="cycled")
 --- @field params table|nil @parameters for controller function
 --- @field parameter_name string|nil @parameter name (for type="parameter")
 --- @field cycle_value number|nil @cycle value (for type="cycled")
