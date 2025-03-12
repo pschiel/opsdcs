@@ -96,12 +96,11 @@ function copy_to_mission_and_get_buffer() end
 function dbg_print() end
 
 --- Triggers command with value. Similar to avDevice:performClickableAction() but doesn't move the switch
---- 
 --- If sending a command to a device you do not own, you MUST pass a number to device_id.
 --- If the command is being listened for, the exact number will not matter.
---- @param device_id number | nil
+--- @param device_id number|nil
 --- @param command number
---- @param value? number
+--- @param value number|nil
 function dispatch_action(device_id, command, value) end
 
 --- Loads mission file

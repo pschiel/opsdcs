@@ -54,21 +54,19 @@ function SetGlobalCommand() end
 ------------------------------------------------------------------------------
 
 --- Creates a gauge
---- 
---- type "parameter": Set up as a parameter to be accessed across multiple Lua devices.
---- Requires parameter_name to be set.  Does not drive animation directly.
---- 
---- type "cycled": Values exceeding the input range will roll over, eg 1.1 -> 0.1
---- @param type string? Optional, can be set to "parameter" or "cycled"
+--- @param type string|nil @nil, "parameter", "cycled" or "external_arg" (see Gauge for usage)
 --- @return Gauge
 function CreateGauge(type) end
 
 --- @class Gauge
---- @field arg_number number
+--- @field arg_number number @argument number to be animated
 --- @field input table @input range from controller or parameter, e.g. {0,1}
 --- @field output table @output range for argument, e.g. {0,1}
---- @field controller userdata @controller from LoRegisterPanelControls (for type=nil)
---- @field parameter_name? string @parameter name (for type="parameter")
+--- @field controller userdata|nil @controller from LoRegisterPanelControls (for type=nil)
+--- @field params table|nil @parameters for controller function
+--- @field parameter_name string|nil @parameter name (for type="parameter")
+--- @field cycle_value number|nil @cycle value (for type="cycled")
+--- @field external_arg number|nil @external argument number (for type="external_arg")
 
 --- Returns controllers
 --- @return MainPanelControls
@@ -165,10 +163,9 @@ function copy_to_mission_and_get_buffer() end
 function dbg_print() end
 
 --- Triggers command with value. Similar to avDevice:performClickableAction() but doesn't move the switch.
---- 
 --- If sending a command to a device you do not own, you MUST pass a number to device_id.
 --- If the command is being listened for, the exact number will not matter.
---- @param device_id number | nil
+--- @param device_id number|nil
 --- @param command number
 --- @param value number
 function dispatch_action(device_id, command, value) end
@@ -309,7 +306,7 @@ function list_indication(device_id) end
 --- @return number, number @lat, lon
 function lo_to_geo_coords(pos) end
 
---- Loads mission (?) file
+--- Loads mission file
 --- @param file string @filepath
 --- @return function @chunk
 function load_mission_file(file) end
@@ -485,7 +482,7 @@ function UTF8_substring() end
 ------------------------------------------------------------------------------
 
 --- @class ParamHandle
---- @field get fun(self:ParamHandle) => number
+--- @field get fun(self:ParamHandle):number
 --- @field set fun(self:ParamHandle, value:number)
 
 ------------------------------------------------------------------------------
