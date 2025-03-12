@@ -54,8 +54,12 @@ function SetGlobalCommand() end
 ------------------------------------------------------------------------------
 
 --- Creates a gauge
---- type "parameter": parameter_name / arg_number / input e.g. {0,1} / output e.g. {0,1}
---- @param type string @nil uses controller, otherwise "parameter"
+--- 
+--- type "parameter": Set up as a parameter to be accessed across multiple Lua devices.
+--- Requires parameter_name to be set.  Does not drive animation directly.
+--- 
+--- type "cycled": Values exceeding the input range will roll over, eg 1.1 -> 0.1
+--- @param type string? Optional, can be set to "parameter" or "cycled"
 --- @return Gauge
 function CreateGauge(type) end
 
@@ -63,71 +67,71 @@ function CreateGauge(type) end
 --- @field arg_number number
 --- @field input table @input range from controller or parameter, e.g. {0,1}
 --- @field output table @output range for argument, e.g. {0,1}
---- @field controller any @controller from LoRegisterPanelControls (for type=nil)
---- @field parameter_name string @parameter name (for type="parameter")
+--- @field controller userdata @controller from LoRegisterPanelControls (for type=nil)
+--- @field parameter_name? string @parameter name (for type="parameter")
 
 --- Returns controllers
 --- @return MainPanelControls
 function LoRegisterPanelControls() end
 
 --- @class MainPanelControls
---- @field Panel_Rot_X
---- @field Panel_Shake_Y
---- @field Panel_Shake_Z
---- @field base_gauge_AngleOfAttack
---- @field base_gauge_AngleOfSlide
---- @field base_gauge_BarometricAltitude
---- @field base_gauge_CanopyPos
---- @field base_gauge_CanopyState
---- @field base_gauge_EngineLeftFuelConsumption
---- @field base_gauge_EngineLeftRPM
---- @field base_gauge_EngineLeftTemperatureBeforeTurbine
---- @field base_gauge_EngineRightFuelConsumption
---- @field base_gauge_EngineRightRPM
---- @field base_gauge_EngineRightTemperatureBeforeTurbine
---- @field base_gauge_FlapsPos
---- @field base_gauge_FlapsRetracted
---- @field base_gauge_Heading
---- @field base_gauge_HelicopterCollective
---- @field base_gauge_HelicopterCorrection
---- @field base_gauge_HorizontalAcceleration
---- @field base_gauge_IndicatedAirSpeed
---- @field base_gauge_LandingGearHandlePos
---- @field base_gauge_LateralAcceleration
---- @field base_gauge_LeftMainLandingGearDown
---- @field base_gauge_LeftMainLandingGearUp
---- @field base_gauge_MachNumber
---- @field base_gauge_MagneticHeading
---- @field base_gauge_NoseLandingGearDown
---- @field base_gauge_NoseLandingGearUp
---- @field base_gauge_Pitch
---- @field base_gauge_RadarAltitude
---- @field base_gauge_RateOfPitch
---- @field base_gauge_RateOfRoll
---- @field base_gauge_RateOfYaw
---- @field base_gauge_RightMainLandingGearDown
---- @field base_gauge_RightMainLandingGearUp
---- @field base_gauge_Roll
---- @field base_gauge_RudderPosition
---- @field base_gauge_SpeedBrakePos
---- @field base_gauge_StickPitchPosition
---- @field base_gauge_StickRollPosition
---- @field base_gauge_ThrottleLeftPosition
---- @field base_gauge_ThrottleRightPosition
---- @field base_gauge_TotalFuelWeight
---- @field base_gauge_TrueAirSpeed
---- @field base_gauge_VerticalAcceleration
---- @field base_gauge_VerticalVelocity
---- @field base_gauge_WOW_LeftMainLandingGear
---- @field base_gauge_WOW_NoseLandingGear
---- @field base_gauge_WOW_RightMainLandingGear
---- @field canopy
---- @field day_night_texture_switcher
---- @field head_shift_X
---- @field head_shift_Y
---- @field head_shift_Z
---- @field mirrors_draw
---- @field pilot_draw
+--- @field Panel_Rot_X userdata
+--- @field Panel_Shake_Y userdata
+--- @field Panel_Shake_Z userdata
+--- @field base_gauge_AngleOfAttack userdata
+--- @field base_gauge_AngleOfSlide userdata
+--- @field base_gauge_BarometricAltitude userdata
+--- @field base_gauge_CanopyPos userdata
+--- @field base_gauge_CanopyState userdata
+--- @field base_gauge_EngineLeftFuelConsumption userdata
+--- @field base_gauge_EngineLeftRPM userdata
+--- @field base_gauge_EngineLeftTemperatureBeforeTurbine userdata
+--- @field base_gauge_EngineRightFuelConsumption userdata
+--- @field base_gauge_EngineRightRPM userdata
+--- @field base_gauge_EngineRightTemperatureBeforeTurbine userdata
+--- @field base_gauge_FlapsPos userdata
+--- @field base_gauge_FlapsRetracted userdata
+--- @field base_gauge_Heading userdata
+--- @field base_gauge_HelicopterCollective userdata
+--- @field base_gauge_HelicopterCorrection userdata
+--- @field base_gauge_HorizontalAcceleration userdata
+--- @field base_gauge_IndicatedAirSpeed userdata
+--- @field base_gauge_LandingGearHandlePos userdata
+--- @field base_gauge_LateralAcceleration userdata
+--- @field base_gauge_LeftMainLandingGearDown userdata
+--- @field base_gauge_LeftMainLandingGearUp userdata
+--- @field base_gauge_MachNumber userdata
+--- @field base_gauge_MagneticHeading userdata
+--- @field base_gauge_NoseLandingGearDown userdata
+--- @field base_gauge_NoseLandingGearUp userdata
+--- @field base_gauge_Pitch userdata
+--- @field base_gauge_RadarAltitude userdata
+--- @field base_gauge_RateOfPitch userdata
+--- @field base_gauge_RateOfRoll userdata
+--- @field base_gauge_RateOfYaw userdata
+--- @field base_gauge_RightMainLandingGearDown userdata
+--- @field base_gauge_RightMainLandingGearUp userdata
+--- @field base_gauge_Roll userdata
+--- @field base_gauge_RudderPosition userdata
+--- @field base_gauge_SpeedBrakePos userdata
+--- @field base_gauge_StickPitchPosition userdata
+--- @field base_gauge_StickRollPosition userdata
+--- @field base_gauge_ThrottleLeftPosition userdata
+--- @field base_gauge_ThrottleRightPosition userdata
+--- @field base_gauge_TotalFuelWeight userdata
+--- @field base_gauge_TrueAirSpeed userdata
+--- @field base_gauge_VerticalAcceleration userdata
+--- @field base_gauge_VerticalVelocity userdata
+--- @field base_gauge_WOW_LeftMainLandingGear userdata
+--- @field base_gauge_WOW_NoseLandingGear userdata
+--- @field base_gauge_WOW_RightMainLandingGear userdata
+--- @field canopy userdata
+--- @field day_night_texture_switcher userdata
+--- @field head_shift_X userdata
+--- @field head_shift_Y userdata
+--- @field head_shift_Z userdata
+--- @field mirrors_draw userdata
+--- @field pilot_draw userdata
 
 --- ?
 gaugemeta = {}
@@ -160,8 +164,11 @@ function copy_to_mission_and_dofile() end
 function copy_to_mission_and_get_buffer() end
 function dbg_print() end
 
---- Triggers command with value. Similar to avDevice:performClickableAction() but doesn't move the switch
---- @param device_id number @or nil
+--- Triggers command with value. Similar to avDevice:performClickableAction() but doesn't move the switch.
+--- 
+--- If sending a command to a device you do not own, you MUST pass a number to device_id.
+--- If the command is being listened for, the exact number will not matter.
+--- @param device_id number | nil
 --- @param command number
 --- @param value number
 function dispatch_action(device_id, command, value) end
@@ -478,7 +485,7 @@ function UTF8_substring() end
 ------------------------------------------------------------------------------
 
 --- @class ParamHandle
---- @field get fun(self:ParamHandle):number
+--- @field get fun(self:ParamHandle) => number
 --- @field set fun(self:ParamHandle, value:number)
 
 ------------------------------------------------------------------------------

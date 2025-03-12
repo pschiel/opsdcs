@@ -371,7 +371,7 @@ function Get_RFGU_GUISettings_Preset(name) return end
 ---------------------------------------------------------------------------
 
 --- @class PluginProperties
---- @description plugin properties
+--- @description plugin properties, many of these fields are optional.
 --- @field binaries table<string> @strings representing names of binary executable files (.dll) to inject
 --- @field developerName string @name of developer
 --- @field developerLink string @link to developer
