@@ -349,7 +349,7 @@ function print_message_to_user(text) end
 --- @param content string @content
 function save_to_mission(file, content) end
 
---- Sets aircraft draw argument value
+--- Sets aircraft draw argument value (equivalent to ed_fm_set_draw_args)
 --- @param argument number
 --- @param value number
 function set_aircraft_draw_argument_value(argument, value) end

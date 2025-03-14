@@ -260,13 +260,13 @@ world = {}
 --- @field S_EVENT_MISSION_END number @Mission End (12)
 --- @field S_EVENT_TOOK_CONTROL number @Took Control (13)
 --- @field S_EVENT_REFUELING_STOP number @Refueling Stop (14)
---- @field S_EVENT_BIRTH number @Birth (15)
+--- @field S_EVENT_BIRTH number @Birth (15) - works
 --- @field S_EVENT_HUMAN_FAILURE number @Human Failure (16)
 --- @field S_EVENT_DETAILED_FAILURE number @Detailed Failure (17)
 --- @field S_EVENT_ENGINE_STARTUP number @Engine Startup (18)
 --- @field S_EVENT_ENGINE_SHUTDOWN number @Engine Shutdown (19)
 --- @field S_EVENT_PLAYER_ENTER_UNIT number @Player Enter Unit (20)
---- @field S_EVENT_PLAYER_LEAVE_UNIT number @Player Leave Unit (21)
+--- @field S_EVENT_PLAYER_LEAVE_UNIT number @Player Leave Unit (21) - works
 --- @field S_EVENT_PLAYER_COMMENT number @Player Comment (22)
 --- @field S_EVENT_SHOOTING_START number @Shooting Start (23)
 --- @field S_EVENT_SHOOTING_END number @Shooting End (24)
@@ -279,8 +279,8 @@ world = {}
 --- @field S_EVENT_LANDING_AFTER_EJECTION number @Landing After Ejection (31)
 --- @field S_EVENT_PARATROOPER_LENDING number @Paratrooper Lending (32)
 --- @field S_EVENT_DISCARD_CHAIR_AFTER_EJECTION number @Discard Chair After Ejection (33)
---- @field S_EVENT_WEAPON_ADD number @Weapon Add (34)
---- @field S_EVENT_TRIGGER_ZONE number @Trigger Zone (35)
+--- @field S_EVENT_WEAPON_ADD number @Weapon Add (34) - works NOT
+--- @field S_EVENT_TRIGGER_ZONE number @Trigger Zone (35) - works NOT
 --- @field S_EVENT_LANDING_QUALITY_MARK number @Landing Quality Mark (36)
 --- @field S_EVENT_BDA number @BDA (37)
 --- @field S_EVENT_AI_ABORT_MISSION number @AI Abort Mission (38)
@@ -289,21 +289,21 @@ world = {}
 --- @field S_EVENT_PLAYER_SELF_KILL_PILOT number @Player Self Kill Pilot (41)
 --- @field S_EVENT_PLAYER_CAPTURE_AIRFIELD number @Player Capture Airfield (42)
 --- @field S_EVENT_EMERGENCY_LANDING number @Emergency Landing (43)
---- @field S_EVENT_UNIT_CREATE_TASK number @Unit Create Task (44)
---- @field S_EVENT_UNIT_DELETE_TASK number @Unit Delete Task (45)
+--- @field S_EVENT_UNIT_CREATE_TASK number @Unit Create Task (44) - works NOT
+--- @field S_EVENT_UNIT_DELETE_TASK number @Unit Delete Task (45) - works NOT
 --- @field S_EVENT_SIMULATION_START number @Simulation Start (46)
---- @field S_EVENT_WEAPON_REARM number @Weapon Rearm (47)
+--- @field S_EVENT_WEAPON_REARM number @Weapon Rearm (47) - works NOT in server
 --- @field S_EVENT_WEAPON_DROP number @Weapon Drop (48)
---- @field S_EVENT_UNIT_TASK_COMPLETE number @Unit Task Complete (49)
---- @field S_EVENT_UNIT_TASK_STAGE number @Unit Task Stage (50)
+--- @field S_EVENT_UNIT_TASK_COMPLETE number @Unit Task Complete (49) - works NOT
+--- @field S_EVENT_UNIT_TASK_STAGE number @Unit Task Stage (50) - works NOT
 --- @field S_EVENT_MAC_EXTRA_SCORE number @MAC Extra Score (51)
 --- @field S_EVENT_MISSION_RESTART number @Mission Restart (52)
 --- @field S_EVENT_MISSION_WINNER number @Mission Winner (53)
 --- @field S_EVENT_RUNWAY_TAKEOFF number @Runway Takeoff (54)
 --- @field S_EVENT_RUNWAY_TOUCH number @Runway Touch (55)
 --- @field S_EVENT_MAC_LMS_RESTART number @MAC LMS Restart (56)
---- @field S_EVENT_SIMULATION_FREEZE number @Simulation Freeze (57)
---- @field S_EVENT_SIMULATION_UNFREEZE number @Simulation Unfreeze (58)
+--- @field S_EVENT_SIMULATION_FREEZE number @Simulation Freeze (57) - works
+--- @field S_EVENT_SIMULATION_UNFREEZE number @Simulation Unfreeze (58) - works
 --- @field S_EVENT_HUMAN_AIRCRAFT_REPAIR_START number @Human Aircraft Repair Start (59)
 --- @field S_EVENT_HUMAN_AIRCRAFT_REPAIR_FINISH number @Human Aircraft Repair Finish (60)
 --- @field S_EVENT_MAX number @Max (61)
