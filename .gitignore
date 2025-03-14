@@ -5,9 +5,12 @@
 /opsdcs-camcontrol
 /opsdcs-crew/Scripts/opsdcs-crew/sounds
 /opsdcs-fm/build
+/opsdcs-fm/demangled
 /opsdcs-fm/headers
 /opsdcs-fm/dumps
 /opsdcs-fm/*.txt
+/opsdcs-fm/*.py
+/opsdcs-fm/*.bat
 /opsdcs-pmca
 /opsdcs-samsites
 /opsdcs-setup/stubs/fm-stubs.cpp
