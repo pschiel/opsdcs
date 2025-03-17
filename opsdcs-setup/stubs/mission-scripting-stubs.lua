@@ -415,7 +415,7 @@ trigger.flareColor = {}
 --- @field addOtherCommandForCoalition fun(coalition:number, name:string, userFlagName:string, userFlagValue:string) @Adds a coalition-specific command to the "F10 Other" menu.
 --- @field addOtherCommandForGroup fun(groupId:number, name:string, userFlagName:string, userFlagValue:string) @Adds a group-specific command to the "F10 Other" menu.
 --- @field arrowToAll fun(coalition:number, id:number, startPoint:vec3, endPoint:vec3, color:table, fillColor:table, lineType:number, readOnly:boolean, message:string) @Creates an arrow on the F10 map. 0=no line, 1=solid, 2=dashed, 3=dotted, 4=dot dash, 5=long dash, 6=two dash
---- @field circleToAll fun()
+--- @field circleToAll fun(coalition:number, id:number, center:vec3, radius:number, color:table, fillColor:table, lineType:number, readOnly:boolean, message:string)
 --- @field ctfColorTag fun(unitName:string, smokeColor:number) @Creates a smoke plume behind a specified aircraft. When passed 0 for smoke type the plume will be disabled. When triggering the on the same unit with a different color the plume will simply change color. (trigger.smokeColor)
 --- @field deactivateGroup fun(Group:Group) @Deactivates the specified group.
 --- @field effectSmokeBig fun(position:vec3, preset:number, density:number, name:string) @Creates a large smoke effect at a specified position with a specified preset (1-4=smoke/fire, 5-7=smoke), density (0-1), and name. (trigger.effectSmokePreset)
@@ -472,7 +472,7 @@ trigger.action = {}
 --- @field getUserFlag fun(flag:string):number @Returns the value of a user flag.
 --- @field getZone fun(zoneName:string):TriggerZone @Returns a trigger zone table of a given name
 --- @field addZone fun(zoneData:table):TriggerZone @Adds a trigger zone to the mission with the provided data.
---- @field addTrigger fun(trig:env.mission.trig):env.mission.trig @Adds a trigger to the mission.
+--- @field addTrigger fun(trig:env.mission.trig|table):env.mission.trig @Adds a trigger to the mission.
 --- @type trigger.misc
 trigger.misc = {}
 
@@ -635,7 +635,7 @@ net = {}
 --- @description Represents an object with body, unique name, category and type.
 --- @field Category Object.Category
 --- @field Desc Object.Desc
---- @field destroy fun(self:Object) @Destroys the object, physically removing it from the game world without creating an event.
+--- @field destroy fun(self:Object|table) @Destroys the object, physically removing it from the game world without creating an event.
 --- @field getAttributes fun()
 --- @field getCategory fun(self:Object):Object.Category @Returns the category of the object as an enumerator.
 --- @field getDesc fun(self:Object):Object.Desc @Returns a description table of the object, with entries depending on the object's category.

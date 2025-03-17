@@ -86,7 +86,7 @@ os = {}
 --- @field LoIsOwnshipExportAllowed fun()
 --- @field LoIsSensorExportAllowed fun()
 --- @field LoLoCoordinatesToGeoCoordinates fun(x:number, z:number):number, number @ll to geo (Always)
---- @field LoSetCameraPosition fun(pos:Position3) @Set camera position (Ownship)
+--- @field LoSetCameraPosition fun(pos:Position3|table) @Set camera position (Ownship)
 --- @field LoSetCommand fun(command:number, value:number) @Set command (Ownship)
 --- @field LoSimulationOnActivePause fun()
 --- @field LoSimulationOnPause fun()

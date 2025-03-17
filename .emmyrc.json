@@ -2,7 +2,7 @@
     "completion": {
         "autoRequire": true,
         "autoRequireFunction": "require",
-        "autoRequireNamingConvention": "keep",
+        "autoRequireNamingConvention": "camelCase",
         "callSnippet": false,
         "postfix": "@"
     },
@@ -13,7 +13,7 @@
         "disable": [
             "undefined-global",
             "missing-parameter",
-            "missing-return-value"
+            "need-import"
         ],
         "globals": [],
         "globalsRegex": [],
@@ -41,7 +41,7 @@
         "ignoreDir": [],
         "ignoreGlobs": [],
         "library": [
-            "E:/Work/dcs/opsdcs/opsdcs-setup/stubs"
+            "F:/Work/dcs/opsdcs/opsdcs-setup/stubs"
         ],
         "workspaceRoots": [],
         "preloadFileSize": 1048576,
