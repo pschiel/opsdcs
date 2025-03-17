@@ -2,7 +2,7 @@
 --- @param filename string @filename
 --- @param data table @table to save
 --- @return boolean @status: true if successful, false on error
-function saveData(filename, data)
+local function saveData(filename, data)
     local file, err = io.open(filename, "w+")
     if err then return false end
     file:write(net.lua2json(data))
@@ -13,7 +13,7 @@ end
 --- loads data from a json file
 --- @param filename string @filename
 --- @return table|boolean @data loaded from file, false on error
-function loadData(filename)
+local function loadData(filename)
     local file, err = io.open(filename, "r")
     if err then return false end
     local json = file:read("*a")

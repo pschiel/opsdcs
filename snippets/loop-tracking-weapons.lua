@@ -59,12 +59,14 @@ local function loop()
             for _, zoneName in ipairs(zones) do
                 local zone = getZone(zoneName)
                 local inZone = false
-                if zone.type == 2 then
-                    inZone = mist.pointInPolygon(weapon:getPoint(), zone.verticies, tonumber(zone.props.height))
-                else
-                    inZone = checkDistance(weapon:getPoint(), { x = zone.x, y = 0, z = zone.y }, zone.radius)
+                if zone then
+                    if zone.type == 2 then
+                        inZone = mist.pointInPolygon(weapon:getPoint(), zone.verticies, tonumber(zone.props.height))
+                    else
+                        inZone = checkDistance(weapon:getPoint(), { x = zone.x, y = 0, z = zone.y }, zone.radius)
+                    end
                 end
-                if inZone then
+                if zone and inZone then
                     local desc = weapon:getDesc()
                     local weaponMatch = false
                     for key, value in pairs(zone.props) do

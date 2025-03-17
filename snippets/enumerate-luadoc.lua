@@ -1,9 +1,9 @@
 --- recursive enumeration into emmylua annotations
---- @param table tbl @table to enumerate (_G for globals)
---- @param string name @table name
---- @param number maxLvl @maximum recursive depth level
---- @param number lvl @current depth level
---- @param table visited @visited tables to avoid infinite recursion
+--- @param tbl table @table to enumerate (_G for globals)
+--- @param name string @table name
+--- @param maxLvl number @maximum recursive depth level
+--- @param lvl number @current depth level
+--- @param visited table @visited tables to avoid infinite recursion
 function enumerate(tbl, name, maxLvl, lvl, visited)
     lvl = lvl or 1
     visited = visited or {}

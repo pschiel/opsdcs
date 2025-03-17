@@ -182,7 +182,7 @@ env.warehouses.warehouses = {}
 --- @field getTime fun():number @Returns the model time in seconds to three decimal places since the mission has started. Time pauses with the game.
 --- @field getTime0 fun():number @Returns the mission start time in seconds. Useful for calculating elapsed time with timer.getAbsTime().
 --- @field removeFunction fun(functionId:number) @Removes a scheduled function by its functionId, preventing it from executing.
---- @field scheduleFunction fun(functionToCall:function, functionArgs:table, modelTime:number):number @Schedules a function to run at a specified future model time. Returns a functionId.
+--- @field scheduleFunction fun(functionToCall:function, functionArgs:any, modelTime:number):number @Schedules a function to run at a specified future model time. Returns a functionId.
 --- @field setFunctionTime fun(functionId:number, modelTime:number) @Reschedules an already scheduled function to run at a different model time.
 --- @type timer
 timer = {}
@@ -239,7 +239,7 @@ atmosphere = {}
 --- @field onEvent fun(event:table) @Calls all world event handlers onEvent() with given event
 --- @field removeEventHandler fun(handler:EventHandler) @Removes the specified event handler from handling events.
 --- @field removeJunk fun(searchVolume:table):number @Searches a defined area to remove craters, wreckage, and debris within the volume, excluding scenery objects. (world.VolumeType)
---- @field searchObjects fun(category:table|number, searchVolume:number, handler:function, data:any):table @Searches a defined volume for specified objects and can execute a function on each found object. (Object.Category, world.VolumeType)
+--- @field searchObjects fun(category:table|number, searchVolume:table, handler:function, data:any):table @Searches a defined volume for specified objects and can execute a function on each found object. (Object.Category, world.VolumeType)
 --- @type world
 world = {}
 
@@ -428,7 +428,7 @@ trigger.flareColor = {}
 --- @field markToAll fun(id:number, text:string, point:vec3, readOnly:boolean, message:string) @Adds a mark point to all on the F10 map.
 --- @field markToCoalition fun(id:number, text:string, point:vec3, coalitionId:number, readOnly:boolean, message:string) @Adds a mark point to a coalition on the F10 map.
 --- @field markToGroup fun(id:number, text:string, point:vec3, groupId:number, readOnly:boolean, message:string) @Adds a mark point to a group on the F10 map.
---- @field markupToAll fun(shapeId:number, coalition:number, id:number, point1:vec3, param:..., color:table, fillColor:table, lineType:number, readOnly:boolean, message:string) @Creates a defined shape on the F10 map.
+--- @field markupToAll fun(shapeId:number, coalition:number, id:number, point1:vec3, color:table, fillColor:table, lineType:number, readOnly:boolean, message:string) @Creates a defined shape on the F10 map. Additional points can be passed after "point1"
 --- @field outSound fun(soundfile:string) @Plays a sound file to all players.
 --- @field outSoundForCoalition fun(coalition:number, soundfile:string) @Plays a sound file to all players in the specified coalition.
 --- @field outSoundForCountry fun(country:number, soundfile:string) @Plays a sound file to all players in the specified country.
@@ -441,7 +441,7 @@ trigger.flareColor = {}
 --- @field outTextForUnit fun(unitId:number, text:string, displayTime:number, clearview:boolean) @Displays text to players in a specified unit for a set time.
 --- @field pushAITask fun(Group:Group, taskIndex:number) @Pushes the specified task index to the front of the tasking queue for the group.
 --- @field quadToAll fun(coalition:number, id:number, point1:vec3, point2:vec3, point3:vec3, point4:vec3, color:table, fillColor:table, lineType:number, readOnly:boolean, message:string) @Creates a quadrilateral on the F10 map. 0=no line, 1=solid, 2=dashed, 3=dotted, 4=dot dash, 5=long dash, 6=two dash
---- @field radioTransmission fun(filename:string, point:vec3, modulation:enum, loop:boolean, frequency:number, power:number, name:string) @Transmits an audio file from a specific point on a given frequency. (radio.modulation)
+--- @field radioTransmission fun(filename:string, point:vec3, modulation:number, loop:boolean, frequency:number, power:number, name:string) @Transmits an audio file from a specific point on a given frequency. (radio.modulation)
 --- @field rectToAll fun(coalition:number, id:number, startPoint:vec3, endPoint:vec3, color:table, fillColor:table, lineType:number, readOnly:boolean, message:string) @Creates a rectangle on the F10 map. 0=no line, 1=solid, 2=dashed, 3=dotted, 4=dot dash, 5=long dash, 6=two dash
 --- @field removeMark fun(id:number) @Removes a mark from the F10 map.
 --- @field removeOtherCommand fun(name:string) @Removes the specified command from the "F10 Other" radio menu.
@@ -495,9 +495,9 @@ coord = {}
 
 --- @class missionCommands
 --- @description The missionCommands singleton allows for greater access and flexibility of use for the F10 Other radio menu. Added commands can contain sub-menus and directly call lua functions.
---- @field addCommand fun(name:string, path:table|nil, functionToRun:function, anyArgument:any):table @Adds a command to the "F10 Other" menu.
---- @field addCommandForCoalition fun(coalitionSide:number, name:string, path:table|nil, functionToRun:function, anyArgument:any):table @Adds a coalition-specific command to the F10 menu.
---- @field addCommandForGroup fun(groupId:number, name:string, path:table|nil, functionToRun:function, anyArgument:any):table @Adds a group-specific command to the F10 menu.
+--- @field addCommand fun(name:string, path:table|nil, functionToRun:function, arg:any, ...:any):table @Adds a command to the "F10 Other" menu.
+--- @field addCommandForCoalition fun(coalitionSide:number, name:string, path:table|nil, functionToRun:function, arg:any, ...:any):table @Adds a coalition-specific command to the F10 menu.
+--- @field addCommandForGroup fun(groupId:number, name:string, path:table|nil, functionToRun:function, arg:any, ...:any):table @Adds a group-specific command to the F10 menu.
 --- @field addSubMenu fun(name:string, path:table|nil):table @Creates a submenu in the F10 radio menu.
 --- @field addSubMenuForCoalition fun(coalitionSide:number, name:string, path:table|nil):table @Creates a coalition-specific submenu in the F10 menu.
 --- @field addSubMenuForGroup fun(groupId:number, name:string, path:table|nil):table @Creates a group-specific submenu in the F10 menu.
@@ -735,7 +735,7 @@ CoalitionObject = {}
 --- @field getSeats fun()
 --- @field getSensors fun(self:Unit):table @Returns a table of available sensors.
 --- @field hasCarrier fun()
---- @field hasSensors fun(self:Unit, sensorType:enum, subCategory:enum):boolean @Returns true if the unit has the specified sensors.
+--- @field hasSensors fun(self:Unit, sensorType:number, subCategory:number):boolean @Returns true if the unit has the specified sensors.
 --- @field isActive fun(self:Unit):boolean @Returns true if the unit is activated.
 --- @field markDisembarkingTask fun()
 --- @field openRamp fun()
@@ -849,7 +849,7 @@ Weapon = {}
 --- @description Weapon description table.
 --- @field category Weapon.Category
 --- @field warhead.type Weapon.WarheadType
---- @field warhead.mass Mass
+--- @field warhead.mass number @Mass
 
 --- @class Weapon.DescMissile:Weapon.Desc
 --- @description Missile description table.
@@ -984,9 +984,9 @@ Group.Category = {}
 
 --- @class Controller
 --- @description Represents a controller of a unit or group.
---- @field getDetectedTargets fun(self:Controller, detectionType1:enum, detectionType2:enum, detectionType3:enum,...):table @Returns a table of detected targets.
+--- @field getDetectedTargets fun(self:Controller, detectionType1:number, detectionType2:number, detectionType3:number,...):table @Returns a table of detected targets.
 --- @field hasTask fun(self:Controller):boolean @Returns true if the controller has a task.
---- @field isTargetDetected fun(self:Controller, target:Object, detectionType1:enum, detectionType2:enum, detectionType3:enum,...):table @Returns details if the target is detected.
+--- @field isTargetDetected fun(self:Controller, target:Object, detectionType1:number, detectionType2:number, detectionType3:number,...):table @Returns details if the target is detected.
 --- @field knowTarget fun(self:Controller, object:Object, type:boolean, distance:boolean) @Forces the controller to become aware of a specified target.
 --- @field popTask fun(self:Controller) @Removes the top task from the tasking queue.
 --- @field pushTask fun(self:Controller, task:Task) @Pushes a task to the front of the tasking queue.
@@ -994,7 +994,7 @@ Group.Category = {}
 --- @field setAltitude fun(self:Controller, altitude:number, keep:boolean, altType:string) @Sets the altitude for aircraft, with an option to maintain it at waypoints.
 --- @field setCommand fun(self:Controller, command:Command) @Sets a command, an instant action with no impact on active tasks.
 --- @field setOnOff fun(self:Controller, value:boolean) @Enables or disables the AI controller, not applicable to aircraft or helicopters.
---- @field setOption fun(self:Controller, optionId:number|enum, optionValue:number|enum) @Sets behavior options that affect all tasks performed by the controller.
+--- @field setOption fun(self:Controller, optionId:number, optionValue:number) @Sets behavior options that affect all tasks performed by the controller.
 --- @field setSpeed fun(self:Controller, speed:number, keep:boolean) @Sets the speed for the controlled group, with an option to maintain it at waypoints.
 --- @field setTask fun(self:Controller, task:Task) @Sets a specified task to the units or groups associated with the controller.
 --- @type Controller
@@ -1091,14 +1091,14 @@ Controller.Detection = {}
 
 --- @class Spot
 --- @description Represents a spot from laser or IR-pointer.
---- @field createInfraRed fun(source:Object, localRef:Vec3, point:Vec3):Spot @Creates an infrared ray visible with night vision. localRef is optional; use nil if not needed.
---- @field createLaser fun(source:Object, localRef:Vec3, point:Vec3, laserCode:number|nil):Spot @Creates a laser ray. localRef is optional; use nil if not needed. If laserCode is absent, defaults to an IR beam.
+--- @field createInfraRed fun(source:Object, localRef:vec3, point:vec3):Spot @Creates an infrared ray visible with night vision. localRef is optional; use nil if not needed.
+--- @field createLaser fun(source:Object, localRef:vec3, point:vec3, laserCode:number|nil):Spot @Creates a laser ray. localRef is optional; use nil if not needed. If laserCode is absent, defaults to an IR beam.
 --- @field destroy fun(self:Object) @Destroys the object, removing it from the game world without an event. If used with a group, the entire group will be destroyed.
 --- @field getCategory fun(self:Object):Spot.Category @Returns the category and sub-category of the object.
 --- @field getCode fun(self:Spot):number @Returns the laser code used for laser designation. Default and max value is 1688.
---- @field getPoint fun(self:Object):Vec3 @Returns the x, y, and z coordinates of the objects position in 3D space.
+--- @field getPoint fun(self:Object):vec3 @Returns the x, y, and z coordinates of the objects position in 3D space.
 --- @field setCode fun(self:Spot, code:number) @Sets the laser code for laser designation. Default and max value is 1688.
---- @field setPoint fun(self:Spot, vec3:Vec3) @Sets the destination point for the spot.
+--- @field setPoint fun(self:Spot, vec3:vec3) @Sets the destination point for the spot.
 --- @type Spot
 Spot = {}
 

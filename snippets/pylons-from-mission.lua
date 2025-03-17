@@ -1,5 +1,5 @@
 --- Returns pylon CLSIDs from mission file
---- @param string unitName @unit name (not player name)
+--- @param unitName string @unit name (not player name)
 --- @return table @table with CLSIDs
 function getPylonsFromMission(unitName)
     for _, coalition in pairs(env.mission.coalition) do

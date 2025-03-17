@@ -7,7 +7,7 @@ function lcg_randomseed(seed)
     lcg_seed = seed or timer.getTime()
     lcg_a = 1664525
     lcg_c = 1013904223
-    lcg_m = 2^32
+    lcg_m = 4294967296
 end
 
 --- Generates a random number between 0 and 1
