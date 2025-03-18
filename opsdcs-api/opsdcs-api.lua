@@ -67,8 +67,8 @@ function OpsdcsApi:onSimulationFrame()
     if self.server == nil or self.isMissionLoading then return end
     local client = self.server:accept()
     if client then
-        client:settimeout(60)
-        local request, err = client:receive()
+        client:settimeout(0)
+        local request, err = client:receive("*l")
         if not err then
             local method, path, slug, queryString = request:match("^(%w+)%s(/[^/%?]+)/?([^%?]*)%??(.*)%sHTTP/%d%.%d$")
             local headers = self:getHeaders(client)
