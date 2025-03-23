@@ -325,12 +325,12 @@ function UTF8_substring() end
 --- @field level number @element level (starting from 1)
 --- @field collimated boolean @if true, element is collimated (infinite focus)
 --- @field isvisible boolean @when false, not visible and rendered only to stencil buffer
---- @field z_enabled boolean @enable z (coordinate?)
---- @field use_mipfilter boolean @mipmap filtering ?
+--- @field z_enabled boolean @enable z (in coordinates ???)
+--- @field use_mipfilter boolean @mipmap filtering between mipmaps ???
 --- @field additive_alpha boolean @???
 --- @field change_opacity boolean @???
 --- @field isdraw boolean @if false, element is not drawn
---- @field primitivetype PrimitiveType @"triangles", "lines", ..?
+--- @field primitivetype PrimitiveType @"triangles", "lines", (...others???)
 --- @field vertices vec3[] @list of vertices
 --- @field indices number[] @list of vertex indices (3 per triangle, 1 per point on line)
 --- @field width number @line width
@@ -343,9 +343,9 @@ function UTF8_substring() end
 --- @field formats table @string format(s?), e.g. {"%s"} or {"%03.0f"}
 --- @field tex_params table @center x, center y, scale x, scale y
 --- @field blend_mode blend_mode @blend mode 0-5, see Scripts\Aircrafts\_Common\Cockpit\elements_defs.lua
---- @field geometry_hosts table @list of geometry hosts (bounding box elements) ??
+--- @field geometry_hosts table @list of geometry hosts (bounding box elements) ???
 --- @field tex_coords table @texture coordinates
---- @field state_tex_coords table @states of texture coordinates
+--- @field state_tex_coords table @states of texture coordinates (what if tex_coords also used ???)
 
 --- @alias ElementType string
 ---| '"ceBoundingMeshBox"'
