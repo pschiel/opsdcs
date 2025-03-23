@@ -21,7 +21,7 @@
         "enables": []
     },
     "hint": {
-        "paramHint": false,
+        "paramHint": true,
         "indexHint": false,
         "localHint": false,
         "overrideHint": false
@@ -41,7 +41,7 @@
         "ignoreDir": [],
         "ignoreGlobs": [],
         "library": [
-            "F:/Work/dcs/opsdcs/opsdcs-setup/stubs"
+            "E:/Work/dcs/opsdcs/opsdcs-setup/stubs"
         ],
         "workspaceRoots": [],
         "preloadFileSize": 1048576,

@@ -319,18 +319,18 @@ function UTF8_substring() end
 --- @field parent_element string @parent element name
 --- @field element_params string[] @list of shared element parameters
 --- @field material string @material name, see MakeMaterial()
---- @field init_pos vec2 @initial position
---- @field init_rot vec3 @initial rotation (degrees)
+--- @field init_pos vec2|vec3 @initial position
+--- @field init_rot vec2 @initial rotation (degrees)
 --- @field h_clip_relation h_clip_relations @hardware clipping relations (pixel test/modify)
 --- @field level number @element level (starting from 1)
---- @field collimated boolean @if true, element is collimated (HUD)
+--- @field collimated boolean @if true, element is collimated (infinite focus)
 --- @field isvisible boolean @when false, not visible and rendered only to stencil buffer
---- @field z_enabled boolean @enable z
---- @field use_mipfilter boolean @
+--- @field z_enabled boolean @enable z (coordinate?)
+--- @field use_mipfilter boolean @mipmap filtering ?
 --- @field additive_alpha boolean @???
 --- @field change_opacity boolean @???
 --- @field isdraw boolean @if false, element is not drawn
---- @field primitivetype PrimitiveType @"triangles", "lines"
+--- @field primitivetype PrimitiveType @"triangles", "lines", ..?
 --- @field vertices vec3[] @list of vertices
 --- @field indices number[] @list of vertex indices (3 per triangle, 1 per point on line)
 --- @field width number @line width
@@ -343,7 +343,9 @@ function UTF8_substring() end
 --- @field formats table @string format(s?), e.g. {"%s"} or {"%03.0f"}
 --- @field tex_params table @center x, center y, scale x, scale y
 --- @field blend_mode blend_mode @blend mode 0-5, see Scripts\Aircrafts\_Common\Cockpit\elements_defs.lua
---- @field geometry_hosts table @list of geometry hosts (bounding box elements)
+--- @field geometry_hosts table @list of geometry hosts (bounding box elements) ??
+--- @field tex_coords table @texture coordinates
+--- @field state_tex_coords table @states of texture coordinates
 
 --- @alias ElementType string
 ---| '"ceBoundingMeshBox"'
@@ -389,7 +391,12 @@ function UTF8_substring() end
 ---| '"parameter_compare_with_number"'
 ---| '"line_object_set_point_using_parameters"'
 ---| '"screenspace_position"'
+---| '"set_origin_to_cockpit_shape"'
 ---| '"show"'
+---| '"change_texture_state_using_parameter"'
+---| '"change_color_using_parameter"'
+---| '"fov_control"'
+---| '"increase_render_target_counter"'
 --[[
 {"change_color_when_parameter_equal_to_number", param_nr, number, red, green, blue}
 {"text_using_parameter", param_nr, format_nr}
@@ -401,8 +408,13 @@ function UTF8_substring() end
 {"parameter_in_range", param_nr, greaterthanvalue, lessthanvalue} -- if greaterthanvalue < param < lessthanvalue then visible
 {"parameter_compare_with_number", param_nr, number} -- if param == number then visible
 {"line_object_set_point_using_parameters", point_nr, param_x, param_y, gain_x, gain_y}
-{"screenspace_position", a, b, c} -- ??? e.g.: {"screenspace_position", 2, -(aspect - 2 * size), 0}
-{"show"} -- ???
+{"screenspace_position", a, b, c} -- ??? e.g.: {"screenspace_position", 2, -(aspect - 2 * size), 0}, a might be axis
+{"set_origin_to_cockpit_shape"} -- sets origin to cockpit shape
+{"show"} -- unsure, mostly seen in screenspace elements (root element) 
+{"change_texture_state_using_parameter", param_nr} -- change texture state using state_tex_coords[param_value]
+{"change_color_using_parameter", ???} -- 
+{"fov_control", ???}
+{"increase_render_target_counter", ???}
 --]]
 --- @class h_clip_relations
 --- @field NULL number @0 - No clipping

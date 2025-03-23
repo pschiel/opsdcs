@@ -137,6 +137,7 @@ net = {}
 --- @field dispatchDigitalAction fun()
 --- @field enter_with_dyngroup fun()
 --- @field exitProcess fun() @Commands to close the DCS application.
+--- @field exportToMiz fun(filename:string) @Exports the current mission to a .miz file.
 --- @field getATCradiosData fun()
 --- @field getAchievementsUiInfo fun()
 --- @field getAirTankerID fun()
@@ -294,3 +295,4 @@ DCS = {}
 --- @field onHideChatPanel fun()
 --- @field onServerRegistrationFail fun(code)
 --- @field onShowRadioMenu fun(size)
+--- @field onWebServerRequest fun() @handler for web server requests (default port 8088)

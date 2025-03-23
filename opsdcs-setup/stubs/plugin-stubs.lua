@@ -133,7 +133,7 @@ function mount_vfs_liveries_path(path) return end
 --- @param path string @path
 function mount_vfs_model_path(path) return end
 
---- Mounts a sound path
+--- Mounts a sound path (obsolete)
 --- @param path string @path
 function mount_vfs_sound_path(path) return end
 
@@ -538,6 +538,9 @@ function Get_RFGU_GUISettings_Preset(name) return end
 ---@field Guns table
 ---@field ammo_type_default number
 ---@field ammo_type table
+-- sound
+---@field sound_name string
+---@field sounderName string
 
 ---------------------------------------------------------------------------
 --- Radio commands data (comm.lua)
