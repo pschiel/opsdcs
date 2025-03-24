@@ -16,7 +16,7 @@
 
 ## Injecting code at runtime
 
-For the Mission Scripting environment, just send the code (snippet) to the DCS LUA Runner extension (^k ^s to setup hotkey).
+For mission and gui environments, just send the code (snippet) to the DCS LUA Runner extension (^k ^s to setup hotkey).
 
 
 ## Enable debugging
@@ -59,3 +59,71 @@ Create `.emmyrc.json` in root directory of your project, and set path to stubs i
 3. You can workaround in both cases by using `dofile('/path/to/script.lua')` (either within a hook callback, or within a "DO SCRIPT" action) to force correct path
 
 4. To debug other scripts besides mission script, put the debug snippet in the any file (Export.lua, entry.lua, ...) where package/require is available
+
+
+## Get a shell
+
+Install https://www.msys2.org/
+
+Add to VSCode terminals:
+```json
+"terminal.integrated.profiles.windows": {
+    "MINGW64": {
+        "path": "C:\\Dev\\msys64\\usr\\bin\\bash.exe",
+        "args": ["--login", "-i"],
+        "env": {
+            "MSYSTEM": "MINGW64",
+            "CHERE_INVOKING": "1"
+        }
+    }
+}
+```
+
+Add to Windows Terminal:
+```json
+{
+    "guid": "{a0a1a2a3-a4a5-a6a7-a8a9-aaabacadaeaf}",
+    "name": "MSYS2 MinGW64",
+    "commandline": "C:\\Dev\\msys64\\usr\\bin\\bash.exe -l -c \"/mingw64.sh\"",
+    "startingDirectory": "%USERPROFILE%",
+    "icon": "C:\\Dev\\msys64\\msys2.exe"
+}
+```
+
+Start script ming64.sh (in `C:/Dev/msys64`)
+```bash
+#!/usr/bin/env bash
+export MSYSTEM=MINGW64
+export CHERE_INVOKING=1
+exec /usr/bin/bash -l
+```
+
+Useful commands:
+
+- Find files with "pilot" and "edm" in name
+
+  ```bash
+  find /e/Games/DCS\ World -iname "*pilot*edm"
+  ```
+
+- Log file realtime viewing with filter
+
+  ```bash
+  tail -f /c/Users/user/Saved\ Games/DCS/Logs/dcs.log | grep -i a4e
+  ```
+
+- Update mingw64
+
+  ```bash
+  pacman -Syu
+  ```
+
+- Some packages
+
+  ```bash
+  pacman -S neovim
+  pacman -S tmux
+  pacman -S git
+  pacman -S python
+  pacman -S python-pip
+  ```

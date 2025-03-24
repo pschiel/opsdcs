@@ -230,9 +230,9 @@ db = {}
 --- @field getGroundWindComponents fun()
 --- @field getGroundWindVelDir fun()
 --- @field getTemperatureAndPressureAtPoint fun(pos) @returns temperature and pressure at a point. pos = {position = {x=0,y=0,z=0}}
---- @field getWindAtPoint fun()
+--- @field getWindAtPoint fun(pos)
 --- @field getWindComponents fun()
---- @field getWindVelDir fun()
+--- @field getWindVelDir fun(pos)
 --- @field initAtmospere fun()
 --- @field updateSpeedDirForOtherLevel fun()
 

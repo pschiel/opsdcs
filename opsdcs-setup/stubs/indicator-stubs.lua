@@ -230,9 +230,9 @@ function get_Viewports() end
 function list_cockpit_params() end
 
 --- Returns list indication
---- @param device_id number
+--- @param indicator_id number
 --- @return string @indication text
-function list_indication(device_id) end
+function list_indication(indicator_id) end
 
 --- Converts local coordinates to lat/lon
 --- @param pos vec3
@@ -322,12 +322,12 @@ function UTF8_substring() end
 --- @field init_pos vec2|vec3 @initial position
 --- @field init_rot vec2 @initial rotation (degrees)
 --- @field h_clip_relation h_clip_relations @hardware clipping relations (pixel test/modify)
---- @field level number @element level (starting from 1)
+--- @field level number @element clipping level (starting from 1)
 --- @field collimated boolean @if true, element is collimated (infinite focus)
 --- @field isvisible boolean @when false, not visible and rendered only to stencil buffer
 --- @field z_enabled boolean @enable z (in coordinates ???)
 --- @field use_mipfilter boolean @mipmap filtering between mipmaps ???
---- @field additive_alpha boolean @???
+--- @field additive_alpha boolean @if true, final.rgb = src.rbg*alpha + dst.rgb, if false, final.rgb = src.rgb*alpha + dst.rgb*(1-alpha)
 --- @field change_opacity boolean @???
 --- @field isdraw boolean @if false, element is not drawn
 --- @field primitivetype PrimitiveType @"triangles", "lines", (...others???)
@@ -342,7 +342,7 @@ function UTF8_substring() end
 --- @field stringdefs table @string font vertical_size, horizontal_size, horizontal_spacing, vertical_spacing
 --- @field formats table @string format(s?), e.g. {"%s"} or {"%03.0f"}
 --- @field tex_params table @center x, center y, scale x, scale y
---- @field blend_mode blend_mode @blend mode 0-5, see Scripts\Aircrafts\_Common\Cockpit\elements_defs.lua
+--- @field blend_mode blend_mode @blend mode 0-5, incorporates both isvisible field and additive alpha, see Scripts\Aircrafts\_Common\Cockpit\elements_defs.lua
 --- @field geometry_hosts table @list of geometry hosts (bounding box elements) ???
 --- @field tex_coords table @texture coordinates
 --- @field state_tex_coords table @states of texture coordinates (what if tex_coords also used ???)
@@ -416,6 +416,7 @@ function UTF8_substring() end
 {"fov_control", ???}
 {"increase_render_target_counter", ???}
 --]]
+
 --- @class h_clip_relations
 --- @field NULL number @0 - No clipping
 --- @field COMPARE number @1 - Test of equality of element level value with the already existing level (set by previously rendered elements). If the level at the given pixel is the same as of the element, the pixel is drawn.
@@ -459,3 +460,27 @@ h_clip_relations = {}
 -- ccMainPanel
 -- ccPadlock
 -- ccUV_26
+
+--- exported values in indicator init
+indicator_type = indicator_types.COMMON
+purposes = { render_purpose.GENERAL, render_purpose.HUD_ONLY_VIEW }
+page_subsets = {
+    [0] = "path/to/page1.lua",
+    [1] = "path/to/page2.lua"
+}
+pages = {
+    [0] = {},
+    [1] = {0},
+    [2] = {0, 1}
+}
+init_pageID = 0
+use_parser = false
+pages_by_mode = {}
+brightness_sensitive_materials = {}
+opacity_sensitive_materials = {}
+color_sensitive_materials = {}
+is_colored = true
+day_color = { 0, 0.5, 0 }
+night_color = { 0, 1.0, 0 }
+used_render_mask = "interleave.dds"
+always_show_ground = false

@@ -25,8 +25,8 @@ os = {}
 --- @class Export
 --- @description Export functions (available in Export.lua)
 --- @field GetClickableElements fun():table @Gets clickable elements (Misc)
---- @field GetDevice fun(id:number):table @Gets device (Misc)
---- @field GetIndicator fun(id:number):table @Gets indicator (Misc)
+--- @field GetDevice fun(id:number):table @Gets avDevice (Misc)
+--- @field GetIndicator fun(id:number):table @Gets ccIndicator (Misc)
 --- @field LoGeoCoordinatesToLoCoordinates fun(longitude_degrees:number, latitude_degrees:number):vec3 @geo to ll (Always)
 --- @field LoGetADIPitchBankYaw fun():number, number, number @Gets ADI pitch, bank and yaw (Ownship)
 --- @field LoGetAccelerationUnits fun():table @Gets acceleration units (Ownship)
@@ -95,3 +95,32 @@ os = {}
 --- @field LuaExportBeforeNextFrame fun() @Works just before every simulation frame.
 --- @field LuaExportStart fun() @Works once just before mission start.
 --- @field LuaExportStop fun() @Works once just after mission stop.
+
+function a_cockpit_highlight(id, name, size, plugin) end
+function a_cockpit_highlight_indication(id, indicator, name, size, plugin) end
+function a_cockpit_highlight_position(id, x, y, z, dimX, dimY, dimZ) end
+function a_cockpit_lock_player_seat(number) end
+function a_cockpit_param_save_as(source, destination) end
+function a_cockpit_perform_clickable_action(device, command, value, plugin) end
+function a_cockpit_pop_actor() end
+function a_cockpit_push_actor(number) end
+function a_cockpit_remove_highlight(id) end
+function a_cockpit_unlock_player_seat() end
+function a_start_listen_command(command, flag, count, min, max, device) end
+function a_start_listen_event(event, flag) end
+function c_argument_in_range(argument, min, max, plugin) end
+function c_cockpit_highlight_visible(id) end
+function c_cockpit_param_equal_to(param, value) end
+function c_cockpit_param_in_range(param, min, max) end
+function c_cockpit_param_is_equal_to_another(param1, param2) end
+function c_indication_txt_equal_to(id, name, value) end
+function c_start_wait_for_user(flagCont, flagBack) end
+function c_stop_wait_for_user() end
+function copy_to_mission_and_dofile() end
+function copy_to_mission_and_get_buffer() end
+function dbg_print() end
+
+function get_param_handle(param) end
+function list_cockpit_params() end
+function list_indication(indicator_id) end
+function show_param_handles_list() end

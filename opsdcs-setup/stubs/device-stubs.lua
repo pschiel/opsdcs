@@ -297,9 +297,9 @@ function get_Viewports() end
 function list_cockpit_params() end
 
 --- Returns list indication
---- @param device_id number
+--- @param indicator_id number
 --- @return string @indication text
-function list_indication(device_id) end
+function list_indication(indicator_id) end
 
 --- Converts local coordinates to lat/lon
 --- @param pos vec3
@@ -477,6 +477,9 @@ function UTF8_substring() end
 --- @field remove_purpose fun()
 --- @field set_page fun()
 
+--- @class ccKneeboard:ccIndicator
+--- @field Add_Map_Page fun(page_subset_id:number, script_path:string)
+
 ------------------------------------------------------------------------------
 --- Param handle
 ------------------------------------------------------------------------------
@@ -566,6 +569,7 @@ function post_initialize() end
 --- update function (used with make_default_activity)
 function update() end
 
+-- exported values in clickabledata
 show_element_boxes = true
 show_element_parent_boxes = true
 show_indicator_borders = true
@@ -577,6 +581,9 @@ use_click_and_pan_mode = true
 --- @param type string @aicraft type
 --- @param name string @livery name or "default"
 function find_custom_livery(type, name) end
+
+--- exported values in mainpanel_init
+--- todo..
 
 -- avDevice classes:
 -- avABU11Clock
