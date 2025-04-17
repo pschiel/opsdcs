@@ -337,15 +337,15 @@ db = {}
 --- @field load_next_mission fun()
 --- @field log fun(message:string) @Writes an "INFO" entry to the DCS log file.
 --- @field lua2json fun(lua:any):table @Converts a Lua value to a JSON string.
---- @field missionlist_append fun()
---- @field missionlist_clear fun()
---- @field missionlist_delete fun()
---- @field missionlist_get fun()
---- @field missionlist_get_installed_theatres fun()
---- @field missionlist_move fun()
---- @field missionlist_run fun()
---- @field missionlist_set_loop fun()
---- @field missionlist_set_shuffle fun()
+--- @field missionlist_append fun(mission):any @Adds a mission to the mission list.
+--- @field missionlist_clear fun():any @Clears the mission list.
+--- @field missionlist_delete fun(mission_id:number):any @Deletes a mission from the mission list.
+--- @field missionlist_get fun():table @Returns mission list data (missionList:table, missionTheatres:table, listStartIndex:number, listShuffle:bool, listLoop:bool)
+--- @field missionlist_get_installed_theatres fun():table @Returns install theatres (in key "theatres")
+--- @field missionlist_move fun(old_id:number, new_id:number):any @Moves a mission in the mission list.
+--- @field missionlist_run fun(mission_id:number):any @Runs a mission from the mission list.
+--- @field missionlist_set_loop fun(loop:boolean):any @Sets the mission list to loop or not.)
+--- @field missionlist_set_shuffle fun(shuffle:boolean):any @Sets the mission list to shuffle or not.
 --- @field recv_chat fun() @Functionality unknown.
 --- @field restart fun()
 --- @field screenshot_del fun()

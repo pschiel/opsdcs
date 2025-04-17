@@ -235,11 +235,14 @@ atmosphere = {}
 --- @field addEventHandler fun(handler:EventHandler) @Adds a function as an event handler that executes when a simulator event occurs.
 --- @field getAirbases fun(coalitionId:number|nil):table @Returns a table of airbase objects for a specified coalition or all airbases if no coalition is specified. (coalition.side)
 --- @field getMarkPanels fun():table @Returns a table of mark panels and shapes drawn within the mission.
+--- @field getPersistenceData fun(name:string) @Read persistence data identified by name. Returns Lua-value stored in this miz/sav by a given name or nil if no value found.
 --- @field getPlayer fun():Unit @Returns a table representing the single unit object in the game set as "Player".
 --- @field onEvent fun(event:table) @Calls all world event handlers onEvent() with given event
 --- @field removeEventHandler fun(handler:EventHandler) @Removes the specified event handler from handling events.
 --- @field removeJunk fun(searchVolume:table):number @Searches a defined area to remove craters, wreckage, and debris within the volume, excluding scenery objects. (world.VolumeType)
 --- @field searchObjects fun(category:table|number, searchVolume:table, handler:function, data:any):table @Searches a defined volume for specified objects and can execute a function on each found object. (Object.Category, world.VolumeType)
+--- @field setPersistenceHandler fun(name:string, handler:function) @Registers a handler for generating persistent data when saving simulation state.
+--- @field weather world.weather
 --- @type world
 world = {}
 
@@ -309,6 +312,13 @@ world = {}
 --- @field S_EVENT_MAX number @Max (61)
 --- @type world.event
 world.event = {}
+
+--- @class world.weather
+--- @field getFogThickness fun():number @Get the current fog thickness in meters. Returns zero if fog is not present.
+--- @field getFogVisibilityDistance fun():number @Get the current maximum visibility distance in meters. Returns zero if fog is not present.
+--- @field setFogAnimation fun(...) @Sets fog animation keys. Time is set in seconds and relative to the current simulation time, where time=0 is the current moment. Time must be increasing. Previous animation is always discarded despite the data being correct.
+--- @field setFogThickness fun(thickness:number) @Instantly sets fog thickness in meters. The current fog animation is always discarded. Set zero to disable the fog. Actual limits: [100; 5000]
+--- @field setFogVisibilityDistance fun(visibility:number) @Instantly sets the maximum visibility distance of fog at sea level when looking at the horizon. In meters. The current fog animation is always discarded. Set zero to disable the fog. Actual limits: [100, 100;000]
 
 --- @class world.BirthPlace
 --- @description birth places
