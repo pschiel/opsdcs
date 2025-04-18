@@ -220,6 +220,7 @@ net = {}
 --- @field reloadOptions fun()
 --- @field reloadUserScripts fun()
 --- @field restartMission fun()
+--- @field saveMissionTo fun(filename:string, saveMission:function, pathOrigMiz:filename) @saves mission to filename (saveMission gets called with miz object for modifications)
 --- @field selfKillPilot fun()
 --- @field sendRCD_Callback fun()
 --- @field setBoardNumResourcesDialogData fun()
@@ -244,6 +245,7 @@ net = {}
 --- @field spawnPlayer fun()
 --- @field stopMission fun() @Commands to stop the mission.
 --- @field takeTrackControl fun()
+--- @field toggleDTC fun(unitType:string|nil, onOff:boolean, unknown:boolean)
 --- @field unlockKeyboardInput fun()
 --- @field unlockMouseInput fun()
 --- @field unsetViewRearm fun()
