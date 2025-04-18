@@ -121,7 +121,7 @@ Useful commands:
 - Some packages
 
   ```bash
-  pacman -S neovim
+  pacman -S mingw-w64-x86_64-neovim
   pacman -S tmux
   pacman -S git
   pacman -S python

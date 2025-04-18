@@ -2,20 +2,23 @@
 
 if Goldeneye then return end -- do not load twice
 
+-- package.cpath = package.cpath .. ';C:/Users/ops/.vscode/extensions/tangzx.emmylua-0.8.20-win32-x64/debugger/emmy/windows/x64/?.dll'
+-- local dbg = require("emmy_core")
+-- dbg.tcpConnect("localhost", 9966)
+
 Goldeneye = {
     options = {
-        debug = true,    --- @type boolean @debug mode, set true for ingame debug messages
-        timeDelta = 1.0, --- @type number @time delta in seconds for recon update interval
+        debug = true, --- @type boolean @debug mode, set true for ingame debug messages
     },
 
-    --- @type string[] @available aircraft types
+    --- @type string[] @available aircraft types. definitions in aircraft/*.lua
     aircraftTypes = {
         "F-16C_50",
         "F-5E-3",
         "UH-1H",
     },
 
-    --- @type string[] @available sensor types
+    --- @type string[] @available sensor types. definitions in sensors/*.lua
     sensorTypes = {
         "Testsensor",
         "Omera-33",
@@ -25,8 +28,8 @@ Goldeneye = {
     },
 
     basedir = GoldeneyeBasedir or "", --- @type string @path to Scripts/goldeneye
-    aircraft = {},                    --- @type table<string,Aircraft> @aircraft by type
-    sensors = {},                     --- @type table<string,Sensor> @sensors by type
+    aircraft = {},                    --- @type table<string,Aircraft> @supported aircraft by type
+    sensors = {},                     --- @type table<string,Sensor> @all sensors by type
     players = {},                     --- @type table<number,Unit> @current recon players by id
     groups = {},                      --- @type table<number,GroupInfo> @current recon groups by id
     scannedObjects = {},              --- @type table<number,Object> @scanned objects by id
@@ -71,7 +74,7 @@ function Goldeneye:log(msg, duration)
     end
 end
 
---- load script (from inside mission or from file system)
+--- loads a script (from inside mission or from file system)
 --- @param filename string @filename relative to basedir
 function Goldeneye:loadScript(filename)
     self:log("loading " .. filename)
@@ -82,6 +85,7 @@ function Goldeneye:loadScript(filename)
     end
 end
 
+--- loads aircraft and sensor data
 function Goldeneye:loadPluginData()
     for _, aircraftType in ipairs(self.aircraftTypes) do
         self:loadScript("aircraft/" .. aircraftType .. ".lua")
@@ -94,7 +98,7 @@ end
 
 ------------------------------------------------------------------------------
 
---- start script (setup event handler, add player in SP)
+--- start Goldeneye (setup event handler, add player in SP)
 function Goldeneye:start()
     self:log("start")
     self:loadPluginData()
@@ -108,7 +112,7 @@ function Goldeneye:start()
     self.isRunning = true
 end
 
---- stop script
+--- stop Goldeneye (remove event handler, remove menu)
 function Goldeneye:stop()
     self:log("stop")
     for index, handler in world.eventHandlers do
@@ -125,24 +129,15 @@ end
 --- @param event Event @event
 function Goldeneye:onEvent(event)
     if event.id == world.event.S_EVENT_BIRTH then
+        self:log("event: S_EVENT_BIRTH (handled)")
         if not event.initiator:getPlayerName() then return end
         self:addPlayer(event.initiator)
     elseif event.id == world.event.S_EVENT_PLAYER_LEAVE_UNIT then
+        self:log("event: S_EVENT_PLAYER_LEAVE_UNIT (handled)")
         self:removePlayer(event.initiator)
-    elseif event.id == world.event.S_EVENT_WEAPON_REARM then
-        if not event.initiator:getPlayerName() then return end
-        if self:isReconAllowed(event.initiator) then
-            if not self.players[event.initiator:getID()] then
-                self:log("recon allowed after rearm, adding player")
-                self:addPlayer(event.initiator)
-            end
-        else
-            if self.players[event.initiator:getID()] then
-                self:log("recon not allowed after rearm, removing player")
-                self:removePlayer(event.initiator)
-            end
-        end
     else
+        -- takeoff, runway takeoff
+        -- unit lost, kill, dead
         self:genericOnEvent(event)
     end
 end
@@ -159,7 +154,7 @@ function Goldeneye:genericOnEvent(event)
     self:log("event: " .. self.eventNamesById[event.id])
 end
 
---- main update loop for recording @TODO global or by player?
+--- main update loop for recording @TODO schedule by player/sensor
 function Goldeneye:update()
     if not world.getPlayer() then
         return
@@ -172,26 +167,28 @@ function Goldeneye:update()
     }
     self:applyRotation(sensor.position.x, sensor.position.y, 0)
     self:searchObjects(sensor)
-    timer.scheduleFunction(self.update, self, timer.getTime() + self.options.timeDelta)
+    timer.scheduleFunction(self.update, self, timer.getTime() + 1)
 end
 
 ------------------------------------------------------------------------------
 
---- add player or client unit, check for recon eligibility, adds menu commands
+--- add player to recon if allowed
 --- @param unit Unit @unit
 function Goldeneye:addPlayer(unit)
-    local unitId = unit:getID()
+    local unitId = unit:getID() -- ME id
     local unitType = unit:getTypeName()
+    local playerName = unit:getPlayerName()
     local group = unit:getGroup()
     local groupId = group:getID()
-    self:log(string.format("add player: %s (%s) (id %d), group %s (id %d)", unit:getName(), unit:getPlayerName(), unitId, group:getName(), groupId))
+    self:log(string.format("add player: %s (%s), id %d, group %s (id %d)",
+        unit:getName(), playerName, unitId, group:getName(), groupId))
     if not self:isReconAllowed(unit) then return end
     if self.groups[groupId] then
-        self:log("group already has a player, ignoring")
+        self:log("group already has a recon enabled player, ignoring")
         return
     end
     self.players[unitId] = unit
-    self.groups[groupId] = { 
+    self.groups[groupId] = {
         player = unit,
         menuitems = {},
         unitType = unitType,
@@ -200,12 +197,14 @@ function Goldeneye:addPlayer(unit)
     self:refreshMenu(groupId)
 end
 
---- Remove player and cleanup groups if needed
+--- remove player from recon
 --- @param unit Unit @unit to remove
 function Goldeneye:removePlayer(unit)
+    if not unit or unit.dead then
+        return
+    end
     local unitId = unit:getID()
     if not self.players[unitId] then
-        self:log("player not active, ignoring")
         return
     end
     local group = unit:getGroup()
@@ -218,35 +217,6 @@ function Goldeneye:removePlayer(unit)
     self.groups[groupId] = nil
 end
 
---- Returns pylon CLSIDs from mission file
---- @param string unitName @unit name (not player name)
---- @return table @table with CLSIDs
-function Goldeneye:getPylonsFromMission(unitName)
-    for _, coalition in pairs(env.mission.coalition) do
-        if coalition.country then
-            for _, country in ipairs(coalition.country) do
-                if country.plane and country.plane.group then
-                    for _, group in ipairs(country.plane.group) do
-                        for _, unit in ipairs(group.units) do
-                            if unit.name == unitName then
-                                local clsids = {}
-                                if unit.payload and unit.payload.pylons then
-                                    for _, pylon in pairs(unit.payload.pylons) do
-                                        for _, clsid in pairs(pylon) do
-                                            clsids[clsid] = true
-                                        end
-                                    end
-                                end
-                                return clsids
-                            end
-                        end
-                    end
-                end
-            end
-        end
-    end
-end
-
 --- checks if player unit is allowed to do recon
 --- @param unit Unit @player unit
 --- @return boolean @true if allowed
@@ -254,18 +224,26 @@ function Goldeneye:isReconAllowed(unit)
     local unitId = unit:getID()
     local unitType = unit:getTypeName()
     self:log(string.format("player id %d, aircraft type: %s", unitId, unitType))
-    -- @TODO check unit type, name?
-    -- for _, ammo in ipairs(unit:getAmmo()) do
-    --     if self.aircraft[unitType].allowedAmmoTypes[ammo.desc.typeName] == nil then
-    --         self:log("recon allowed: no (due to ammo: " .. ammo.desc.typeName .. ")")
-    --         return false
-    --     end
-    -- end
+    if not self.aircraft[unitType] then
+        self:log("recon allowed: no (unsupported aircraft)")
+        return false
+    end
+    -- ammo check
+    local ammo = unit:getAmmo()
+    if ammo then
+        for _, ammo in ipairs(ammo) do
+            if self.aircraft[unitType].allowedAmmoTypes == nil
+                or self.aircraft[unitType].allowedAmmoTypes[ammo.desc.typeName] == nil then
+                self:log("recon allowed: no (due to ammo: " .. ammo.desc.typeName .. ")")
+                return false
+            end
+        end
+    end
     self:log("recon allowed: yes")
     return true
 end
 
---- checks if player unit is allowed to select payload / rearm @TODO group/unit?
+--- checks if player unit is allowed to select payload
 --- @param groupId number @group id
 --- @return boolean @true if allowed
 function Goldeneye:isSelectPayloadAllowed(groupId)
@@ -275,7 +253,10 @@ end
 
 function Goldeneye:toggleRecord(groupId, index)
     local group = self.groups[groupId]
-    if not group.payload then self:log("No payload selected") return end
+    if not group.payload then
+        self:log("No payload selected")
+        return
+    end
     group.isRecording[index] = not group.isRecording[index]
     self:log(string.format("Recording %s for group %d", group.isRecording[index] and "started" or "stopped", groupId))
     self:refreshMenu(groupId)
@@ -326,34 +307,34 @@ function Goldeneye:refreshMenu(groupId)
     end
 end
 
---- Create payload selection menu for a group
+--- create payload selection menu for a group
 --- @param groupId number @group id
 --- @param parentPath table @parent menu path
 function Goldeneye:createPayloadMenu(groupId, parentPath)
     local group = self.groups[groupId]
     if not group then return end
-    
+
     local aircraft = self.aircraft[group.unitType]
     if not aircraft or not aircraft.payloads then return end
-    
+
     for _, payload in ipairs(aircraft.payloads) do
         missionCommands.addCommandForGroup(groupId, payload.name, parentPath, self.selectPayload, self, groupId, payload)
     end
 end
 
---- Select a payload for a group
+--- select a payload for a group
 --- @param groupId number @group id
 --- @param payload table @selected payload
 function Goldeneye:selectPayload(groupId, payload)
     local group = self.groups[groupId]
     if not group then return end
-    
+
     local aircraft = self.aircraft[group.unitType]
     if not aircraft or not aircraft.payloads then return end
-    
+
     group.payload = payload
     self:log(string.format("Selected payload '%s' for group %d", payload.name, groupId))
-    
+
     -- Refresh the menu to show the current selection
     self:refreshMenu(groupId)
 end
@@ -422,7 +403,10 @@ function Goldeneye:camViewToggle(groupId, mountIndex)
         return
     end
     local group = self.groups[groupId]
-    if not group.payload then self:log("No payload selected") return end
+    if not group.payload then
+        self:log("No payload selected")
+        return
+    end
     self.activeCamViewMount = mountIndex
     local code = "Export.LoSetCommand(1708)"
     net.dostring_in("gui", code)
@@ -567,8 +551,6 @@ function Goldeneye:searchObjects(sensor)
     world.searchObjects(Object.Category.STATIC, volume, onFoundObject, sensor)
     world.searchObjects(Object.Category.SCENERY, volume, onFoundObject, sensor)
 end
-
-function Goldeneye:recordObject(object) end
 
 ------------------------------------------------------------------------------
 

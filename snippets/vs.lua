@@ -2,8 +2,8 @@
 
 local cy = 904215 -- vaziani
 local cx = -319621
-local n = 2000 -- total number of units
-local r = 10000 -- radius
+local n = 1 -- total number of units
+local r = 1000 -- radius
 
 local aircraft = {
     [1] = {
@@ -30,7 +30,7 @@ local aircraft = {
     },
     [2] = {
         type = "Soldier M4",
-        country = country.id.RUSSIA,
+        country = country.id.USA,
         category = Group.Category.GROUND,
         payload = {
             -- ["pylons"] = {
