@@ -9,26 +9,27 @@ livery = {
         -- Name of section in model
         "pilot_F18C_helmet",
         
-        -- Layer
-        -- DIFFUSE            0    Base Color
-        -- NORMAL             1    Normals/Depth and Depth Affects (ie Rain/Scratches on Glass, Panel Lines and Rivets.
-        -- SPECULAR           2    (Replaced by RoughMet Map w/ DCS 2.5) Surface Properties for Surface Flare Intensity, Width and Reflection
-        -- DECAL              3    Decal Layer, a opacity layer for adding Decals w/ out changing the base color layer.
-        -- DIRT               4    Layer used for Dirty Build Up on an Object
-        -- DAMAGE             5    Layer Used for Procedural Damage Volumetric (Small Scuffs -> Bullet Holes -> Large Holes -> Removed Surfaces)
-        -- PUDDLES            6    Used to Place Water/Puddles on Surfaces (Puddles on Runways etc)
-        -- SNOW               7    Used to Place Snow on Surfaces (Snow on Buildings/Bunkers/Runways etc)
-        -- SELF_ILLUMINATION  8    Used to Make a Texture Self Illuminated (Diffuse = Color, Alpha = Strength)
-        -- AMBIENT OCCLUSION  9    (Replaced w/ RoughMet Map w/ DCS 2.5) Used to Place Ambient Occlusions on Models
-        -- DAMAGE             10   Used to Place Damage Diffuse Color (Appearance of Dirt/Burn Marks)
-        -- ROUGHMET           13   Used for PBR Surface Properties, (R = AO dark/light, G = Roughness shiny/dull, B = Metalness nometal/metal)
-        -- OPACITY            14   Used for Surface Opacity (Mainly for Glass Material, or Textures for Meshes) 
+        -- Texture channel/type
+        -- DIFFUSE            0    Diffuse layer pre PBR, Base Color layer for PBR 
+        -- NORMAL             1    Normals/depth (ie. rain/scratches on glass, panel lines, rivets)
+        -- DECAL              3    Decal layer, a opacity layer for adding decals without changing the base color layer
+        -- DIRT               4    Layer used for dirt buildup on an object
+        -- DAMAGE             5    Layer used for procedural damage volumetric (small scuffs -> bullet holes -> large holes -> removed surfaces)
+        -- PUDDLES            6    Used to place water/puddles on surfaces (puddles on runways etc)
+        -- SNOW               7    Used to place snow on surfaces (snow on buildings/bunkers/runways etc)
+        -- SELF_ILLUMINATION  8    Used to make a texture self illuminated (diffuse = color, alpha = strength)
+        -- DAMAGE             10   Used to place damage diffuse color (appearance of dirt/burn marks around)
+        -- ROUGHMET           13   Used for PBR surface properties
+        --                         Red   = ambient occlusion level (black = 100%, white = 0%)
+        --                         Green = microsurface, roughness/smoothness (black = smooth/shiny, white = rough/dull)
+        --                         Blue  = reflectivity, metal/dielectric (black = dielectric, white = metal)
+        -- OPACITY            14   Used for surface opacity (mainly for glass material, or textures for meshes) 
         DIFFUSE,
         
-        -- texture file
+        -- texture filename (with or without extension)
         "NameOfTexture",
         
-        -- true:  loads texture file from VFS (can use everything mounted with mount_vfs_texture_path)
+        -- true:  loads texture file from VFS (everything mounted with mount_vfs_texture_path)
         -- false: loads texture from this livery folder
         false
     }
