@@ -12,4 +12,4 @@ livery = {
 -- SNOW = 7
 -- SELF_ILLUMINATION = 8
 -- AMBIENT_OCCLUSION = 9
--- ROUGHNESS_METALLIC = 13
+-- ROUGHNESS_METALLIC = 13 (blue = metallic, green = glossy/matte, red = AO)

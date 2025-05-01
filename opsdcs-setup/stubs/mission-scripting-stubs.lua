@@ -511,7 +511,7 @@ coord = {}
 --- @field addSubMenu fun(name:string, path:table|nil):table @Creates a submenu in the F10 radio menu.
 --- @field addSubMenuForCoalition fun(coalitionSide:number, name:string, path:table|nil):table @Creates a coalition-specific submenu in the F10 menu.
 --- @field addSubMenuForGroup fun(groupId:number, name:string, path:table|nil):table @Creates a group-specific submenu in the F10 menu.
---- @field doAction fun()
+--- @field doAction fun(index:number) @Executes the action for the menu item with specified index in the F10 menu.
 --- @field removeItem fun(path:table|nil) @Removes an item or submenu from the F10 radio menu.
 --- @field removeItemForCoalition fun(coalitionSide:number, path:table|nil) @Removes a coalition-specific item or submenu from the F10 menu.
 --- @field removeItemForGroup fun(groupId:number, path:table|nil) @Removes a group-specific item or submenu from the F10 menu.

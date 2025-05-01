@@ -1,0 +1,8 @@
+-- rearm/refuel:     179 > 973 > 966       (f1)     or: command 1560
+-- ground power on:  179 > 973 > 967 > 966 (f2 f1) 
+-- ground power off: 179 > 973 > 967 > 967 (f2 f2)
+-- repair:           179 > 973 > 968       (f3) 
+-- chocks place:     179 > 973 > 969 > 966 (f4 f1)
+-- chocks remove:    179 > 973 > 969 > 967 (f4 f2)
+-- jhmcs:            179 > 973 > 970 > 966 (f5 f1)
+-- nvg:              179 > 973 > 970 > 967 (f5 f2)

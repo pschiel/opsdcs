@@ -15,6 +15,7 @@ OpsdcsCrew["Ka-50_3"] = {
             text = "Before Startup",
             needAllPrevious = true,
             conditions = {
+                -- close service hatches lctrl+w
                 -- SYSTEM ACTIVATION AND CHECKS
                 { text = "Set BAT1 and BAT2 to ON and covers DOWN", cond = { "arg_eq", "ENERG-AKK1-PTR", 1, "arg_eq", "ENERG-AKK2-PTR", 1, "arg_eq", "ENERG-COVER-AKK1-PTR", 0, "arg_eq", "ENERG-COVER-AKK2-PTR", 0 } },
                 { text = "Set INV to AUTO", cond = { "arg_eq", "CONVERTER-PTR", 0.2 } },

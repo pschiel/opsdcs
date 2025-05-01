@@ -1,0 +1,41 @@
+---------------------------------------------------------------------------
+--- COMM ENV
+--- used by radio commands script (comm.lua). see also Scripts\UI\RadioCommandDialogPanel\RadioCommandDialogsPanel.lua
+---
+--- also available: utils
+---------------------------------------------------------------------------
+
+--- @class data
+--- @field base data.base @base env
+--- @field pUnit table @Player unit
+--- @field pComm table @data.pComm:sendRawMessage(command, messageParameters)
+--- @field initialized boolean
+--- @field worldEventHandlers table @World event handles handle world events and passes them into RadioCommandDialogsPanel.onEvent()
+--- @field msgHandlers table @Message handlers converts messages into internal events and passes them into RadioCommandDialogsPanel.onEvent()
+--- @field menus table @menu
+--- @field menuOther table @Misson command menu (contains name, submenu.name, submenu.items)
+--- @field menuEmbarkToTransport table @Misson command menu (contains name, submenu.name, submenu.items)
+--- @field curCommunicatorId number
+--- @field intercomId number
+--- @field communicators table
+--- @field VoIP boolean
+--- @field showingOnlyPresentRecepients boolean
+--- @field highlighting boolean
+--- @field radioAutoTune boolean
+--- @field recepientInfo boolean
+--- @field rootItem table @rootItem.builders?
+--- @field customUnitProperties table @'AddPropAircraft' in the module entry description (lua) -> wsInitData.AddPropList (cpp) -> RadioCommandDialogsPanel.data.customUnitProperties (lua). table["PropertyName"] = {value = 0, str_value = ""}
+
+--- @class data.base
+--- @description also includes everything from mission-scripting-stubs
+--- @field package table @package env
+--- @field require fun(module: string): any
+--- @field DCS DCS
+--- @field Export Export
+--- @field db db
+--- @field lfs lfs
+--- @field io io
+--- @field os os
+--- @field net net
+--- @field GetDevice fun(deviceId: number): avDevice
+--- @field GetIndicator fun(indicatorId: number): ccIndicator
