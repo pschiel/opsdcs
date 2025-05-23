@@ -33,7 +33,8 @@
         "extensions": [
             ".lua",
             ".lods",
-            ".dlg"
+            ".dlg",
+            ".cfg"
         ],
         "requirePattern": []
     },
