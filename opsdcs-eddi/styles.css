@@ -1,0 +1,316 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Ensure body takes full viewport height */
+    background-color: #f4f7f6;
+    overflow: hidden; /* Prevent body scrollbars, children will manage scroll */
+}
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 10px 20px; /* Reduced padding */
+    text-align: center;
+    display: flex; /* For aligning title and button */
+    justify-content: space-between; /* Pushes title left, button right */
+    align-items: center; /* Vertically center items */
+    flex-shrink: 0; /* Prevent header from shrinking */
+}
+
+header h1 {
+    margin: 0; /* Remove default h1 margin */
+    font-size: 1.5em; /* Adjust as needed */
+}
+
+#main-content {
+    display: flex;
+    flex-direction: row; /* Sidebars and preview area in a row */
+    flex-grow: 1; /* Takes up available vertical space */
+    overflow: auto; /* Allow main content to scroll if needed */
+}
+
+/* Widget Sidebar (now on the far right) */
+#widget-toolbar {
+    background-color: #fff;
+    padding: 15px;
+    border-left: 1px solid #ccc; /* Border on the left now */
+    width: 200px; /* Fixed width for widget sidebar */
+    flex-shrink: 0; /* Prevent shrinking */
+    overflow-y: auto; /* Scroll if widget list is long */
+    box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+    order: 3; /* Widgets sidebar on the far right */
+}
+
+#widget-toolbar h2, #widget-toolbar h3 {
+    margin-top: 0;
+    color: #333;
+}
+
+#widget-toolbar h3 {
+    font-size: 1em;
+    margin-bottom: 10px;
+}
+
+.toolbar-section .widget-button {
+    display: block; /* Stack buttons vertically */
+    width: 100%;    /* Full width of their container */
+    margin-bottom: 8px;
+    padding: 8px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: left;
+    font-size: 0.9em;
+}
+
+.widget-button:hover {
+    background-color: #0056b3;
+}
+
+/* Dialog Preview Area */
+#dialog-preview-container {
+    flex-grow: 1; /* Takes all available horizontal space */
+    padding: 20px;
+    background-color: #e9ecef; /* Light background for contrast */
+    display: flex;
+    flex-direction: column; /* Stack title and canvas wrapper */
+    overflow: auto; /* If canvas itself is very large */
+}
+
+#dialog-preview-container h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+/* Wrapper for the dialog canvas, if needed for additional styling or structure */
+/* For now, #dialog-canvas will be the direct child that grows */
+
+#dialog-canvas {
+    background-color: #ffffff;
+    border: 2px dashed #007bff; /* More prominent border */
+    min-height: 300px; /* Minimum height */
+    position: relative; /* For absolute positioning of widgets */
+    overflow: auto; /* If widgets go out of bounds, canvas itself can scroll */
+    box-shadow: 0 0 10px rgba(0,0,0,0.1) inset;
+    flex-grow: 1; /* Allow canvas to grow within #dialog-design-area */
+    display: flex; /* To center the placeholder */
+    align-items: center; /* To center the placeholder */
+    justify-content: center; /* To center the placeholder */
+}
+
+.canvas-placeholder {
+    color: #aaa;
+    font-style: italic;
+    text-align: center;
+    pointer-events: none; /* Allow clicks to go to the canvas itself */
+}
+
+/* Properties Sidebar (now in the middle of Preview and Widgets) */
+#properties-sidebar {
+    background-color: #fff;
+    padding: 15px;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc; /* Added right border */
+    width: 280px; /* Fixed width for properties */
+    flex-shrink: 0; /* Prevent shrinking */
+    overflow-y: auto; /* Scroll if properties are many */
+    box-shadow: -2px 0 5px rgba(0,0,0,0.05);
+    order: 2; /* Properties sidebar in the middle right */
+}
+
+#properties-sidebar h2 {
+    margin-top: 0;
+    color: #333;
+}
+
+.property-item {
+    margin-bottom: 12px;
+}
+
+.property-item label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 0.9em;
+    color: #555;
+}
+
+.property-item input[type="text"],
+.property-item input[type="number"],
+.property-item textarea {
+    width: calc(100% - 16px); /* Account for padding */
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 0.9em;
+}
+
+.property-item input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+.property-input, .property-item select {
+    width: calc(100% - 16px); /* Account for padding */
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 0.9em;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    margin-top: 2px; /* Add a little space if label is above */
+}
+
+.property-item textarea.property-input {
+    min-height: 60px; /* Give textareas a bit more space */
+}
+
+/* Styling for Remove Widget button */
+.remove-widget-button {
+    display: block;
+    width: calc(100% - 16px); /* Match input width */
+    padding: 8px;
+    margin-top: 15px;
+    background-color: #dc3545; /* Red color for delete/remove */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 0.9em;
+}
+
+.remove-widget-button:hover {
+    background-color: #c82333; /* Darker red on hover */
+}
+
+/* Skin Details Sidebar */
+#skin-details-sidebar {
+    width: 300px; /* Fixed width for skin details */
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-left: 1px solid #ccc;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    order: 4; /* Skin details sidebar on the very far right */
+}
+
+#skin-details-sidebar h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+#save-dialog-button {
+    background-color: #28a745;
+    color: white;
+    padding: 8px 15px; /* Adjusted padding for header */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em; /* Adjusted font size for header */
+}
+
+#save-dialog-button:hover {
+    background-color: #218838;
+}
+
+/* Individual widget styling on canvas */
+.widget-on-canvas {
+    position: absolute; /* Crucial for drag and drop positioning */
+    border: 1px solid #666;
+    background-color: #f9f9f9;
+    padding: 5px;
+    cursor: move;
+    font-size: 0.9em;
+    overflow: hidden; /* Prevent content from spilling out visually */
+    box-sizing: border-box;
+    min-width: 20px; /* Prevent collapsing to zero */
+    min-height: 20px;
+}
+
+.widget-on-canvas.selected {
+    border: 2px solid #007bff; /* Highlight selected widget */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    z-index: 10; /* Bring selected widget to the front */
+}
+
+/* Styling for Panel */
+.widget-on-canvas[data-widget-type="panel"] {
+    background-color: #e9e9e9; /* Slightly different background */
+    border: 1px solid #a0a0a0;
+    position: relative; /* For child positioning, but itself is absolute */
+}
+
+/* Styling for ScrollPane */
+.widget-on-canvas[data-widget-type="scrollpane"] {
+    background-color: #f0f5f0; /* Light green-ish tint */
+    border: 1px dashed #778877;
+    position: relative; /* For child positioning, but itself is absolute */
+    overflow: auto; /* Show scrollbars if content overflows - editor visual only */
+}
+
+/* Styling for ScrollBar */
+.widget-on-canvas[data-widget-type="scrollbar"] {
+    background-color: #c0c0c0;
+    border: 1px solid #808080;
+    /* Typically long and thin, default size will be set in JS */
+}
+
+/* Styling for ComboBox */
+.widget-on-canvas[data-widget-type="combobox"] {
+    background-color: #ffffff;
+    border: 1px solid #909090;
+    /* Add a pseudo-element for dropdown arrow or set text content */
+}
+
+/* Styling for ComboList (ListBox) */
+.widget-on-canvas[data-widget-type="combolist"] {
+    background-color: #ffffff;
+    border: 1px solid #909090;
+    overflow-y: auto; /* If it's supposed to show items */
+}
+
+/* Styling for ToggleButton */
+.widget-on-canvas[data-widget-type="togglebutton"] {
+    background-color: #d0d0d0;
+    border: 1px solid #888888;
+    cursor: pointer;
+}
+
+.widget-on-canvas[data-widget-type="togglebutton"][data-checked="true"] {
+    background-color: #a0c0a0; /* Greenish when checked */
+    border-color: #608060;
+}
+
+/* Styling for TreeView */
+.widget-on-canvas[data-widget-type="treeview"] {
+    background-color: #f5f5e0; /* Light yellow tint */
+    border: 1px solid #888870;
+    position: relative; /* For child positioning, but itself is absolute */
+    overflow: auto;
+}
+
+/* Ensure children of container widgets are positioned relative to their container */
+.widget-on-canvas[data-widget-type="panel"] > .widget-on-canvas,
+.widget-on-canvas[data-widget-type="scrollpane"] > .widget-on-canvas,
+.widget-on-canvas[data-widget-type="treeview"] > .widget-on-canvas {
+    position: absolute; /* Children are absolute within their relative parent */
+}
+
+/* Ensure sidebars take full height and enable scrolling */
+#properties-sidebar,
+#widget-toolbar,
+#skin-details-sidebar {
+    height: calc(100vh - 40px); /* Adjust 40px based on top-bar height */
+    box-sizing: border-box;
+}
+
+#properties-sidebar-content,
+#skin-details-content {
+    flex-grow: 1; /* Allow content to take available space */
+    overflow-y: auto; /* Enable scrolling for content within these sidebars */
+}
