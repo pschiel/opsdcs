@@ -50,6 +50,23 @@ document.addEventListener('DOMContentLoaded', () => {
         widgetElement.id = widgetId;
         widgetElement.classList.add('widget-on-canvas');
         widgetElement.dataset.widgetType = widgetType;
+
+        const defaultSkins = {
+            label: "staticSkin",
+            button: "buttonSkin",
+            checkbox: "checkBoxSkin",
+            editbox: "editBoxSkin",
+            panel: "panelSkin",
+            scrollpane: "scrollPaneSkin",
+            combobox: "comboBoxSkin",
+            combolist: "comboListSkin",
+            togglebutton: "toggleButtonSkin",
+            treeview: "treeViewSkin",
+            grid: "gridSkin",
+            gridheadercell: "gridHeaderCellSkin" // Though typically a child, good to define
+        };
+
+        const defaultSkinName = defaultSkins[widgetType] || ""; // Fallback to empty if no default
         
         let defaultTextContent = `${widgetType.charAt(0).toUpperCase() + widgetType.slice(1)} #${widgetCounter}`; // Used for initial display if text prop not set
         let initialWidth = 100;
@@ -108,22 +125,21 @@ document.addEventListener('DOMContentLoaded', () => {
             id: widgetId, // Use the generated widgetId
             parentId: parentElement.id, 
             type: widgetType,
-            x: initialX,
-            y: initialY,
+            text: defaultTextContent,
+            x: 10,
+            y: 10,
             width: initialWidth,
             height: initialHeight,
-            text: defaultTextContent, // Default text, might be overridden by widget-specific
             visible: true,
             enabled: true,
             tooltip: '',
-            zindex: 0,
-            skinName: 'defaultSkin', 
-            skinData: { 
-                params: { name: 'defaultSkin' }, 
-                states: {} 
-            },
+            zindex: 0, 
             tabOrder: 0,
-            children: [] 
+            skinName: defaultSkinName, // Apply default skinName
+            skinData: { // Initialize skinData with the default skinName
+                params: { name: defaultSkinName },
+                states: {}
+            }
         };
 
         let finalProps; // This will hold the complete properties object
@@ -131,18 +147,18 @@ document.addEventListener('DOMContentLoaded', () => {
         // Second switch: define the final set of properties for the widget type
         switch (widgetType) {
             case 'label':
-                finalProps = { ...commonProps, skinName: 'StaticSkin', skinData: { params: { name: 'StaticSkin' }}, height: 20, text: 'NewLabel', ...additionalProps };
+                finalProps = { ...commonProps, height: 20, text: 'NewLabel', ...additionalProps };
                 break;
             case 'button':
-                finalProps = { ...commonProps, skinName: 'ButtonSkin', skinData: { params: { name: 'ButtonSkin' }}, ...additionalProps };
+                finalProps = { ...commonProps, ...additionalProps };
                 break;
             case 'panel':
             case 'treeview':
-                finalProps = { ...commonProps, skinName: 'PanelSkin', skinData: { params: { name: 'PanelSkin' }}, text: '', ...additionalProps }; // text: '' for panels
+                finalProps = { ...commonProps, text: '', ...additionalProps }; // text: '' for panels
                 break;
             case 'scrollpane':
                 finalProps = {
-                    ...commonProps, skinName: 'ScrollPaneSkin', skinData: { params: { name: 'ScrollPaneSkin' }},
+                    ...commonProps,
                     text: '', // text: '' for scrollpanes
                     vertScrollBarStep: 16,
                     horzScrollBarStep: 0,
@@ -152,23 +168,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
                 break;
             case 'editbox':
-                finalProps = { ...commonProps, skinName: 'EditBoxSkin', skinData: { params: { name: 'EditBoxSkin' }}, text: '', ...additionalProps }; // text: '' for editbox
+                finalProps = { ...commonProps, text: '', ...additionalProps }; // text: '' for editbox
                 break;
             case 'checkbox':
-                finalProps = { ...commonProps, skinName: 'CheckBoxSkin', skinData: { params: { name: 'CheckBoxSkin' }}, width: 120, text: 'Checkbox', checked: false, ...additionalProps };
+                finalProps = { ...commonProps, width: 120, text: 'Checkbox', checked: false, ...additionalProps };
                 break;
             case 'togglebutton':
-                finalProps = { ...commonProps, skinName: 'ToggleButtonSkin', skinData: { params: { name: 'ToggleButtonSkin' }}, width: 120, text: 'ToggleButton', checked: false, ...additionalProps };
+                finalProps = { ...commonProps, width: 120, text: 'ToggleButton', checked: false, ...additionalProps };
                 break;
             case 'combobox':
-                finalProps = { ...commonProps, skinName: 'ComboBoxSkin', skinData: { params: { name: 'ComboBoxSkin' }}, width: 150, ...additionalProps }; // items and selectedIndex from additionalProps
+                finalProps = { ...commonProps, width: 150, ...additionalProps }; // items and selectedIndex from additionalProps
                 break;
             case 'combolist':
-                 finalProps = { ...commonProps, skinName: 'ListBoxSkin', skinData: { params: { name: 'ListBoxSkin' }}, width: 150, text: '', ...additionalProps }; // items from additionalProps, text is usually empty
+                 finalProps = { ...commonProps, width: 150, text: '', ...additionalProps }; // items from additionalProps, text is usually empty
                  break;
             case 'grid':
                 finalProps = {
-                    ...commonProps, skinName: 'gridSkin', skinData: { params: { name: 'gridSkin' }},
+                    ...commonProps,
                     text: '', // text: '' for grid
                     columns: JSON.stringify([
                         { attribute: 'col1', width: 100, align: 'left', title: 'Column 1' }, 
@@ -185,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
                 break;
             case 'gridheadercell':
-                finalProps = { ...commonProps, skinName: 'gridHeaderCellSkin', skinData: { params: { name: 'gridHeaderCellSkin' }}, ...additionalProps };
+                finalProps = { ...commonProps, ...additionalProps };
                 break;
             default:
                 finalProps = { ...commonProps, ...additionalProps };
@@ -348,25 +364,59 @@ document.addEventListener('DOMContentLoaded', () => {
             propContainer.appendChild(label);
 
         if (key === 'skinName') {
-            const skinLabel = document.createElement('label');
-            skinLabel.textContent = 'skinName:';
-            const skinInput = document.createElement('input');
-            skinInput.type = 'text';
-            skinInput.value = properties[key] || '';
-            skinInput.addEventListener('change', (e) => {
+            const selectSkin = document.createElement('select');
+            selectSkin.id = `prop-${key}-${properties.id}`; // Use the same ID pattern for the select
+            selectSkin.classList.add('property-input'); // Use existing class for styling if applicable
+
+            const skinOptions = [
+                { value: "", text: "(None/Default)" },
+                { value: "windowSkin", text: "windowSkin" }, // Added windowSkin
+                { value: "staticSkin", text: "staticSkin" },
+                { value: "buttonSkin", text: "buttonSkin" },
+                { value: "checkBoxSkin", text: "checkBoxSkin" },
+                { value: "editBoxSkin", text: "editBoxSkin" },
+                { value: "panelSkin", text: "panelSkin" },
+                { value: "comboBoxSkin", text: "comboBoxSkin" },
+                { value: "scrollPaneSkin", text: "scrollPaneSkin" },
+                { value: "comboListSkin", text: "comboListSkin" },
+                { value: "toggleButtonSkin", text: "toggleButtonSkin" },
+                { value: "treeViewSkin", text: "treeViewSkin" },
+                { value: "gridSkin", text: "gridSkin" }
+            ];
+
+            skinOptions.forEach(opt => {
+                const option = document.createElement('option');
+                option.value = opt.value;
+                option.textContent = opt.text;
+                selectSkin.appendChild(option);
+            });
+
+            selectSkin.value = properties[key] || ''; // Set current value
+
+            selectSkin.addEventListener('change', (e) => {
                 properties[key] = e.target.value;
                 // Also update skinData.params.name if it exists, to keep them in sync
-                if (properties.skinData && properties.skinData.params) {
+                // Initialize skinData and skinData.params if they don't exist and a skin is selected
+                if (e.target.value) { // If a skin is selected (not empty string)
+                    if (!properties.skinData) {
+                        properties.skinData = { params: {}, states: {} };
+                    }
+                    if (!properties.skinData.params) {
+                        properties.skinData.params = {};
+                    }
                     properties.skinData.params.name = e.target.value;
+                } else { // If (None/Default) is selected, clear skinData.params.name or handle as needed
+                    if (properties.skinData && properties.skinData.params) {
+                        properties.skinData.params.name = ""; // Or consider removing/defaulting skinData
+                    }
                 }
                 element.dataset.properties = JSON.stringify(properties);
-                // If skin details are shown, update them too
-                // if (selectedItem === element && skinDetailsContent.firstChild) { // skinDetailsContent might be undefined now
+                // If skin details are shown, update them too (logic was previously commented out)
+                // if (selectedItem === element && typeof populateSkinDetailsSidebar === 'function') {
                 //     populateSkinDetailsSidebar(properties.skinData, element);
                 // }
             });
-            propContainer.appendChild(skinLabel);
-            propContainer.appendChild(skinInput);
+            propContainer.appendChild(selectSkin);
         } else if (key === 'skinData') {
             // Button to open skin editor / view details - REMOVED
             // const skinDataLabel = document.createElement('label');
@@ -778,6 +828,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (props.type === 'grid') {
             paramsCollector.push(`${paramsInternalIndent}["dataSource"] = "${escapeLuaString(props.dataSource || '')}"`);
             paramsCollector.push(`${paramsInternalIndent}["rowHeight"] = ${props.rowHeight || 20}`);
+            paramsCollector.push(`${paramsInternalIndent}["columns"] = ${props.columns}`);
             paramsCollector.push(`${paramsInternalIndent}["vertScrollBar"] = ${props.vertScrollBar === undefined ? true : props.vertScrollBar}`);
             paramsCollector.push(`${paramsInternalIndent}["horzScrollBar"] = ${props.horzScrollBar === undefined ? false : props.horzScrollBar}`);
             paramsCollector.push(`${paramsInternalIndent}["selectedAttributeColor"] = "${escapeLuaString(props.selectedAttributeColor || '0x00000000')}"`);
