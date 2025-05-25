@@ -8,6 +8,17 @@ document.addEventListener('DOMContentLoaded', () => {
     let selectedItem = null; 
     let widgetCounter = 0;
 
+    // Resizing state variables
+    let isResizing = false;
+    let currentResizeHandle = null;
+    let initialMouseX, initialMouseY;
+    let initialWidgetWidth, initialWidgetHeight;
+    let initialWidgetX, initialWidgetY;
+    let activeWidgetForResize = null;
+
+    let isDragging = false;
+    let dragOffsetX, dragOffsetY;
+
     if (!dialogCanvas.dataset.properties) {
         dialogCanvas.dataset.properties = JSON.stringify({
             id: 'dialog-canvas',
@@ -209,12 +220,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectItem = (element) => {
         if (selectedItem) {
             selectedItem.classList.remove('selected');
-            selectedItem.classList.remove('preview-selected'); // Remove preview selection class
+            selectedItem.classList.remove('preview-selected');
+            if (selectedItem.classList.contains('widget-on-canvas') && selectedItem !== dialogCanvas) {
+                removeResizeHandles(selectedItem);
+            }
         }
         selectedItem = element;
         if (selectedItem){
             selectedItem.classList.add('selected');
-            selectedItem.classList.add('preview-selected'); // Add preview selection class
+            selectedItem.classList.add('preview-selected');
+
+            if (selectedItem.classList.contains('widget-on-canvas') && selectedItem !== dialogCanvas) {
+                addResizeHandles(selectedItem); // Add handles if it's a widget
+            }
 
             if (selectedItem.classList.contains('widget-on-canvas') && selectedItem.parentElement) {
                 const parent = selectedItem.parentElement;
@@ -555,6 +573,128 @@ document.addEventListener('DOMContentLoaded', () => {
         // For now, we'll keep the placeholder and preformatted JSON display
     };
 
+    const resizeHandlePositions = ['nw', 'ne', 'sw', 'se'];
+
+    function addResizeHandles(widgetElement) {
+        removeResizeHandles(widgetElement); // Clear existing handles first
+        resizeHandlePositions.forEach(pos => {
+            const handle = document.createElement('div');
+            handle.classList.add('resize-handle', pos);
+            handle.dataset.position = pos; // Store position for resize logic later
+            widgetElement.appendChild(handle);
+            
+            handle.addEventListener('mousedown', (e) => {
+                startResize(e, widgetElement, pos);
+            });
+        });
+    }
+
+    function removeResizeHandles(widgetElement) {
+        if (widgetElement) {
+            const handles = widgetElement.querySelectorAll('.resize-handle');
+            handles.forEach(handle => handle.remove());
+        }
+    }
+
+    function startResize(event, widgetElement, handlePosition) {
+        event.preventDefault();
+        event.stopPropagation(); // Prevent drag-and-drop from triggering
+
+        isResizing = true;
+        currentResizeHandle = handlePosition;
+        activeWidgetForResize = widgetElement;
+
+        initialMouseX = event.clientX;
+        initialMouseY = event.clientY;
+
+        const widgetRect = widgetElement.getBoundingClientRect();
+        const parentRect = widgetElement.parentElement.getBoundingClientRect(); // Assuming parent is the canvas or another container
+
+        initialWidgetWidth = widgetElement.offsetWidth;
+        initialWidgetHeight = widgetElement.offsetHeight;
+        initialWidgetX = widgetElement.offsetLeft;
+        initialWidgetY = widgetElement.offsetTop;
+        
+        document.addEventListener('mousemove', doResize);
+        document.addEventListener('mouseup', stopResize);
+    }
+
+    function doResize(event) {
+        if (!isResizing || !activeWidgetForResize) return;
+        event.preventDefault();
+
+        const dx = event.clientX - initialMouseX;
+        const dy = event.clientY - initialMouseY;
+
+        let newWidth = initialWidgetWidth;
+        let newHeight = initialWidgetHeight;
+        let newX = initialWidgetX;
+        let newY = initialWidgetY;
+
+        // Adjust dimensions and position based on the handle being dragged
+        if (currentResizeHandle.includes('e')) { // East (right)
+            newWidth = initialWidgetWidth + dx;
+        }
+        if (currentResizeHandle.includes('w')) { // West (left)
+            newWidth = initialWidgetWidth - dx;
+            newX = initialWidgetX + dx;
+        }
+        if (currentResizeHandle.includes('s')) { // South (bottom)
+            newHeight = initialWidgetHeight + dy;
+        }
+        if (currentResizeHandle.includes('n')) { // North (top)
+            newHeight = initialWidgetHeight - dy;
+            newY = initialWidgetY + dy;
+        }
+
+        // Ensure minimum size (e.g., 10x10 pixels)
+        const minSize = 10;
+        if (newWidth < minSize) {
+            if (currentResizeHandle.includes('w')) newX -= (minSize - newWidth);
+            newWidth = minSize;
+        }
+        if (newHeight < minSize) {
+            if (currentResizeHandle.includes('n')) newY -= (minSize - newHeight);
+            newHeight = minSize;
+        }
+
+        activeWidgetForResize.style.width = `${newWidth}px`;
+        activeWidgetForResize.style.height = `${newHeight}px`;
+        activeWidgetForResize.style.left = `${newX}px`;
+        activeWidgetForResize.style.top = `${newY}px`;
+
+        // Update dataset properties
+        const properties = JSON.parse(activeWidgetForResize.dataset.properties);
+        properties.width = Math.round(newWidth);
+        properties.height = Math.round(newHeight);
+        properties.x = Math.round(newX);
+        properties.y = Math.round(newY);
+        activeWidgetForResize.dataset.properties = JSON.stringify(properties);
+
+        displayItemProperties(activeWidgetForResize); // Refresh sidebar
+    }
+
+    function stopResize() {
+        if (!isResizing) return;
+        isResizing = false;
+        document.removeEventListener('mousemove', doResize);
+        document.removeEventListener('mouseup', stopResize);
+        
+        // Update dataset properties one last time to ensure they are integers if needed
+        if (activeWidgetForResize) {
+            const properties = JSON.parse(activeWidgetForResize.dataset.properties);
+            properties.width = parseInt(activeWidgetForResize.style.width, 10);
+            properties.height = parseInt(activeWidgetForResize.style.height, 10);
+            properties.x = parseInt(activeWidgetForResize.style.left, 10);
+            properties.y = parseInt(activeWidgetForResize.style.top, 10);
+            activeWidgetForResize.dataset.properties = JSON.stringify(properties);
+            displayItemProperties(activeWidgetForResize);
+        }
+
+        currentResizeHandle = null;
+        activeWidgetForResize = null;
+    }
+
     // Widget type mapping for DLG file
     const widgetTypeMap = {
         label: 'Static',
@@ -629,11 +769,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         ` [\"attribute\"] = \"${escapeLuaString(col.attribute || '')}\",` +
                         ` [\"width\"] = ${col.width || 100} }`
                     ).join(', '); 
-                    paramsContent += `,\n${childIndent}    [\"columns\"] = { ${columnsLua} }`;
+                    paramsContent += `,\n${childIndent}    ["columns"] = { ${columnsLua} }`;
                 }
             } catch (e) {
                 console.error('Error parsing Grid columns JSON:', e);
-                paramsContent += `,\n${childIndent}    [\"columns\"] = {}`; // Default to empty if error
+                paramsContent += `,\n${childIndent}    ["columns"] = {}`; // Default to empty if error
             }
         }
 
@@ -674,7 +814,6 @@ document.addEventListener('DOMContentLoaded', () => {
             // Fallback to simple skin name if no detailed states
             skinString = `,\n${childIndent}  ["skin"] = {\n${childIndent}    ["params"] = { ["name"] = "${escapeLuaString(skinParamsName)}" },\n${childIndent}    ["states"] = {}\n${childIndent}  }`;
         }
-
 
         let childrenStringForTable = '';
         if (['panel', 'scrollpane', 'treeview', 'grid'].includes(props.type)) {
@@ -785,7 +924,7 @@ document.addEventListener('DOMContentLoaded', () => {
             element.style.top = `${newY}px`;
 
             // Update properties in real-time (optional, can be deferred to mouseup)
-            const props = JSON.parse(element.dataset.properties || '{}');
+            const props = JSON.parse(element.dataset.properties);
             props.x = newX;
             props.y = newY;
             element.dataset.properties = JSON.stringify(props);
@@ -803,7 +942,7 @@ document.addEventListener('DOMContentLoaded', () => {
             element.style.removeProperty('user-select');
 
             // Final update of properties after drag
-            const props = JSON.parse(element.dataset.properties || '{}');
+            const props = JSON.parse(element.dataset.properties);
             props.x = parseInt(element.style.left, 10);
             props.y = parseInt(element.style.top, 10);
             element.dataset.properties = JSON.stringify(props);
