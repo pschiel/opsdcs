@@ -90,8 +90,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // widgetElement.textContent = defaultTextContent; // Set text content later based on finalProps.text
 
         const parentChildrenCount = parentElement.querySelectorAll(':scope > .widget-on-canvas').length;
-        const initialX = 10 + (parentChildrenCount % 10) * 15; // Adjusted staggering
-        const initialY = 10 + Math.floor(parentChildrenCount / 10) * 15; // Adjusted staggering
+        const initialX = 0; // Default X to 0
+        const initialY = 0; // Default Y to 0
         
         const commonProps = {
             id: widgetId, // Use the generated widgetId
@@ -209,10 +209,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectItem = (element) => {
         if (selectedItem) {
             selectedItem.classList.remove('selected');
+            selectedItem.classList.remove('preview-selected'); // Remove preview selection class
         }
         selectedItem = element;
         if (selectedItem){
             selectedItem.classList.add('selected');
+            selectedItem.classList.add('preview-selected'); // Add preview selection class
+
             if (selectedItem.classList.contains('widget-on-canvas') && selectedItem.parentElement) {
                 const parent = selectedItem.parentElement;
                 // Only re-append if it's not already the last child.
@@ -234,7 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const isDialogCanvas = element.id === 'dialog-canvas';
         const properties = JSON.parse(element.dataset.properties);
 
-        const titleText = isDialogCanvas ? `Window Properties` : `Properties: ${properties.type || 'Widget'} (${properties.id})`;
+        const titleText = isDialogCanvas ? `Window Properties` : `${properties.type || 'Widget'} (${properties.id})`;
         const title = document.createElement('h4'); // Using h4 for widget title to be smaller than main sidebar title
         title.textContent = titleText;
         propertiesSidebarContent.appendChild(title);

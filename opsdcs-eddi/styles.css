@@ -74,7 +74,7 @@ header h1 {
 /* Dialog Preview Area */
 #dialog-preview-container {
     flex-grow: 1; /* Takes all available horizontal space */
-    padding: 20px;
+    padding: 15px; /* Consistent padding with sidebars */
     background-color: #e9ecef; /* Light background for contrast */
     display: flex;
     flex-direction: column; /* Stack title and canvas wrapper */
@@ -84,6 +84,7 @@ header h1 {
 #dialog-preview-container h2 {
     margin-top: 0;
     margin-bottom: 15px;
+    /* margin-left: 20px; */ /* Removed: padding of parent container will handle indent */
     color: #333;
 }
 
@@ -91,13 +92,14 @@ header h1 {
 /* For now, #dialog-canvas will be the direct child that grows */
 
 #dialog-canvas {
-    background-color: #ffffff;
-    border: 2px dashed #007bff; /* More prominent border */
-    min-height: 300px; /* Minimum height */
-    position: relative; /* For absolute positioning of widgets */
-    overflow: auto; /* If widgets go out of bounds, canvas itself can scroll */
-    box-shadow: 0 0 10px rgba(0,0,0,0.1) inset;
-    flex-grow: 1; /* Allow canvas to grow within #dialog-design-area */
+    width: 600px; /* Default width */
+    height: 400px; /* Default height */
+    border: 1px dashed #ccc; /* Default grey dashed border for unselected state */
+    position: relative; /* For absolute positioning of child widgets */
+    background-color: #f0f0f0; /* Light grey background */
+    overflow: hidden; /* To contain widgets */
+    margin: 0;
+    box-shadow: none; /* No default box-shadow */
     display: flex; /* To center the placeholder */
     align-items: center; /* To center the placeholder */
     justify-content: center; /* To center the placeholder */
@@ -220,21 +222,18 @@ header h1 {
 
 /* Individual widget styling on canvas */
 .widget-on-canvas {
-    position: absolute; /* Crucial for drag and drop positioning */
-    border: 1px solid #666;
-    background-color: #f9f9f9;
-    padding: 5px;
-    cursor: move;
-    font-size: 0.9em;
-    overflow: hidden; /* Prevent content from spilling out visually */
-    box-sizing: border-box;
-    min-width: 20px; /* Prevent collapsing to zero */
-    min-height: 20px;
+    border: 1px dashed #ccc !important; /* Editor's guide border, always show for unselected */
+    position: absolute; /* For dragging */
+    background-color: rgba(230, 230, 250, 0.7); /* Light lavender with some transparency */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    overflow: hidden; /* Prevent content from spilling out, especially for small widgets */
+    margin: 0;
+    padding: 0;
+    font-size: 10px; /* Default text size for widgets on canvas */
 }
 
 .widget-on-canvas.selected {
-    border: 2px solid #007bff; /* Highlight selected widget */
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    /* border: 2px solid #007bff; */ /* Removed: Highlight selected widget - Handled by .preview-selected */
     z-index: 10; /* Bring selected widget to the front */
 }
 
@@ -299,6 +298,30 @@ header h1 {
 .widget-on-canvas[data-widget-type="scrollpane"] > .widget-on-canvas,
 .widget-on-canvas[data-widget-type="treeview"] > .widget-on-canvas {
     position: absolute; /* Children are absolute within their relative parent */
+}
+
+/* Styling for text content within widgets on the canvas */
+.widget-on-canvas,
+.widget-on-canvas .widget-text-content, /* If you wrap text in a specific span/div */
+.widget-on-canvas span, /* General spans inside widgets */
+.widget-on-canvas div,  /* General divs inside widgets (be careful not to override too much) */
+.widget-on-canvas p,   /* General paragraphs inside widgets */
+.widget-on-canvas label /* For label elements used as text holders */
+{
+    font-size: 8px;
+}
+
+.widget-label,
+.widget-button,
+.widget-checkbox,
+.widget-togglebutton,
+.widget-gridheadercell {
+    font-size: 8px; 
+}
+
+/* Class for visual selection in preview */
+.preview-selected {
+    border: 1px dashed red !important; /* Red dashed border for selected items */
 }
 
 /* Ensure sidebars take full height and enable scrolling */
