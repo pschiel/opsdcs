@@ -17,17 +17,18 @@ OpsdcsCrewHook = {
 
 --- log helper, writes to dcs.log
 --- @param message string
-function OpsdcsCrewHook:log(message)
-    if self.logging then log.info("[opsdcs-crew] " .. message) end
+function OpsdcsCrewHook:log(message, ...)
+    if self.logging then
+        log.info("[opsdcs-crew] " .. string.format(message, ...))
+    end
 end
 
 --- mission load end callback, injects script into mission
 function OpsdcsCrewHook:onMissionLoadEnd()
     local missionName = DCS.getMissionName()
-    self:log("onMissionLoadEnd: " .. missionName)
+    self:log("onMissionLoadEnd: %s", missionName)
     for _, pattern in ipairs(self.autoInjectMissionPatterns) do
         if string.match(missionName, pattern) then
-            self:log("Injecting script into mission: " .. missionName)
             self:injectScript()
             break
         end
@@ -36,6 +37,7 @@ end
 
 --- inject script into MSE via mission env and a_do_script
 function OpsdcsCrewHook:injectScript()
+    self:log("Injecting opsdcs-crew-mission.lua into mission")
     local code = "a_do_script('"
         .. "OpsdcsCrewBasedir=[[" .. OpsdcsCrewBasedir .. "]];OpsdcsCrewInject=true;"
         .. "dofile(OpsdcsCrewBasedir..[[opsdcs-crew-mission.lua]])"

@@ -234,10 +234,30 @@ document.addEventListener('DOMContentLoaded', () => {
         const isDialogCanvas = element.id === 'dialog-canvas';
         const properties = JSON.parse(element.dataset.properties);
 
-        const titleText = isDialogCanvas ? `Dialog Properties` : `Properties: ${properties.type || 'Widget'} (${properties.id})`;
-        const title = document.createElement('h3');
+        const titleText = isDialogCanvas ? `Window Properties` : `Properties: ${properties.type || 'Widget'} (${properties.id})`;
+        const title = document.createElement('h4'); // Using h4 for widget title to be smaller than main sidebar title
         title.textContent = titleText;
         propertiesSidebarContent.appendChild(title);
+
+        if (!isDialogCanvas) {
+            const removeButton = document.createElement('button');
+            removeButton.textContent = 'Remove Widget';
+            removeButton.id = 'remove-widget-button'; // Keep the ID for uniqueness
+            removeButton.classList.add('remove-widget-button'); // Restore original class for styling
+            removeButton.onclick = () => {
+                if (selectedItem && selectedItem !== dialogCanvas) {
+                    const parentOfSelected = selectedItem.parentElement;
+                    selectedItem.remove();
+                    // Attempt to select the parent if it's a container, otherwise select dialogCanvas
+                    if (parentOfSelected && parentOfSelected.classList.contains('container-widget')) {
+                        selectItem(parentOfSelected);
+                    } else {
+                        selectItem(dialogCanvas);
+                    }
+                }
+            };
+            propertiesSidebarContent.appendChild(removeButton);
+        }
 
         // Base properties applicable to most widgets
         const baseEditablePropertiesSpec = {
@@ -305,152 +325,156 @@ document.addEventListener('DOMContentLoaded', () => {
             label.textContent = `${currentRenderSpec[key]}:`;
             propContainer.appendChild(label);
 
-            if (key === 'skinName') {
-                const skinLabel = document.createElement('label');
-                skinLabel.textContent = 'skinName:';
-                const skinInput = document.createElement('input');
-                skinInput.type = 'text';
-                skinInput.value = properties[key] || '';
-                skinInput.addEventListener('change', (e) => {
-                    properties[key] = e.target.value;
-                    // Also update skinData.params.name if it exists, to keep them in sync
-                    if (properties.skinData && properties.skinData.params) {
-                        properties.skinData.params.name = e.target.value;
-                    }
-                    element.dataset.properties = JSON.stringify(properties);
-                    // If skin details are shown, update them too
-                    if (selectedItem === element && skinDetailsContent.firstChild) {
-                        populateSkinDetailsSidebar(properties.skinData, element);
-                    }
-                });
-                propContainer.appendChild(skinLabel);
-                propContainer.appendChild(skinInput);
-            } else if (key === 'skinData') {
-                // Button to open skin editor / view details
-                // This part remains largely the same, but we ensure it doesn't rely on ALL_DCS_SKIN_NAMES
-                const skinDataLabel = document.createElement('label');
-                skinDataLabel.textContent = 'skinData:';
-                const viewSkinButton = document.createElement('button');
-                viewSkinButton.textContent = 'View/Edit Skin Details';
-                viewSkinButton.classList.add('view-skin-button');
-                viewSkinButton.onclick = () => {
-                    populateSkinDetailsSidebar(properties.skinData, element);
-                };
-                propContainer.appendChild(skinDataLabel);
-                propContainer.appendChild(viewSkinButton);
-            } else if (typeof properties[key] === 'boolean' || 
-                (currentRenderSpec[key] && (currentRenderSpec[key].toLowerCase().includes('visible') || currentRenderSpec[key].toLowerCase().includes('enabled'))) ||
-                ['vertMouseWheel', 'horzMouseWheel', 'vertScrollBar', 'horzScrollBar', 'useAlternatingRowColor'].includes(key)) {
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.checked = properties[key] || false;
-                checkbox.addEventListener('change', (e) => {
-                    properties[key] = e.target.checked;
-                    element.dataset.properties = JSON.stringify(properties);
-                    // No need to re-select or re-display for checkbox change unless it affects layout
-                });
-                propContainer.appendChild(checkbox);
-            } else {
-                let inputType = 'text';
-                const propValue = properties[key];
-
-                if (typeof propValue === 'number' && !['zindex', 'tabOrder', 'selectedIndex', 'rowHeight', 'vertScrollBarStep', 'horzScrollBarStep'].includes(key)) {
-                    // Keep general numbers as text to avoid spinner issues if not strictly integer steps
-                } else if (key === 'items' || key === 'tooltip' || key === 'columns' || (key === 'text' && properties.type !== 'editbox' && properties.type !== 'combobox' && properties.type !== 'Dialog')) {
-                    inputType = 'textarea';
-                } else if (['zindex', 'tabOrder', 'selectedIndex', 'rowHeight', 'vertScrollBarStep', 'horzScrollBarStep'].includes(key) || (currentRenderSpec[key] && currentRenderSpec[key].toLowerCase().includes('(px)'))) {
-                    inputType = 'number';
+        if (key === 'skinName') {
+            const skinLabel = document.createElement('label');
+            skinLabel.textContent = 'skinName:';
+            const skinInput = document.createElement('input');
+            skinInput.type = 'text';
+            skinInput.value = properties[key] || '';
+            skinInput.addEventListener('change', (e) => {
+                properties[key] = e.target.value;
+                // Also update skinData.params.name if it exists, to keep them in sync
+                if (properties.skinData && properties.skinData.params) {
+                    properties.skinData.params.name = e.target.value;
                 }
-                
-                if (key === 'dataSource' || key === 'selectedAttributeColor' || key === 'selectedRowColor' || key === 'altRowColor') {
-                    inputType = 'text'; // Ensure these are text, even if they might look like numbers/colors
-                }
+                element.dataset.properties = JSON.stringify(properties);
+                // If skin details are shown, update them too
+                // if (selectedItem === element && skinDetailsContent.firstChild) { // skinDetailsContent might be undefined now
+                //     populateSkinDetailsSidebar(properties.skinData, element);
+                // }
+            });
+            propContainer.appendChild(skinLabel);
+            propContainer.appendChild(skinInput);
+        } else if (key === 'skinData') {
+            // Button to open skin editor / view details - REMOVED
+            // const skinDataLabel = document.createElement('label');
+            // skinDataLabel.textContent = 'skinData:';
+            // const viewSkinButton = document.createElement('button');
+            // viewSkinButton.textContent = 'View/Edit Skin Details';
+            // viewSkinButton.classList.add('view-skin-button');
+            // viewSkinButton.onclick = () => {
+            //     populateSkinDetailsSidebar(properties.skinData, element); // populateSkinDetailsSidebar might be undefined or not desired
+            // };
+            // propContainer.appendChild(skinDataLabel);
+            // propContainer.appendChild(viewSkinButton);
+            // Instead of the button, perhaps just show the skinData as a non-editable text for now, or nothing.
+            // For now, let's not add anything for skinData to simplify.
+            continue; // Skip rendering anything for skinData for now
+        } else if (typeof properties[key] === 'boolean' || 
+            (currentRenderSpec[key] && (currentRenderSpec[key].toLowerCase().includes('visible') || currentRenderSpec[key].toLowerCase().includes('enabled'))) ||
+            ['vertMouseWheel', 'horzMouseWheel', 'vertScrollBar', 'horzScrollBar', 'useAlternatingRowColor'].includes(key)) {
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.checked = properties[key] || false;
+            checkbox.addEventListener('change', (e) => {
+                properties[key] = e.target.checked;
+                element.dataset.properties = JSON.stringify(properties);
+                // No need to re-select or re-display for checkbox change unless it affects layout
+            });
+            propContainer.appendChild(checkbox);
+        } else {
+            let inputType = 'text';
+            const propValue = properties[key];
 
-                const input = document.createElement(inputType === 'textarea' ? 'textarea' : 'input');
-                if (inputType !== 'textarea') input.type = inputType;
-                
-                input.id = `prop-${key}-${properties.id}`;
-                input.name = key;
-                input.classList.add('property-input'); // Consistent styling
-
-                if (inputType === 'textarea') {
-                    input.value = properties[key] !== undefined ? properties[key] : '';
-                    input.rows = 3;
-                } else {
-                    input.value = properties[key] !== undefined ? properties[key] : '';
-                }
-
-                input.addEventListener('change', (e) => {
-                    const currentProps = JSON.parse(element.dataset.properties);
-                    let value = e.target.value;
-
-                    if (input.type === 'number') {
-                        value = parseFloat(value);
-                        if (isNaN(value)) value = currentProps[key] || ( (key === 'width' || key === 'height') ? 100 : 0 );
-                    } else if (input.type === 'checkbox') {
-                        value = e.target.checked;
-                    } else if (key === 'items') {
-                        value = e.target.value.split(',').map(item => item.trim()).filter(item => item);
-                    }
-
-                    currentProps[key] = value;
-                    element.dataset.properties = JSON.stringify(currentProps);
-                    
-                    if (isDialogCanvas) {
-                        if (key === 'width') element.style.width = currentProps[key] + 'px';
-                        if (key === 'height') element.style.height = currentProps[key] + 'px';
-                    } else {
-                        if (key === 'text' && element.firstChild && element.firstChild.nodeType === Node.TEXT_NODE) element.firstChild.nodeValue = currentProps[key];
-                        if (key === 'x') element.style.left = currentProps[key] + 'px';
-                        if (key === 'y') element.style.top = currentProps[key] + 'px';
-                        if (key === 'width') element.style.width = currentProps[key] + 'px';
-                        if (key === 'height') element.style.height = currentProps[key] + 'px';
-                        if (key === 'checked' && properties.type === 'togglebutton') {
-                            element.dataset.checked = value; 
-                        }
-                    }
-                });
-                propContainer.appendChild(input);
+            if (typeof propValue === 'number' && !['zindex', 'tabOrder', 'selectedIndex', 'rowHeight', 'vertScrollBarStep', 'horzScrollBarStep'].includes(key)) {
+                // Keep general numbers as text to avoid spinner issues if not strictly integer steps
+            } else if (key === 'items' || key === 'tooltip' || key === 'columns' || (key === 'text' && properties.type !== 'editbox' && properties.type !== 'combobox' && properties.type !== 'Dialog')) {
+                inputType = 'textarea';
+            } else if (['zindex', 'tabOrder', 'selectedIndex', 'rowHeight', 'vertScrollBarStep', 'horzScrollBarStep'].includes(key) || (currentRenderSpec[key] && currentRenderSpec[key].toLowerCase().includes('(px)'))) {
+                inputType = 'number';
             }
-            propertiesSidebarContent.appendChild(propContainer);
-        }
+            
+            if (key === 'dataSource' || key === 'selectedAttributeColor' || key === 'selectedRowColor' || key === 'altRowColor') {
+                inputType = 'text'; // Ensure these are text, even if they might look like numbers/colors
+            }
 
-        // Add 'Edit Skin Details' button for all non-dialogCanvas items
-        if (!isDialogCanvas) {
-            const editSkinButton = document.createElement('button');
-            editSkinButton.textContent = 'Edit Skin Details';
-            editSkinButton.id = 'edit-skin-details-button';
-            editSkinButton.style.marginTop = '10px';
-            editSkinButton.onclick = () => {
-                if (selectedItem) {
-                    const currentProps = JSON.parse(selectedItem.dataset.properties);
-                    populateSkinDetailsSidebar(currentProps.skinData, selectedItem);
-                } else {
-                    clearSkinDetailsSidebar();
+            const input = document.createElement(inputType === 'textarea' ? 'textarea' : 'input');
+            if (inputType !== 'textarea') input.type = inputType;
+            
+            input.id = `prop-${key}-${properties.id}`;
+            input.name = key;
+            input.classList.add('property-input'); // Consistent styling
+
+            if (inputType === 'textarea') {
+                input.value = properties[key] !== undefined ? properties[key] : '';
+                input.rows = 3;
+            } else {
+                input.value = properties[key] !== undefined ? properties[key] : '';
+            }
+
+            input.addEventListener('change', (e) => {
+                const currentProps = JSON.parse(element.dataset.properties);
+                let value = e.target.value;
+
+                if (input.type === 'number') {
+                    value = parseFloat(value);
+                    if (isNaN(value)) value = currentProps[key] || ( (key === 'width' || key === 'height') ? 100 : 0 );
+                } else if (input.type === 'checkbox') {
+                    value = e.target.checked;
+                } else if (key === 'items') {
+                    value = e.target.value.split(',').map(item => item.trim()).filter(item => item);
                 }
-            };
-            propertiesSidebarContent.appendChild(editSkinButton);
-        }
 
-        // Add Remove Widget button if a widget is selected (not dialog-canvas)
-        if (!isDialogCanvas && element) {
-            const removeButton = document.createElement('button');
-            removeButton.textContent = 'Remove Widget';
-            removeButton.classList.add('remove-widget-button'); // For styling
-            removeButton.addEventListener('click', () => {
-                if (selectedItem && selectedItem !== dialogCanvas) {
-                    const parentOfSelected = selectedItem.parentElement;
-                    selectedItem.remove();
-                    selectItem(null); // Clear selection and properties
-                    // If the parent was the main dialog canvas, check placeholder
-                    if (parentOfSelected && parentOfSelected.id === 'dialog-canvas') {
-                        removeCanvasPlaceholder();
+                currentProps[key] = value;
+                element.dataset.properties = JSON.stringify(currentProps);
+                
+                if (isDialogCanvas) {
+                    if (key === 'width') element.style.width = currentProps[key] + 'px';
+                    if (key === 'height') element.style.height = currentProps[key] + 'px';
+                } else {
+                    if (key === 'text' && element.firstChild && element.firstChild.nodeType === Node.TEXT_NODE) element.firstChild.nodeValue = currentProps[key];
+                    if (key === 'x') element.style.left = currentProps[key] + 'px';
+                    if (key === 'y') element.style.top = currentProps[key] + 'px';
+                    if (key === 'width') element.style.width = currentProps[key] + 'px';
+                    if (key === 'height') element.style.height = currentProps[key] + 'px';
+                    if (key === 'checked' && properties.type === 'togglebutton') {
+                        element.dataset.checked = value; 
                     }
                 }
             });
-            propertiesSidebarContent.appendChild(document.createElement('hr')); // Separator
-            propertiesSidebarContent.appendChild(removeButton);
+            propContainer.appendChild(input);
         }
+        propertiesSidebarContent.appendChild(propContainer);
+    }
+
+    // Add 'Edit Skin Details' button for all non-dialogCanvas items
+    // Removed this block to ensure only one 'Remove Widget' button exists
+    // if (!isDialogCanvas) {
+    //     const editSkinButton = document.createElement('button');
+    //     editSkinButton.textContent = 'Edit Skin Details';
+    //     editSkinButton.id = 'edit-skin-details-button';
+    //     editSkinButton.style.marginTop = '10px';
+    //     editSkinButton.onclick = () => {
+    //         if (selectedItem) {
+    //             const currentProps = JSON.parse(selectedItem.dataset.properties);
+    //             populateSkinDetailsSidebar(currentProps.skinData, selectedItem);
+    //         } else {
+    //             clearSkinDetailsSidebar();
+    //         }
+    //     };
+    //     propertiesSidebarContent.appendChild(editSkinButton);
+    // }
+
+    // Add Remove Widget button if a widget is selected (not dialog-canvas)
+    // Removed this block to ensure only one 'Remove Widget' button exists
+    // if (!isDialogCanvas && element) {
+    //     const removeButton = document.createElement('button');
+    //     removeButton.textContent = 'Remove Widget';
+    //     removeButton.classList.add('remove-widget-button'); // For styling
+    //     removeButton.addEventListener('click', () => {
+    //         if (selectedItem && selectedItem !== dialogCanvas) {
+    //             const parentOfSelected = selectedItem.parentElement;
+    //             selectedItem.remove();
+    //             selectItem(null); // Clear selection and properties
+    //             // If the parent was the main dialog canvas, check placeholder
+    //             if (parentOfSelected && parentOfSelected.id === 'dialog-canvas') {
+    //                 removeCanvasPlaceholder();
+    //             }
+    //         }
+    //     });
+    //     propertiesSidebarContent.appendChild(document.createElement('hr')); // Separator
+    //     propertiesSidebarContent.appendChild(removeButton);
+    // }
     };
 
     const clearPropertiesSidebar = () => {
