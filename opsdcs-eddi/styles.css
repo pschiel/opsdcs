@@ -131,38 +131,59 @@ header h1 {
 }
 
 .property-item {
-    margin-bottom: 12px;
+    margin-bottom: 10px; /* Adjusted margin */
+    display: flex;
+    align-items: center; /* Vertically align label and input */
+    gap: 10px; /* Space between label and input */
 }
 
 .property-item label {
-    display: block;
-    margin-bottom: 4px;
+    /* display: block; */ /* No longer needed */
+    /* margin-bottom: 4px; */ /* No longer needed */
     font-size: 0.9em;
     color: #555;
+    flex-basis: 100px; /* Fixed width for labels */
+    flex-shrink: 0; /* Prevent label from shrinking */
+    text-align: left; /* Changed from right to left */
+    padding-right: 5px; /* Keep padding for separation from input */
 }
 
 .property-item input[type="text"],
 .property-item input[type="number"],
-.property-item textarea {
-    width: calc(100% - 16px); /* Account for padding */
+.property-item textarea,
+.property-item select { /* Added select here */
+    /* width: calc(100% - 16px); */ /* Old width calculation */
+    width: 100%; /* Inputs take remaining flex space */
     padding: 6px 8px;
     border: 1px solid #ccc;
     border-radius: 3px;
     font-size: 0.9em;
+    box-sizing: border-box; /* Important for width calculation */
 }
 
 .property-item input[type="checkbox"] {
-    margin-right: 5px;
+    margin-right: 5px; /* Keep this for checkbox alignment if it's not part of the main label-input pair */
+    flex-grow: 0; /* Don't let checkbox take extra space */
+    flex-basis: auto; /* Reset basis */
 }
 
-.property-input, .property-item select {
-    width: calc(100% - 16px); /* Account for padding */
+/* Specific handling for checkboxes if they are the primary input for a label */
+.property-item > input[type="checkbox"]:first-child {
+    order: 1; /* Put checkbox after label if label is present */
+}
+.property-item > label + input[type="checkbox"] {
+    margin-left: 0; /* Remove default browser margin if it exists */
+}
+
+.property-input, .property-item select { /* .property-input is a general class, ensure it's covered */
+    /* width: calc(100% - 16px); */ /* Old width calculation */
+    width: 100%; /* Take full width of its flex container part */
     padding: 6px 8px;
     border: 1px solid #ccc;
     border-radius: 3px;
     font-size: 0.9em;
-    box-sizing: border-box; /* Include padding and border in the element's total width and height */
-    margin-top: 2px; /* Add a little space if label is above */
+    box-sizing: border-box;
+    /* margin-top: 2px; */ /* No longer needed */
 }
 
 .property-item textarea.property-input {
@@ -175,6 +196,7 @@ header h1 {
     width: calc(100% - 16px); /* Match input width */
     padding: 8px;
     margin-top: 15px;
+    margin-bottom: 15px; /* Added bottom margin */
     background-color: #dc3545; /* Red color for delete/remove */
     color: white;
     border: none;

@@ -19,15 +19,33 @@ document.addEventListener('DOMContentLoaded', () => {
     let isDragging = false;
     let dragOffsetX, dragOffsetY;
 
+    // Define default properties for widgets and the dialog canvas
+    const defaultSkins = {
+        dialogWindow: "windowSkinME", // Default for the main dialog window
+        label: "staticSkin_ME",
+        button: "buttonSkin_MENew2", // Changed default skin for button
+        checkbox: "checkBoxSkin_MENew",
+        editbox: "editBoxNew",
+        panel: "panelSkin",
+        scrollpane: "scrollPaneSkin",
+        combobox: "comboListSkinNew_",
+        combolist: "comboListSkinNew_",
+        togglebutton: "toggleButtonSkin",
+        treeview: "treeViewSkin",
+        grid: "gridSkin",
+        gridheadercell: "gridHeaderCellSkin"
+    };
+
     if (!dialogCanvas.dataset.properties) {
+        const dialogDefaultSkin = defaultSkins.dialogWindow || 'windowSkin'; // Fallback if not defined
         dialogCanvas.dataset.properties = JSON.stringify({
-            id: 'dialog-canvas',
+            name: 'dialog_0',
             text: 'MyDialog',
             width: 600,
             height: 400,
-            skinName: 'windowSkin',
+            skinName: dialogDefaultSkin,
             skinData: {
-                params: { name: 'windowSkin' },
+                params: { name: dialogDefaultSkin },
                 states: {}
             }
         });
@@ -51,22 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         widgetElement.classList.add('widget-on-canvas');
         widgetElement.dataset.widgetType = widgetType;
 
-        const defaultSkins = {
-            label: "staticSkin",
-            button: "buttonSkin",
-            checkbox: "checkBoxSkin",
-            editbox: "editBoxSkin",
-            panel: "panelSkin",
-            scrollpane: "scrollPaneSkin",
-            combobox: "comboBoxSkin",
-            combolist: "comboListSkin",
-            togglebutton: "toggleButtonSkin",
-            treeview: "treeViewSkin",
-            grid: "gridSkin",
-            gridheadercell: "gridHeaderCellSkin" // Though typically a child, good to define
-        };
-
-        const defaultSkinName = defaultSkins[widgetType] || ""; // Fallback to empty if no default
+        const defaultSkinName = defaultSkins[widgetType.toLowerCase()] || ""; // Ensure widgetType is lowercase for lookup
         
         let defaultTextContent = `${widgetType.charAt(0).toUpperCase() + widgetType.slice(1)} #${widgetCounter}`; // Used for initial display if text prop not set
         let initialWidth = 100;
@@ -74,7 +77,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const additionalProps = {}; // For props not in commonProps initially
 
         // First switch: setup initial dimensions, default text for some, and widget-specific additionalProps
-        switch (widgetType) {
+        switch (widgetType.toLowerCase()) { // Ensure widgetType is lowercase for consistent case matching
+            case 'label':
+            case 'editbox':
+            case 'button': // Buttons often share similar height with labels/editboxes
+            case 'checkbox': // Checkboxes too
+                initialHeight = 20;
+                break;
             case 'panel':
             case 'scrollpane':
             case 'treeview':
@@ -96,12 +105,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 additionalProps.items = ['Option A', 'Option B', 'Option C'];
                 break;
             case 'togglebutton':
+                initialHeight = 20; // Also set togglebutton height to 20px for consistency
                 additionalProps.checked = false;
                 defaultTextContent = 'ToggleButton';
-                break;
-            case 'editbox':
-                initialWidth = 150;
-                defaultTextContent = ''; // EditBox usually starts empty
                 break;
             case 'grid': 
                 initialWidth = 300;
@@ -364,40 +370,55 @@ document.addEventListener('DOMContentLoaded', () => {
             propContainer.appendChild(label);
 
         if (key === 'skinName') {
-            const selectSkin = document.createElement('select');
-            selectSkin.id = `prop-${key}-${properties.id}`; // Use the same ID pattern for the select
-            selectSkin.classList.add('property-input'); // Use existing class for styling if applicable
+            const inputSkin = document.createElement('input');
+            inputSkin.type = 'text';
+            const staticDataListId = 'skinOptionsList'; // Reverted to static ID
+            inputSkin.setAttribute('list', staticDataListId);
+            inputSkin.placeholder = 'Type or select a skin';
+
+            const dataList = document.createElement('datalist');
+            dataList.id = staticDataListId; // Use the static ID
 
             const skinOptions = [
+                // Original skins (with (None/Default) first)
                 { value: "", text: "(None/Default)" },
-                { value: "windowSkin", text: "windowSkin" }, // Added windowSkin
-                { value: "staticSkin", text: "staticSkin" },
-                { value: "buttonSkin", text: "buttonSkin" },
-                { value: "checkBoxSkin", text: "checkBoxSkin" },
-                { value: "editBoxSkin", text: "editBoxSkin" },
+                { value: "windowSkin", text: "windowSkin" },
+                { value: "staticSkin_ME", text: "staticSkin_ME" },
+                { value: "toggleButtonSkin", text: "toggleButtonSkin" },
+                { value: "checkBoxSkin_MENew", text: "checkBoxSkin_MENew" },
+                { value: "editBoxNew", text: "editBoxNew" },
                 { value: "panelSkin", text: "panelSkin" },
                 { value: "comboBoxSkin", text: "comboBoxSkin" },
                 { value: "scrollPaneSkin", text: "scrollPaneSkin" },
-                { value: "comboListSkin", text: "comboListSkin" },
-                { value: "toggleButtonSkin", text: "toggleButtonSkin" },
+                { value: "comboListSkinNew_", text: "comboListSkinNew_" },
                 { value: "treeViewSkin", text: "treeViewSkin" },
-                { value: "gridSkin", text: "gridSkin" }
+                { value: "gridSkin", text: "gridSkin" },
+
+                // Skins from me_aircraft_group.dlg (add if not already present)
+                // staticSkin_ME is already present
+                { value: "staticSkin2_ME", text: "staticSkin2_ME" },
+                { value: "buttonSkin_ME", text: "buttonSkin_ME" },
+                { value: "toggleButtonSkin_ME", text: "toggleButtonSkin_ME" },
+                { value: "windowSkinME", text: "windowSkinME" },
+                { value: "buttonSkin_MENew2", text: "buttonSkin_MENew2" }
             ];
 
-            skinOptions.forEach(opt => {
+            const uniqueSkinOptions = Array.from(new Map(skinOptions.map(item => [item.value, item])).values());
+
+            uniqueSkinOptions.forEach(opt => {
                 const option = document.createElement('option');
                 option.value = opt.value;
-                option.textContent = opt.text;
-                selectSkin.appendChild(option);
+                if (opt.value === "") {
+                    option.textContent = opt.text; // For "(None/Default)" display text is important
+                }
+                dataList.appendChild(option);
             });
 
-            selectSkin.value = properties[key] || ''; // Set current value
+            inputSkin.value = properties[key] || ''; // Set current value
 
-            selectSkin.addEventListener('change', (e) => {
+            inputSkin.addEventListener('change', (e) => {
                 properties[key] = e.target.value;
-                // Also update skinData.params.name if it exists, to keep them in sync
-                // Initialize skinData and skinData.params if they don't exist and a skin is selected
-                if (e.target.value) { // If a skin is selected (not empty string)
+                if (e.target.value) { 
                     if (!properties.skinData) {
                         properties.skinData = { params: {}, states: {} };
                     }
@@ -405,18 +426,15 @@ document.addEventListener('DOMContentLoaded', () => {
                         properties.skinData.params = {};
                     }
                     properties.skinData.params.name = e.target.value;
-                } else { // If (None/Default) is selected, clear skinData.params.name or handle as needed
+                } else { 
                     if (properties.skinData && properties.skinData.params) {
-                        properties.skinData.params.name = ""; // Or consider removing/defaulting skinData
+                        properties.skinData.params.name = ""; 
                     }
                 }
                 element.dataset.properties = JSON.stringify(properties);
-                // If skin details are shown, update them too (logic was previously commented out)
-                // if (selectedItem === element && typeof populateSkinDetailsSidebar === 'function') {
-                //     populateSkinDetailsSidebar(properties.skinData, element);
-                // }
             });
-            propContainer.appendChild(selectSkin);
+            propContainer.appendChild(inputSkin);
+            propContainer.appendChild(dataList); // Datalist must be added to the DOM
         } else if (key === 'skinData') {
             // Button to open skin editor / view details - REMOVED
             // const skinDataLabel = document.createElement('label');
@@ -450,7 +468,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (typeof propValue === 'number' && !['zindex', 'tabOrder', 'selectedIndex', 'rowHeight', 'vertScrollBarStep', 'horzScrollBarStep'].includes(key)) {
                 // Keep general numbers as text to avoid spinner issues if not strictly integer steps
-            } else if (key === 'items' || key === 'tooltip' || key === 'columns' || (key === 'text' && properties.type !== 'editbox' && properties.type !== 'combobox' && properties.type !== 'Dialog')) {
+            } else if (key === 'items' || key === 'columns') { 
                 inputType = 'textarea';
             } else if (['zindex', 'tabOrder', 'selectedIndex', 'rowHeight', 'vertScrollBarStep', 'horzScrollBarStep'].includes(key) || (currentRenderSpec[key] && currentRenderSpec[key].toLowerCase().includes('(px)'))) {
                 inputType = 'number';
@@ -828,13 +846,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (props.type === 'grid') {
             paramsCollector.push(`${paramsInternalIndent}["dataSource"] = "${escapeLuaString(props.dataSource || '')}"`);
             paramsCollector.push(`${paramsInternalIndent}["rowHeight"] = ${props.rowHeight || 20}`);
-            paramsCollector.push(`${paramsInternalIndent}["columns"] = ${props.columns}`);
-            paramsCollector.push(`${paramsInternalIndent}["vertScrollBar"] = ${props.vertScrollBar === undefined ? true : props.vertScrollBar}`);
-            paramsCollector.push(`${paramsInternalIndent}["horzScrollBar"] = ${props.horzScrollBar === undefined ? false : props.horzScrollBar}`);
-            paramsCollector.push(`${paramsInternalIndent}["selectedAttributeColor"] = "${escapeLuaString(props.selectedAttributeColor || '0x00000000')}"`);
-            paramsCollector.push(`${paramsInternalIndent}["selectedRowColor"] = "${escapeLuaString(props.selectedRowColor || '0x87CEEB80')}"`);
-            paramsCollector.push(`${paramsInternalIndent}["useAlternatingRowColor"] = ${props.useAlternatingRowColor === undefined ? false : props.useAlternatingRowColor}`);
-            paramsCollector.push(`${paramsInternalIndent}["altRowColor"] = "${escapeLuaString(props.altRowColor || '0xF0F0F0FF')}"`);
             try {
                 const columnsArray = JSON.parse(props.columns);
                 if (Array.isArray(columnsArray)) {
@@ -849,6 +860,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Error parsing Grid columns JSON:', e);
                 paramsCollector.push(`${paramsInternalIndent}["columns"] = {}`);
             }
+            paramsCollector.push(`${paramsInternalIndent}["vertScrollBar"] = ${props.vertScrollBar === undefined ? true : props.vertScrollBar}`);
+            paramsCollector.push(`${paramsInternalIndent}["horzScrollBar"] = ${props.horzScrollBar === undefined ? false : props.horzScrollBar}`);
+            paramsCollector.push(`${paramsInternalIndent}["selectedAttributeColor"] = "${escapeLuaString(props.selectedAttributeColor || '0x00000000')}"`);
+            paramsCollector.push(`${paramsInternalIndent}["selectedRowColor"] = "${escapeLuaString(props.selectedRowColor || '0x87CEEB80')}"`);
+            paramsCollector.push(`${paramsInternalIndent}["useAlternatingRowColor"] = ${props.useAlternatingRowColor === undefined ? false : props.useAlternatingRowColor}`);
+            paramsCollector.push(`${paramsInternalIndent}["altRowColor"] = "${escapeLuaString(props.altRowColor || '0xF0F0F0FF')}"`);
         }
 
         // Add the params table to the main widget properties
@@ -916,12 +933,71 @@ document.addEventListener('DOMContentLoaded', () => {
         const dialogProps = JSON.parse(dialogCanvasElement.dataset.properties);
         const dialogName = dialogProps.text || "MyDialog";
 
+        // Dynamically generate skin states for the main dialog
+        const dialogSkinData = dialogProps.skinData || { states: {} }; // Ensure skinData and states exist
+        const dialogSkinStates = dialogSkinData.states || {};
+        let dialogStatesLuaString = '';
+        if (Object.keys(dialogSkinStates).length > 0) {
+            const stateEntries = Object.entries(dialogSkinStates).map(([stateName, layers]) => {
+                const layerEntries = (Array.isArray(layers) ? layers : []).map(layer => { // Ensure layers is an array
+                    let layerPropsString = '';
+                    if (typeof layer === 'object' && layer !== null) {
+                        layerPropsString = Object.entries(layer).map(([layerKey, layerValue]) => {
+                            if (typeof layerValue === 'object' && layerValue !== null) {
+                                const innerPropsString = Object.entries(layerValue)
+                                    .map(([k, v]) => `[\"${escapeLuaString(k)}\"] = \"${escapeLuaString(v)}\"`)
+                                    .join(', ');
+                                return `                            [\"${escapeLuaString(layerKey)}\"] = { ${innerPropsString} }`;
+                            } else {
+                                return `                            [\"${escapeLuaString(layerKey)}\"] = \"${escapeLuaString(String(layerValue))}\"`;
+                            }
+                        }).join(',\n');
+                    }
+                    return `                        {\n${layerPropsString}\n                        }`; 
+                }).join(',\n');
+                return `                [\"${escapeLuaString(stateName)}\"] = {\n${layerEntries}\n                }`;
+            }).join(',\n');
+            dialogStatesLuaString = `\n${stateEntries}\n        `;
+        }
+
         const childWidgets = Array.from(dialogCanvasElement.querySelectorAll(':scope > .widget-on-canvas'));
         const childrenContent = childWidgets.length > 0 
-            ? childWidgets.map(widget => generateWidgetLua(widget, 2)).join(',') + '\n    ' 
+            ? childWidgets.map(widget => generateWidgetLua(widget, 2)).join(',\n    ') + '\n    ' 
             : '    -- No child widgets\n    ';
 
-        const luaString = `dialog = {\n    ["type"] = "Window",\n    ["params"] = {\n        ["bounds"] = {\n            [1] = { ["h"] = ${dialogProps.height}, ["w"] = ${dialogProps.width}, ["x"] = 0, ["y"] = 0 }\n        },\n        ["draggable"] = true, ["enabled"] = true, ["hasCursor"] = true, ["lockFlow"] = false,\n        ["modal"] = false, ["offscreen"] = false, ["resizable"] = true, ["zOrder"] = 100,\n        ["text"] = "${escapeLuaString(dialogProps.text || 'Dialog')}"\n    },\n    ["skin"] = {\n        ["params"] = { ["name"] = "${escapeLuaString(dialogProps.skinName)}" },\n        ["states"] = { ["released"] = { [1] = { ["bkg"] = { ["center_center"] = "0x000000cc" } } } }\n    },\n    ["children"] = {${childrenContent}}\n};`;
+        // Refactor luaString for readability
+        const luaParams = `
+    ["params"] = {
+        ["bounds"] = {
+            [1] = { ["h"] = ${dialogProps.height}, ["w"] = ${dialogProps.width}, ["x"] = 0, ["y"] = 0 }
+        },
+        ["draggable"] = true, 
+        ["enabled"] = true, 
+        ["hasCursor"] = true, 
+        ["lockFlow"] = false,
+        ["modal"] = false, 
+        ["offscreen"] = false, 
+        ["resizable"] = true, 
+        ["zOrder"] = 100,
+        ["text"] = "${escapeLuaString(dialogProps.text || 'Dialog')}"
+    }`; 
+
+        const luaSkin = `
+    ["skin"] = {
+        ["params"] = { ["name"] = "${escapeLuaString(dialogProps.skinName || 'windowSkin')}" },
+        ["states"] = {${dialogStatesLuaString}}
+    }`;
+
+        const luaChildren = `
+    ["children"] = {
+    ${childrenContent}}`;
+
+        const luaString = `dialog = {
+    ["type"] = "Window",
+    ${luaParams},
+    ${luaSkin},
+    ${luaChildren}
+};`;
 
         const blob = new Blob([luaString], { type: 'text/plain;charset=utf-8' });
         const link = document.createElement('a');
@@ -934,7 +1010,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         console.log("DLG file generated:");
         console.log(luaString);
-        alert("Dialog saved as " + `${dialogName}.dlg`);
     }
 
     function makeDraggable(element) {
