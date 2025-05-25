@@ -221,20 +221,21 @@ document.addEventListener('DOMContentLoaded', () => {
         if (selectedItem) {
             selectedItem.classList.remove('selected');
             selectedItem.classList.remove('preview-selected');
-            if (selectedItem.classList.contains('widget-on-canvas') && selectedItem !== dialogCanvas) {
-                removeResizeHandles(selectedItem);
-            }
+            // Remove handles from previously selected item, whether it's a widget or dialogCanvas
+            removeResizeHandles(selectedItem); 
         }
         selectedItem = element;
         if (selectedItem){
             selectedItem.classList.add('selected');
             selectedItem.classList.add('preview-selected');
 
-            if (selectedItem.classList.contains('widget-on-canvas') && selectedItem !== dialogCanvas) {
-                addResizeHandles(selectedItem); // Add handles if it's a widget
+            if (selectedItem.id === 'dialog-canvas') {
+                addResizeHandles(selectedItem, ['se']); // Only 'se' handle for dialog canvas
+            } else if (selectedItem.classList.contains('widget-on-canvas')) {
+                addResizeHandles(selectedItem, resizeHandlePositions); // All handles for other widgets
             }
 
-            if (selectedItem.classList.contains('widget-on-canvas') && selectedItem.parentElement) {
+            if (selectedItem.classList.contains('widget-on-canvas') && selectedItem.parentElement) { // This check might be redundant for dialog-canvas but harmless
                 const parent = selectedItem.parentElement;
                 // Only re-append if it's not already the last child.
                 // This helps maintain z-order for items that are not the selected one,
@@ -573,14 +574,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // For now, we'll keep the placeholder and preformatted JSON display
     };
 
-    const resizeHandlePositions = ['nw', 'ne', 'sw', 'se'];
+    const resizeHandlePositions = ['nw', 'ne', 'sw', 'se']; // Default for widgets
 
-    function addResizeHandles(widgetElement) {
+    function addResizeHandles(widgetElement, handlesToAdd) {
         removeResizeHandles(widgetElement); // Clear existing handles first
-        resizeHandlePositions.forEach(pos => {
+        handlesToAdd.forEach(pos => {
             const handle = document.createElement('div');
             handle.classList.add('resize-handle', pos);
-            handle.dataset.position = pos; // Store position for resize logic later
+            handle.dataset.position = pos;
             widgetElement.appendChild(handle);
             
             handle.addEventListener('mousedown', (e) => {
@@ -628,21 +629,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let newWidth = initialWidgetWidth;
         let newHeight = initialWidgetHeight;
-        let newX = initialWidgetX;
-        let newY = initialWidgetY;
+        let newX = initialWidgetX; // Only used if not dialogCanvas
+        let newY = initialWidgetY; // Only used if not dialogCanvas
+
+        const isDialog = activeWidgetForResize.id === 'dialog-canvas';
 
         // Adjust dimensions and position based on the handle being dragged
         if (currentResizeHandle.includes('e')) { // East (right)
             newWidth = initialWidgetWidth + dx;
         }
-        if (currentResizeHandle.includes('w')) { // West (left)
+        if (currentResizeHandle.includes('w') && !isDialog) { // West (left) - Not for dialogCanvas
             newWidth = initialWidgetWidth - dx;
             newX = initialWidgetX + dx;
         }
         if (currentResizeHandle.includes('s')) { // South (bottom)
             newHeight = initialWidgetHeight + dy;
         }
-        if (currentResizeHandle.includes('n')) { // North (top)
+        if (currentResizeHandle.includes('n') && !isDialog) { // North (top) - Not for dialogCanvas
             newHeight = initialWidgetHeight - dy;
             newY = initialWidgetY + dy;
         }
@@ -650,25 +653,28 @@ document.addEventListener('DOMContentLoaded', () => {
         // Ensure minimum size (e.g., 10x10 pixels)
         const minSize = 10;
         if (newWidth < minSize) {
-            if (currentResizeHandle.includes('w')) newX -= (minSize - newWidth);
+            if (currentResizeHandle.includes('w') && !isDialog) newX -= (minSize - newWidth);
             newWidth = minSize;
         }
         if (newHeight < minSize) {
-            if (currentResizeHandle.includes('n')) newY -= (minSize - newHeight);
+            if (currentResizeHandle.includes('n') && !isDialog) newY -= (minSize - newHeight);
             newHeight = minSize;
         }
 
         activeWidgetForResize.style.width = `${newWidth}px`;
         activeWidgetForResize.style.height = `${newHeight}px`;
-        activeWidgetForResize.style.left = `${newX}px`;
-        activeWidgetForResize.style.top = `${newY}px`;
-
-        // Update dataset properties
+        
         const properties = JSON.parse(activeWidgetForResize.dataset.properties);
         properties.width = Math.round(newWidth);
         properties.height = Math.round(newHeight);
-        properties.x = Math.round(newX);
-        properties.y = Math.round(newY);
+
+        if (!isDialog) {
+            activeWidgetForResize.style.left = `${newX}px`;
+            activeWidgetForResize.style.top = `${newY}px`;
+            properties.x = Math.round(newX);
+            properties.y = Math.round(newY);
+        }
+        
         activeWidgetForResize.dataset.properties = JSON.stringify(properties);
 
         displayItemProperties(activeWidgetForResize); // Refresh sidebar
@@ -680,13 +686,15 @@ document.addEventListener('DOMContentLoaded', () => {
         document.removeEventListener('mousemove', doResize);
         document.removeEventListener('mouseup', stopResize);
         
-        // Update dataset properties one last time to ensure they are integers if needed
         if (activeWidgetForResize) {
             const properties = JSON.parse(activeWidgetForResize.dataset.properties);
             properties.width = parseInt(activeWidgetForResize.style.width, 10);
             properties.height = parseInt(activeWidgetForResize.style.height, 10);
-            properties.x = parseInt(activeWidgetForResize.style.left, 10);
-            properties.y = parseInt(activeWidgetForResize.style.top, 10);
+            
+            if (activeWidgetForResize.id !== 'dialog-canvas') {
+                properties.x = parseInt(activeWidgetForResize.style.left, 10);
+                properties.y = parseInt(activeWidgetForResize.style.top, 10);
+            }
             activeWidgetForResize.dataset.properties = JSON.stringify(properties);
             displayItemProperties(activeWidgetForResize);
         }
@@ -714,126 +722,142 @@ document.addEventListener('DOMContentLoaded', () => {
     // Function to generate Lua for a single widget and its children
     function generateWidgetLua(widgetElement, indentLevel = 1) {
         const props = JSON.parse(widgetElement.dataset.properties);
-        const childIndent = '    '.repeat(indentLevel + 1);
+        const indentString = '    '.repeat(indentLevel);
+        const childPropertyIndent = indentString + '  '; // For type, skin, children, params keys
+        const paramsInternalIndent = childPropertyIndent + '  '; // For keys inside the params table
 
-        // Use widgetTypeMap to get the DLG widget type
         const dlgWidgetType = widgetTypeMap[props.type] || (props.type.charAt(0).toUpperCase() + props.type.slice(1));
 
-        // const widgetSkinName = props.skinName || 'defaultSkin'; // Fallback if skinName is missing
-        // Prioritize skinData for skin generation
-        const skinToUse = props.skinData || { params: { name: props.skinName || 'defaultSkin' }, states: {} };
-        if (!skinToUse.params) skinToUse.params = { name: props.skinName || 'defaultSkin' };
-        if (!skinToUse.states) skinToUse.states = {};
+        let widgetPropertiesOutput = []; // Array to hold each line like '["key"] = value' for the main widget table
 
-        let paramsContent = `\n${childIndent}    ["type"] = "${escapeLuaString(dlgWidgetType)}"`;
+        // 1. Type (Directly in the widget's table)
+        widgetPropertiesOutput.push(`${childPropertyIndent}["type"] = "${escapeLuaString(dlgWidgetType)}"`);
+
+        // 2. Params (Collect all relevant properties for the params table)
+        let paramsCollector = [];
+
+        // 2a. Bounds (with named keys, inside params)
+        paramsCollector.push(`${paramsInternalIndent}["bounds"] = { ["x"] = ${props.x}, ["y"] = ${props.y}, ["w"] = ${props.width}, ["h"] = ${props.height} }`);
         
-        if (props.text !== undefined && props.type !== 'panel' && props.type !== 'scrollpane' && props.type !== 'treeview' && props.type !== 'grid') { // Grids usually don't have a direct text param in DLG
-            paramsContent += `,\n${childIndent}    ["text"] = "${escapeLuaString(props.text)}"`;
+        // 2b. Visible (inside params)
+        paramsCollector.push(`${paramsInternalIndent}["visible"] = ${props.visible === undefined ? true : props.visible}`);
+
+        // 2c. Enabled (inside params)
+        paramsCollector.push(`${paramsInternalIndent}["enabled"] = ${props.enabled === undefined ? true : props.enabled}`);
+
+        // 2d. TabOrder (inside params, using 'tabOrder' as key based on your DLG)
+        paramsCollector.push(`${paramsInternalIndent}["tabOrder"] = ${props.tabOrder || 0}`);
+        
+        // 2e. Text (inside params for all types that might have it)
+        if (props.text !== undefined) { // Simplified condition, specific exclusions can be added if truly needed
+            paramsCollector.push(`${paramsInternalIndent}["text"] = "${escapeLuaString(props.text)}"`);
         }
+
+        // 2f. Other widget-specific params
         if (props.tooltip !== undefined && props.tooltip !== '') {
-            paramsContent += `,\n${childIndent}    ["tooltip"] = "${escapeLuaString(props.tooltip)}"`;
+            paramsCollector.push(`${paramsInternalIndent}["tooltip"] = "${escapeLuaString(props.tooltip)}"`);
         }
         if (props.type === 'checkbox' || props.type === 'togglebutton') {
-            paramsContent += `,\n${childIndent}    ["checked"] = ${props.checked || false}`;
+            paramsCollector.push(`${paramsInternalIndent}["checked"] = ${props.checked || false}`);
         }
         if (props.type === 'combobox' || props.type === 'combolist') {
-            const itemsLua = (props.items && props.items.length > 0) 
-                ? props.items.map(item => `\"${escapeLuaString(item)}\"`).join(', ') 
+            const itemsLua = (props.items && props.items.length > 0)
+                ? props.items.map(item => `\"${escapeLuaString(item)}\"`).join(', ')
                 : '';
-            paramsContent += `,\n${childIndent}    ["items"] = { ${itemsLua} }`;
+            paramsCollector.push(`${paramsInternalIndent}["items"] = { ${itemsLua} }`);
         }
         if (props.type === 'combobox' && props.selectedIndex !== undefined && typeof props.selectedIndex === 'number') {
-            paramsContent += `,\n${childIndent}    ["selectedIndex"] = ${props.selectedIndex + 1}`;
+            paramsCollector.push(`${paramsInternalIndent}["selectedIndex"] = ${props.selectedIndex + 1}`);
         }
         if (props.type === 'scrollpane') {
-            paramsContent += `,\n${childIndent}    ["vertScrollBarStep"] = ${props.vertScrollBarStep || 16},` +
-                             `\n${childIndent}    ["horzScrollBarStep"] = ${props.horzScrollBarStep || 0},` +
-                             `\n${childIndent}    ["vertMouseWheel"] = ${props.vertMouseWheel === undefined ? true : props.vertMouseWheel},` +
-                             `\n${childIndent}    ["horzMouseWheel"] = ${props.horzMouseWheel === undefined ? false : props.horzMouseWheel}`;
+            paramsCollector.push(`${paramsInternalIndent}["vertScrollBarStep"] = ${props.vertScrollBarStep || 16}`);
+            paramsCollector.push(`${paramsInternalIndent}["horzScrollBarStep"] = ${props.horzScrollBarStep || 0}`);
+            paramsCollector.push(`${paramsInternalIndent}["vertMouseWheel"] = ${props.vertMouseWheel === undefined ? true : props.vertMouseWheel}`);
+            paramsCollector.push(`${paramsInternalIndent}["horzMouseWheel"] = ${props.horzMouseWheel === undefined ? false : props.horzMouseWheel}`);
         }
         if (props.type === 'grid') {
-            paramsContent += `,\n${childIndent}    ["dataSource"] = "${escapeLuaString(props.dataSource || '')}",` +
-                             `\n${childIndent}    ["rowHeight"] = ${props.rowHeight || 20},` +
-                             `\n${childIndent}    ["vertScrollBar"] = ${props.vertScrollBar === undefined ? true : props.vertScrollBar},` +
-                             `\n${childIndent}    ["horzScrollBar"] = ${props.horzScrollBar === undefined ? false : props.horzScrollBar},` +
-                             `\n${childIndent}    ["selectedAttributeColor"] = "${escapeLuaString(props.selectedAttributeColor || '0x00000000')}",` +
-                             `\n${childIndent}    ["selectedRowColor"] = "${escapeLuaString(props.selectedRowColor || '0x87CEEB80')}",` +
-                             `\n${childIndent}    ["useAlternatingRowColor"] = ${props.useAlternatingRowColor === undefined ? false : props.useAlternatingRowColor},` +
-                             `\n${childIndent}    ["altRowColor"] = "${escapeLuaString(props.altRowColor || '0xF0F0F0FF')}"`;
-            // Columns formatting
+            paramsCollector.push(`${paramsInternalIndent}["dataSource"] = "${escapeLuaString(props.dataSource || '')}"`);
+            paramsCollector.push(`${paramsInternalIndent}["rowHeight"] = ${props.rowHeight || 20}`);
+            paramsCollector.push(`${paramsInternalIndent}["vertScrollBar"] = ${props.vertScrollBar === undefined ? true : props.vertScrollBar}`);
+            paramsCollector.push(`${paramsInternalIndent}["horzScrollBar"] = ${props.horzScrollBar === undefined ? false : props.horzScrollBar}`);
+            paramsCollector.push(`${paramsInternalIndent}["selectedAttributeColor"] = "${escapeLuaString(props.selectedAttributeColor || '0x00000000')}"`);
+            paramsCollector.push(`${paramsInternalIndent}["selectedRowColor"] = "${escapeLuaString(props.selectedRowColor || '0x87CEEB80')}"`);
+            paramsCollector.push(`${paramsInternalIndent}["useAlternatingRowColor"] = ${props.useAlternatingRowColor === undefined ? false : props.useAlternatingRowColor}`);
+            paramsCollector.push(`${paramsInternalIndent}["altRowColor"] = "${escapeLuaString(props.altRowColor || '0xF0F0F0FF')}"`);
             try {
                 const columnsArray = JSON.parse(props.columns);
                 if (Array.isArray(columnsArray)) {
-                    const columnsLua = columnsArray.map(col => 
+                    const columnsLua = columnsArray.map(col =>
                         `{ [\"align\"] = \"${escapeLuaString(col.align || 'left')}\",` +
                         ` [\"attribute\"] = \"${escapeLuaString(col.attribute || '')}\",` +
                         ` [\"width\"] = ${col.width || 100} }`
-                    ).join(', '); 
-                    paramsContent += `,\n${childIndent}    ["columns"] = { ${columnsLua} }`;
+                    ).join(', ');
+                    paramsCollector.push(`${paramsInternalIndent}["columns"] = { ${columnsLua} }`);
                 }
             } catch (e) {
                 console.error('Error parsing Grid columns JSON:', e);
-                paramsContent += `,\n${childIndent}    ["columns"] = {}`; // Default to empty if error
+                paramsCollector.push(`${paramsInternalIndent}["columns"] = {}`);
             }
         }
 
-        let skinString = '';
-        // Generate skin block based on skinToUse (which prioritizes skinData)
-        const skinParamsName = skinToUse.params.name || 'defaultSkin';
-        let statesLua = '';
-
-        if (Object.keys(skinToUse.states).length > 0) {
-            statesLua = Object.entries(skinToUse.states).map(([stateName, layers]) => {
-                const layersLua = layers.map(layer => {
-                    // Assuming layer is an object that can be stringified to represent Lua table content
-                    // This needs a robust way to convert JS object to Lua table string for each layer
-                    // For now, a simplified JSON.stringify might work for basic structures if DCS accepts it, or we need a custom converter.
-                    // Let's assume for now each layer is simple like { bkg: { center_center: "0x..." } }
-                    // A more robust solution would be a function: objectToLuaTableString(layer)
-                    let layerContent = '';
-                    if (typeof layer === 'object' && layer !== null) {
-                        layerContent = Object.entries(layer).map(([layerKey, layerValue]) => {
-                            // Example: { bkg: { center_center: "0xRRGGBBAA" } }
-                            // -> ["bkg"] = { ["center_center"] = "0xRRGGBBAA" }
-                            if (typeof layerValue === 'object' && layerValue !== null) {
-                                const innerContent = Object.entries(layerValue)
-                                    .map(([k, v]) => `[\"${escapeLuaString(k)}\"] = \"${escapeLuaString(v)}\"`) // Assumes inner values are strings
-                                    .join(', ');
-                                return `[\"${escapeLuaString(layerKey)}\"] = { ${innerContent} }`;
-                            } else {
-                                return `[\"${escapeLuaString(layerKey)}\"] = \"${escapeLuaString(String(layerValue))}\"`;
-                            }
-                        }).join(', ');
-                    }
-                    return `{ ${layerContent} }`;
-                }).join(',\n' + childIndent + '          '); // Indent subsequent layers
-                return `\n${childIndent}      [\"${escapeLuaString(stateName)}\"] = {\n${childIndent}          ${layersLua}\n${childIndent}      }`; 
-            }).join(',');
-            skinString = `,\n${childIndent}  ["skin"] = {\n${childIndent}    ["params"] = { ["name"] = "${escapeLuaString(skinParamsName)}" },\n${childIndent}    ["states"] = {${statesLua}\n${childIndent}    }\n${childIndent}  }`;
+        // Add the params table to the main widget properties
+        if (paramsCollector.length > 0) {
+            widgetPropertiesOutput.push(`${childPropertyIndent}["params"] = {\n${paramsCollector.join(',\n')}\n${childPropertyIndent}}`);
         } else {
-            // Fallback to simple skin name if no detailed states
-            skinString = `,\n${childIndent}  ["skin"] = {\n${childIndent}    ["params"] = { ["name"] = "${escapeLuaString(skinParamsName)}" },\n${childIndent}    ["states"] = {}\n${childIndent}  }`;
+            widgetPropertiesOutput.push(`${childPropertyIndent}["params"] = {}`); // Should not happen if bounds, visible etc. are always added
         }
 
-        let childrenStringForTable = '';
+        // 3. Skin (Directly in the widget's table)
+        const skinToUse = props.skinData || { params: { name: props.skinName || 'defaultSkin' }, states: {} };
+        if (!skinToUse.params) skinToUse.params = { name: props.skinName || 'defaultSkin' };
+        if (!skinToUse.states) skinToUse.states = {};
+        const skinParamsName = skinToUse.params.name || 'defaultSkin';
+        
+        const skinDirectIndent = childPropertyIndent + '  '; // Indent for ["params"] and ["states"] keys under ["skin"]
+        const skinStatesTableIndent = skinDirectIndent + '  '; 
+        const skinLayersArrayIndent = skinStatesTableIndent + '  '; 
+        const skinLayerPropsIndent = skinLayersArrayIndent + '  '; 
+
+        let statesLuaString = '';
+        if (Object.keys(skinToUse.states).length > 0) {
+            const stateEntries = Object.entries(skinToUse.states).map(([stateName, layers]) => {
+                const layerEntries = layers.map(layer => {
+                    let layerPropsString = '';
+                    if (typeof layer === 'object' && layer !== null) {
+                        layerPropsString = Object.entries(layer).map(([layerKey, layerValue]) => {
+                            if (typeof layerValue === 'object' && layerValue !== null) {
+                                const innerPropsString = Object.entries(layerValue)
+                                    .map(([k, v]) => `[\"${escapeLuaString(k)}\"] = \"${escapeLuaString(v)}\"`)
+                                    .join(', ');
+                                return `${skinLayerPropsIndent}[\"${escapeLuaString(layerKey)}\"] = { ${innerPropsString} }`;
+                            } else {
+                                return `${skinLayerPropsIndent}[\"${escapeLuaString(layerKey)}\"] = \"${escapeLuaString(String(layerValue))}\"`;
+                            }
+                        }).join(',\n');
+                    }
+                    return `${skinLayersArrayIndent}{\n${layerPropsString}\n${skinLayersArrayIndent}}`;
+                }).join(',\n');
+                return `${skinStatesTableIndent}[\"${escapeLuaString(stateName)}\"] = {\n${layerEntries}\n${skinStatesTableIndent}}`;
+            }).join(',\n');
+            statesLuaString = `\n${stateEntries}\n${skinDirectIndent}`;
+        }
+
+        widgetPropertiesOutput.push(`${childPropertyIndent}["skin"] = {\n` +
+                                   `${skinDirectIndent}["params"] = { ["name"] = "${escapeLuaString(skinParamsName)}" },\n` +
+                                   `${skinDirectIndent}["states"] = {${statesLuaString}}\n` +
+                                   `${childPropertyIndent}}`);
+
+        // 4. Children (Directly in the widget's table)
         if (['panel', 'scrollpane', 'treeview', 'grid'].includes(props.type)) {
             const childWidgets = Array.from(widgetElement.querySelectorAll(':scope > .widget-on-canvas'));
             if (childWidgets.length > 0) {
-                const childrenEntries = childWidgets.map(child => generateWidgetLua(child, indentLevel + 2)); 
-                childrenStringForTable = `,\n${childIndent}  ["children"] = {\n${childrenEntries.join(',\n')}\n${childIndent}  }`;
+                const childrenEntries = childWidgets.map(child => generateWidgetLua(child, indentLevel + 1)); 
+                widgetPropertiesOutput.push(`${childPropertyIndent}["children"] = {\n${childrenEntries.join(',\n')}\n${childPropertyIndent}}`);
             }
         }
-        
-        const widgetName = props.id; // Use the unique ID as the widget name in Lua table
 
-        return `${'    '.repeat(indentLevel)}["${escapeLuaString(widgetName)}"] = {` +
-               `\n${childIndent}  ["bounds"] = { ${props.x}, ${props.y}, ${props.width}, ${props.height} },` +
-               `\n${childIndent}  ["visible"] = ${props.visible === undefined ? true : props.visible},` +
-               `\n${childIndent}  ["enabled"] = ${props.enabled === undefined ? true : props.enabled},` +
-               `\n${childIndent}  ["tabOrder"] = ${props.tabOrder || 0},` +
-               `\n${childIndent}  ["params"] = {${paramsContent}\n${childIndent}  }` +
-               `${skinString}` +
-               `${childrenStringForTable}\n${'    '.repeat(indentLevel)}}`;
+        const widgetName = props.id;
+        return `${indentString}["${escapeLuaString(widgetName)}"] = {\n${widgetPropertiesOutput.join(',\n')}\n${indentString}}`;
     }
 
     function generateAndDownloadDlg() {
