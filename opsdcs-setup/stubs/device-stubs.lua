@@ -500,10 +500,10 @@ function UTF8_substring() end
 --- @field getCanopyPos fun()
 --- @field getCanopyState fun()
 --- @field getEngineLeftFuelConsumption fun()
---- @field getEngineLeftRPM fun()
+--- @field getEngineLeftRPM fun(): number Gets the current left engine RPM in percent.
 --- @field getEngineLeftTemperatureBeforeTurbine fun()
 --- @field getEngineRightFuelConsumption fun()
---- @field getEngineRightRPM fun()
+--- @field getEngineRightRPM fun(): number Gets the current right engine RPM in percent.
 --- @field getEngineRightTemperatureBeforeTurbine fun()
 --- @field getFlapsPos fun()
 --- @field getFlapsRetracted fun()
