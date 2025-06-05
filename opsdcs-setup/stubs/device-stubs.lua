@@ -257,8 +257,7 @@ function get_non_sim_random_evenly() end
 function get_option_value(option, env) end
 
 --- This is used to set a param handle, best described as a global variable. It is useful for setting animations in mainpanel.lua, getting information into indicators, and getting information between an EFM and lua if you have an EFM.
---- @param param string
---- @return ParamHandle
+--- @param param string|number
 function get_param_handle(param) end
 
 --- ??
@@ -358,7 +357,8 @@ function set_aircraft_draw_argument_value(argument, value) end
 function set_crew_member_seat_adjustment() end
 
 --- Shows param list
-function show_param_handles_list() end
+--- @param enable boolean
+function show_param_handles_list(enable) end
 
 --- ??
 function switch_labels_off() end
@@ -496,38 +496,38 @@ function UTF8_substring() end
 --- @description device base data
 --- @field getAngleOfAttack fun():number Gets the current angle of attack
 --- @field getAngleOfSlide fun():number Gets the current angle of slide
---- @field getBarometricAltitude fun()
+--- @field getBarometricAltitude fun(): number Gets the current barometric altitude in meters.
 --- @field getCanopyPos fun()
 --- @field getCanopyState fun()
 --- @field getEngineLeftFuelConsumption fun()
 --- @field getEngineLeftRPM fun(): number Gets the current left engine RPM in percent.
---- @field getEngineLeftTemperatureBeforeTurbine fun()
+--- @field getEngineLeftTemperatureBeforeTurbine fun(): number Gets the current left engine temperature before turbine.
 --- @field getEngineRightFuelConsumption fun()
 --- @field getEngineRightRPM fun(): number Gets the current right engine RPM in percent.
---- @field getEngineRightTemperatureBeforeTurbine fun()
+--- @field getEngineRightTemperatureBeforeTurbine fun(): number Gets the current right engine temperature before turbine.
 --- @field getFlapsPos fun()
 --- @field getFlapsRetracted fun()
---- @field getHeading fun()
+--- @field getHeading fun(): number Gets the current heading in radians. (?)
 --- @field getHelicopterCollective fun()
 --- @field getHelicopterCorrection fun()
 --- @field getHorizontalAcceleration fun()
---- @field getIndicatedAirSpeed fun()
+--- @field getIndicatedAirSpeed fun(): number Gets the current indicated airspeed in m/s.
 --- @field getLandingGearHandlePos fun()
 --- @field getLateralAcceleration fun()
 --- @field getLeftMainLandingGearDown fun()
 --- @field getLeftMainLandingGearUp fun()
---- @field getMachNumber fun()
---- @field getMagneticHeading fun()
+--- @field getMachNumber fun(): number Gets the current mach.
+--- @field getMagneticHeading fun(): number Gets the current magnetic heading in radians. (?)
 --- @field getNoseLandingGearDown fun()
 --- @field getNoseLandingGearUp fun()
---- @field getPitch fun()
---- @field getRadarAltitude fun()
+--- @field getPitch fun(): number Gets the current pitch in radians.
+--- @field getRadarAltitude fun(): number Gets the current radar altitude in meters.
 --- @field getRateOfPitch fun()
 --- @field getRateOfRoll fun()
 --- @field getRateOfYaw fun()
 --- @field getRightMainLandingGearDown fun()
 --- @field getRightMainLandingGearUp fun()
---- @field getRoll fun()
+--- @field getRoll fun(): number Gets the current roll in radians.
 --- @field getRudderPosition fun()
 --- @field getSelfAirspeed fun()
 --- @field getSelfCoordinates fun()

@@ -123,4 +123,4 @@ function dbg_print() end
 function get_param_handle(param) end
 function list_cockpit_params() end
 function list_indication(indicator_id) end
-function show_param_handles_list() end
+function show_param_handles_list(enable) end
