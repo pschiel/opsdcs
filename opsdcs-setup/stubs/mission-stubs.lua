@@ -216,7 +216,7 @@ function getAlliesString() end
 function getThreatsAllies() end
 function getValueDictByKey() end
 function getValueResourceByKey() end
-function get_param_handle() end
+function get_param_handle(param) end
 function get_server_info() end
 function get_unit_possible_player_roles() end
 function get_welcome_info() end
