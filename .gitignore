@@ -22,3 +22,4 @@
 *.png
 /goldeneye/_old/*
 /lua-python-bridge/build
+.emmyrc.json
