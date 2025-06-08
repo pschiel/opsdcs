@@ -291,7 +291,8 @@ function set_aircraft_draw_argument_value(argument, value) end
 function set_crew_member_seat_adjustment() end
 
 --- Shows param list
-function show_param_handles_list() end
+--- @param enable boolean
+function show_param_handles_list(enable) end
 
 --- ??
 function switch_labels_off() end
@@ -484,3 +485,12 @@ day_color = { 0, 0.5, 0 }
 night_color = { 0, 1.0, 0 }
 used_render_mask = "interleave.dds"
 always_show_ground = false
+
+--- Circle helper function. Can draw circles and arcs, with optional thickness.
+--- Use with dofile(LockOn_Options.common_script_path.."devices_defs.lua")
+--- @param obj Element @element object, the function will set vertices and indices in it
+--- @param radius_outer number @outer radius of the circle
+--- @param radius_inner number|nil @inner radius of the circle (can be nil or 0 for a solid circle)
+--- @param arc number|nil @arc angle in degrees, defaults to 360
+--- @param sides number|nil @number of sides, defaults to 32
+function set_circle(obj, radius_outer, radius_inner, arc, sides) end
