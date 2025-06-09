@@ -257,7 +257,8 @@ function get_non_sim_random_evenly() end
 function get_option_value(option, env) end
 
 --- This is used to set a param handle, best described as a global variable. It is useful for setting animations in mainpanel.lua, getting information into indicators, and getting information between an EFM and lua if you have an EFM.
---- @param param string|number
+--- @param param string The param handle name
+--- @return ParamHandle
 function get_param_handle(param) end
 
 --- ??
