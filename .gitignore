@@ -23,3 +23,4 @@
 *.png
 /goldeneye/_old/*
 /lua-python-bridge/build
+/lua-exec-silent/build
