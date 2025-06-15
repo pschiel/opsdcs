@@ -16,6 +16,8 @@ then:
 les.run("edge-playback", '--text "Hello pilot! DCS version is ' .. __DCS_VERSION__ .. '"')
 ```
 
+Preview: [Youtube](https://www.youtube.com/watch?v=nS14V6GUnFo)
+
 ## compile if you want
 
 - [LUA 5.1 dynamic libs](https://cyfuture.dl.sourceforge.net/project/luabinaries/5.1.4/Windows%20Libraries/lua-5.1.4_Win64_dll12_lib.zip)
