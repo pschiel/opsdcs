@@ -19,6 +19,7 @@ static const struct luaL_Reg les[] = {
 };
 
 __declspec(dllexport) int luaopen_les(lua_State *L) {
-    luaL_register(L, "les", les);
+    lua_newtable(L);
+    luaL_register(L, NULL, les);
     return 1;
 }
