@@ -1,9 +1,11 @@
+-- object oriented script example, with update loop and reload
+
 -- options
 MyThing = {
-    delta_time = 2.0,
-    is_running = false,
-    debug = true,
-    reload_path = [[E:\Work\dcs\opsdcs\snippets\script-template.lua]],
+    delta_time = 2.0, -- dt for update loop
+    is_running = false, -- is true while running
+    debug = true, -- show debug output
+    reload_path = [[E:\Work\dcs\opsdcs\snippets\script-template.lua]], -- script path for development reload
 }
 
 -- debug output
@@ -34,7 +36,7 @@ function MyThing:stop()
     self:debug("stopped")
 end
 
--- reload script (for development)
+-- reload script for development, send "MyThing:reload()" to LUA runner
 function MyThing:reload()
     self:stop()
     dofile(self.reload_path)
